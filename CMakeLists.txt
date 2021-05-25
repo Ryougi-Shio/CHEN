@@ -59,11 +59,13 @@ list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
 Classes/music.cpp
 Classes/StartScene.cpp
+Classes/Hero.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
 Classes/music.h
 Classes/StartScene.h
+Classes/Hero.h
      )
 
 if(ANDROID)
