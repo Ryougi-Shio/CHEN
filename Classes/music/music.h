@@ -2,6 +2,14 @@
 #include"AudioEngine.h"
 #include"cocos2d.h"
 USING_NS_CC;
+/*
+* 音乐播放器
+* 包含
+* 更改当前bgm
+* 初次播放音乐，包括初始化音量
+* 菜单界面，包括更改音量
+* 播放音效。
+*/
 class MusicManager : public Node
 {
 public:
