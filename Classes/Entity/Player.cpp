@@ -7,14 +7,11 @@ bool Player::init()
 	TFSM = PlayerTFSM::create();
 	TFSM->retain();
 	TFSM->bindPlayer(this);
-	this->scheduleUpdate();
+	this->scheduleUpdate();//开启调用update函数的能力
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
 	return 1;
 }
-void Player::update(float dt)
-{
-	;
-}
+
 void Player::rest()
 {
 	Vector<SpriteFrame*> animFrames;
@@ -89,4 +86,67 @@ float Player::getspeedX()
 float Player::getspeedY()
 {
 	return movespeedY;
+}
+
+std::map<cocos2d::EventKeyboard::KeyCode, bool> Player::getkeyMap()//获取keyMap
+{
+	return keyMap;
+}
+
+void Player::TrueKeyCode(EventKeyboard::KeyCode keycode)//键盘按下，对应keycode置true
+{
+	keyMap[keycode] = true;
+}
+void Player::FalseKeyCode(EventKeyboard::KeyCode keycode)//键盘松开，对应keycode置false
+{
+	keyMap[keycode] = false;
+}
+
+void Player::update(float delta)//update for Player
+{
+	auto right = (EventKeyboard::KeyCode)127;
+	auto left = (EventKeyboard::KeyCode)124;
+	auto up = (EventKeyboard::KeyCode)146;
+	auto down = (EventKeyboard::KeyCode)142;
+
+	if (keyMap[up])
+	{
+		startmoveY(Speed);
+	}
+	if (keyMap[down])
+	{
+		startmoveY(-Speed);
+	}
+	if (keyMap[left])
+	{
+		startmoveX(-Speed);
+	}
+	if (keyMap[right])
+	{
+		startmoveX(Speed);
+	}
+	if (keyMap[right] && keyMap[up])
+	{
+		startmoveX(Speed);
+		startmoveY(Speed);
+	}
+	if (keyMap[left] && keyMap[up])
+	{
+		startmoveX(-Speed);
+		startmoveY(Speed);
+	}
+	if (keyMap[left] && keyMap[down])
+	{
+		startmoveX(-Speed);
+		startmoveY(-Speed);
+	}
+	if (keyMap[right] && keyMap[down])
+	{
+		startmoveX(Speed);
+		startmoveY(-Speed);
+	}
+	playerMove();
+	stopmoveX();
+	stopmoveY();
+
 }

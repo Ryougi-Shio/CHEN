@@ -31,6 +31,7 @@ bool SafeScene::init()
 	/*
 	* 键盘监听及回调函数
 	*/
+	/*
 	auto keyBoard = EventListenerKeyboard::create();
 	keyBoard->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event* event) {
 		switch (keyCode)
@@ -93,16 +94,28 @@ bool SafeScene::init()
 		default:
 			break;
 		}
+	};*/
+	////eventlistener,键盘监听，用于移动人物
+	auto myKeyListener = EventListenerKeyboard::create();
+	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘按下时响应
+	{
+		CCLOG("keycode%d", keycode);
+		player->TrueKeyCode(keycode);
+
 	};
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyBoard, this);
-	
+
+	myKeyListener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘松开时响应
+	{
+
+		CCLOG("keyboard is released,code is %d", keycode);
+		player->FalseKeyCode(keycode);
+	};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
 	this->scheduleUpdate();
 	return 1;
 }
 void SafeScene::update(float dt)
 {
-	if (player->getismoveX() || player->getismoveY())
-	{
-		player->playerMove();
-	}
+	player->update(dt);
 }
