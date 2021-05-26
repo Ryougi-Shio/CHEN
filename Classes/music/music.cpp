@@ -2,6 +2,7 @@
 #include"ui/CocosGUI.h"
 USING_NS_CC;
 
+//初始化
 bool MusicManager::init()
 {
 	if (!manager->isEnabled())
@@ -12,7 +13,6 @@ bool MusicManager::init()
 //播放音效
 void  MusicManager::effectPlay(char* filename)
 {
-
 	effect = manager->play2d(filename, false, effectVolume);
 }
 
@@ -43,7 +43,7 @@ void  MusicManager::changeEffectVolume(float Volume)
 }
 
 
-
+//设置菜单
 void MusicManager::menu(Scene* p)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -116,15 +116,24 @@ void MusicManager::menu(Scene* p)
 	});
 	UIbackground->addChild(effectSlider);
 
+	//退出游戏
+
+	auto closeGameLable = Label::createWithTTF("Exit Game", "fonts/Marker Felt.ttf", 48);
+	auto closeGameItem = MenuItemLabel::create(closeGameLable, [=](Ref* sender) {
+		effectPlay("effect/button.mp3");
+		Director::getInstance()->end();
+	});
+	closeGameItem->setPosition(UIbackground->getContentSize().width / 2, closeGameItem->getContentSize().height * 2);
+
 	//退出设置
-	auto closeLabel = Label::createWithTTF("Exit", "fonts/Marker Felt.ttf", 48);
+	auto closeLabel = Label::createWithTTF("Return", "fonts/Marker Felt.ttf", 48);
 	auto closeItem = MenuItemLabel::create(closeLabel, [=](Ref* sender) {
 		effectPlay("effect/button.mp3");
 		p->removeChild(UIbackground);
 	});
-	closeItem->setPosition(UIbackground->getContentSize().width / 2, closeItem->getContentSize().height * 2);
+	closeItem->setPosition(UIbackground->getContentSize().width / 2, closeItem->getContentSize().height * 2 + closeGameItem->getContentSize().height * 2);
 
-	auto optionUI = Menu::create(closeItem, nullptr);
+	auto optionUI = Menu::create(closeGameItem,closeItem, nullptr);
 	optionUI->setPosition(Vec2::ZERO);
 	UIbackground->addChild(optionUI);
 }

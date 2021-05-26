@@ -1,8 +1,8 @@
 #include"cocos2d.h"
 #include"StartScene.h"
 #include"AudioEngine.h"
-#include"OptionUI.h"
 #include"ui/CocosGUI.h"
+#include"SafeScene.h"
 USING_NS_CC;
 /*初始界面的初始化
 * 需包含：
@@ -48,6 +48,7 @@ bool StartScene::init()
 void StartScene::menuStartCallBack(Ref* sender)
 {
 	musicManager->effectPlay("effect/button.mp3");
+	Director::getInstance()->replaceScene(SafeScene::create());
 }
 
 void StartScene::menuCloseCallBack(Ref* sender)
