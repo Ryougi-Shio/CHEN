@@ -25,7 +25,7 @@
 
 cmake_minimum_required(VERSION 3.6)
 
-set(APP_NAME t)
+set(APP_NAME m)
 
 project(${APP_NAME})
 
@@ -35,7 +35,7 @@ if(XCODE)
     endif()
 endif()
 
-if(NOT DEFINED BUILD_ENGINE_DONE) # to test t into root project
+if(NOT DEFINED BUILD_ENGINE_DONE) # to test m into root project
     set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
     set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
 
@@ -57,15 +57,31 @@ endif()
 # add cross-platforms source files and header files 
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
-Classes/music.cpp
-Classes/StartScene.cpp
-Classes/Hero.cpp
+
+
+Classes/Entity/Entity.cpp
+Classes/Entity/Player.cpp
+Classes/music/music.cpp
+Classes/PlayerTFSM/PlayerTFSM.cpp
+Classes/PlayerTFSM/State/PlayerStates.cpp
+Classes/PlayerTFSM/State/State.cpp
+Classes/Scene/NormalScene.cpp
+Classes/Scene/SafeScene.cpp
+Classes/Scene/StartScene.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
-Classes/music.h
-Classes/StartScene.h
-Classes/Hero.h
+
+
+Classes/Entity/Entity.h
+Classes/Entity/Player.h
+Classes/music/music.h
+Classes/PlayerTFSM/PlayerTFSM.h
+Classes/PlayerTFSM/State/PlayerStates.h
+Classes/PlayerTFSM/State/State.h
+Classes/Scene/NormalScene.h
+Classes/Scene/SafeScene.h
+Classes/Scene/StartScene.h
      )
 
 if(ANDROID)
