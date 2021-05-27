@@ -33,7 +33,7 @@ bool SafeScene::init()
 	auto myKeyListener = EventListenerKeyboard::create();
 	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘按下时响应
 	{
-		CCLOG("keycode%d", keycode);
+		//CCLOG("keycode%d", keycode);
 		player->TrueKeyCode(keycode);
 
 	};
@@ -41,7 +41,7 @@ bool SafeScene::init()
 	myKeyListener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘松开时响应
 	{
 
-		CCLOG("keyboard is released,code is %d", keycode);
+		//CCLOG("keyboard is released,code is %d", keycode);
 		player->FalseKeyCode(keycode);
 	};
 
