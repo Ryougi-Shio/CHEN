@@ -51,7 +51,7 @@ void MusicManager::menu(Scene* p)
 	//UI背景图片
 	auto UIbackground =Sprite::create("UI/OptionUI.png");
 	UIbackground->setPosition(visibleSize / 2);
-	p->addChild(UIbackground);
+	p->addChild(UIbackground,5);
 
 	//音乐音量滑动条文字
 	auto musicLabel = Label::createWithTTF("setMusicVolume", "fonts/Marker Felt.ttf", 24);

@@ -14,6 +14,7 @@ public:
 	virtual void update(float dt);
 	void changeState(State* mCurState);
 	void bindPlayer(Player* player);
+	State* getmCurState();
 	CREATE_FUNC(PlayerTFSM);
 private:
 	State* mCurState;
