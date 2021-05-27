@@ -14,15 +14,22 @@ bool Player::init()
 
 void Player::rest()
 {
-	Vector<SpriteFrame*> animFrames;
-	animFrames.reserve(4);
-	animFrames.pushBack(SpriteFrame::create("Player/knight_rest1.png", Rect(0, 0, 52, 60)));
-	animFrames.pushBack(SpriteFrame::create("Player/knight_rest2.png", Rect(0, 0, 52, 60)));
-	animFrames.pushBack(SpriteFrame::create("Player/knight_rest3.png", Rect(0, 0, 52, 60)));
-	animFrames.pushBack(SpriteFrame::create("Player/knight_rest4.png", Rect(0, 0, 52, 60)));
-	Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
-	Animate* animate = Animate::create(animation);
-	getSprite()->runAction(RepeatForever::create(animate));
+
+	auto m_frameCache = SpriteFrameCache::getInstance();//获取动画缓存实例对象
+	m_frameCache->addSpriteFramesWithFile("Player/knight_rest.plist", "Player/knight_rest.png");//添加帧动画文件到缓存
+	Vector<SpriteFrame*>frameArray;//创建序列备用
+	for (int i = 1; i <= 4; i++)
+	{
+		char s[40];
+		sprintf(s, "knight_rest%d.png", i);
+		auto frame = m_frameCache->getSpriteFrameByName(s);
+		frameArray.pushBack(frame);//将帧加入到序列中
+	}
+	Animation* animation = Animation::createWithSpriteFrames(frameArray);//创建动画
+	//animation->setLoops(-1);//-1表示无限播放
+	animation->setDelayPerUnit(0.1f);//每两张图片的间隔时间
+	auto* action = Animate::create(animation);
+	getSprite()->runAction(action);
 }
 
 /*
@@ -30,7 +37,7 @@ void Player::rest()
 * WS对应moveY,分别有判定是否在移动以及移动速度两个变量，AD同理对应moveX、
 * 按下按键时，如果此时另一按键未按下，则将ismove置1，表明开始移动，并且设定对应的移动速度
 * 松开时，将ismove与移动速度置0
-* 目前bug：在按下W时按下S，人物会继续往上走(这里没问题)，但是在持续按住S的情况下松开W，人物会站在原地而不是往下走。AD的情况同理。
+* 目前bug：
 * 目前需求：边界判定以及镜头移动，以及动画状态机的切换。
 */
 void Player::playerMove()
@@ -104,11 +111,11 @@ void Player::FalseKeyCode(EventKeyboard::KeyCode keycode)//键盘松开，对应keycode
 
 void Player::update(float delta)//update for Player
 {
+	//Player运动
 	auto right = (EventKeyboard::KeyCode)127;
 	auto left = (EventKeyboard::KeyCode)124;
 	auto up = (EventKeyboard::KeyCode)146;
 	auto down = (EventKeyboard::KeyCode)142;
-
 	if (keyMap[up])
 	{
 		startmoveY(Speed);
