@@ -113,28 +113,14 @@ void Player::playerMove()
 	if (movespeedX > 0)
 	{
 		TFSM->changeState(new RunState());
-		isFlip = 0;
-
 	}
 	if (movespeedX < 0)
 	{
 		TFSM->changeState(new RunState_Flip());
-		isFlip = 1;
 	}
-	
 	if ((!movespeedX) && (!movespeedY))
 	{
-		if(!isFlip)
-			TFSM->changeState(new RestState());
-		else
-			TFSM->changeState(new RestState_Flip());
-	}
-	if (movespeedY)
-	{
-		if(!isFlip)
-			TFSM->changeState(new RunState());
-		else
-			TFSM->changeState(new RunState_Flip());
+		TFSM->changeState(new RestState());
 	}
 }
 

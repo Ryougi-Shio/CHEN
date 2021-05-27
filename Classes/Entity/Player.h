@@ -41,6 +41,5 @@ private:
 	float Speed=NORMAL;
 	bool ismoveX;
 	bool ismoveY;
-	bool isFlip=0;
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> keyMap;
 };

@@ -21,7 +21,3 @@ void PlayerTFSM::update(float dt)
 {
 	mCurState->execute(mplayer);
 }
-State* PlayerTFSM::getmCurState()
-{
-	return mCurState;
-}
