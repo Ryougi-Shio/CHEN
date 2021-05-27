@@ -28,81 +28,29 @@ bool SafeScene::init()
 	player->setPosition(64 * 4 + 32, 64 * 4 + 32);
 	addChild(player);
 
-	/*
-	* 键盘监听及回调函数
-	*/
-	auto keyBoard = EventListenerKeyboard::create();
-	keyBoard->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event* event) {
-		switch (keyCode)
-		{
-		case cocos2d::EventKeyboard::KeyCode::KEY_W:
-			if (player->getismoveY())
-				break;
-			else
-				player->startmoveY(6.4);
-			break;
-		case cocos2d::EventKeyboard::KeyCode::KEY_A:
-			if (player->getismoveX())
-				break;
-			else
-				player->startmoveX(-6.4);
-			break;
-		case cocos2d::EventKeyboard::KeyCode::KEY_S:
-			if (player->getismoveY())
-				break;
-			else
-				player->startmoveY(-6.4);
-			break;
-		case cocos2d::EventKeyboard::KeyCode::KEY_D:
-			if (player->getismoveX())
-				break;
-			else
-				player->startmoveX(6.4);
-			break;
-		default:
-			break;
-		}
+
+	////eventlistener,键盘监听，用于移动人物
+	auto myKeyListener = EventListenerKeyboard::create();
+	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘按下时响应
+	{
+		//CCLOG("keycode%d", keycode);
+		player->TrueKeyCode(keycode);
+
 	};
-	keyBoard->onKeyReleased = [=](EventKeyboard::KeyCode keyCode, Event* event) {
-		switch (keyCode)
-		{
-		case cocos2d::EventKeyboard::KeyCode::KEY_W:
-			if (player->getismoveY() && player->getspeedY() <= 0)
-				break;
-			else
-				player->stopmoveY();
-			break;
-		case cocos2d::EventKeyboard::KeyCode::KEY_A:
-			if (player->getismoveX() && player->getspeedX() >= 0)
-				break;
-			else
-				player->stopmoveX();
-			break;
-		case cocos2d::EventKeyboard::KeyCode::KEY_S:
-			if (player->getismoveY() && player->getspeedY() >= 0)
-				break;
-			else
-				player->stopmoveY();
-			break;
-		case cocos2d::EventKeyboard::KeyCode::KEY_D:
-			if (player->getismoveX() && player->getspeedX() <= 0)
-				break;
-			else
-				player->stopmoveX();
-			break;
-		default:
-			break;
-		}
+
+	myKeyListener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘松开时响应
+	{
+
+		//CCLOG("keyboard is released,code is %d", keycode);
+		player->FalseKeyCode(keycode);
 	};
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyBoard, this);
-	
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
 	this->scheduleUpdate();
 	return 1;
 }
 void SafeScene::update(float dt)
 {
-	if (player->getismoveX() || player->getismoveY())
-	{
-		player->playerMove();
-	}
+	//调用Player的update，里面有运动的实现
+	player->update(dt);
 }

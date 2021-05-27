@@ -9,6 +9,14 @@ public:
 private:
 
 };
+
+class RunState_Flip : public State
+{
+public:
+	virtual void execute(Player* player);
+private:
+
+};
 //ÐÝÏ¢×´Ì¬
 class RestState :public State
 {
@@ -18,4 +26,13 @@ public:
 private:
 
 };
+class RestState_Flip :public State
+{
+public:
+	virtual void execute(Player* player);
+
+private:
+
+};
+
 
