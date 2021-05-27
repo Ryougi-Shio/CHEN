@@ -16,7 +16,7 @@ void Player::rest()
 {
 
 	auto m_frameCache = SpriteFrameCache::getInstance();//获取动画缓存实例对象
-	m_frameCache->addSpriteFramesWithFile("Player/knight_rest.plist", "Player/knight_rest.png");//添加帧动画文件到缓存
+	m_frameCache->addSpriteFramesWithFile("Player/knight_animate.plist", "Player/knight_animate.png");//添加帧动画文件到缓存
 	Vector<SpriteFrame*>frameArray;//创建序列备用
 	for (int i = 1; i <= 4; i++)
 	{
