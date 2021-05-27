@@ -1,6 +1,6 @@
 #pragma once
 #include"NormalScene.h"
-#include"Entity/Player.h"
+#include"Player.h"
 USING_NS_CC;
 /*
 * ¼Ò

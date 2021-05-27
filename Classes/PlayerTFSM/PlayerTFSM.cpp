@@ -1,6 +1,6 @@
 #include"PlayerTFSM.h"
 #include"PlayerStates.h"
-#include"Entity/Player.h"
+#include"Player.h"
 bool PlayerTFSM::init()
 {
 	changeState(new RestState());//Ä¬ÈÏÐÝÏ¢×´Ì¬

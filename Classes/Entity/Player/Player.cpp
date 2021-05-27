@@ -104,6 +104,7 @@ void Player::run_flip()
 * 目前bug：
 * 目前需求：边界判定以及镜头移动，以及动画状态机的切换。
 */
+
 void Player::playerMove()
 {
 	auto move = MoveBy::create(0, Vec2(movespeedX, movespeedY));

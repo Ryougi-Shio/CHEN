@@ -60,7 +60,8 @@ list(APPEND GAME_SOURCE
 
 
 Classes/Entity/Entity.cpp
-Classes/Entity/Player.cpp
+Classes/Entity/Player/Player.cpp
+Classes/Entity/Player/PlayerMove.cpp
 Classes/music/music.cpp
 Classes/PlayerTFSM/PlayerTFSM.cpp
 Classes/PlayerTFSM/State/PlayerStates.cpp
@@ -74,7 +75,8 @@ list(APPEND GAME_HEADER
 
 
 Classes/Entity/Entity.h
-Classes/Entity/Player.h
+Classes/Entity/Player/Player.h
+Classes/Entity/Player/PlayerMove.h
 Classes/music/music.h
 Classes/PlayerTFSM/PlayerTFSM.h
 Classes/PlayerTFSM/State/PlayerStates.h
