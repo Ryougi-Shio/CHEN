@@ -1,5 +1,7 @@
 #include"PlayerMove.h"
 #include"Player.h"
+#define PX 52
+#define PY 60
 USING_NS_CC;
 void PlayerMove::bindPlayer(Player* player)
 {
@@ -17,41 +19,63 @@ void PlayerMove::Move()
 	auto left = (EventKeyboard::KeyCode)124;
 	auto up = (EventKeyboard::KeyCode)146;
 	auto down = (EventKeyboard::KeyCode)142;
+	float x = mPlayer->getPositionX();
+	float y = mPlayer->getPositionY();
 	if (mPlayer->getkeyMap()[up])
 	{
-		mPlayer->startmoveY(Speed);
+		if(mPlayer->isWall(x,y+PY*0.3))
+			mPlayer->startmoveY(Speed);
 	}
 	if (mPlayer->getkeyMap()[down])
 	{
+		if (mPlayer->isWall(x, y-PY*0.5))
 		mPlayer->startmoveY(-Speed);
 	}
 	if (mPlayer->getkeyMap()[left])
 	{
+		if (mPlayer->isWall(x-PX*0.5, y))
 		mPlayer->startmoveX(-Speed);
 	}
 	if (mPlayer->getkeyMap()[right])
 	{
+		if (mPlayer->isWall(x+PX*0.5, y))
 		mPlayer->startmoveX(Speed);
 	}
 	if (mPlayer->getkeyMap()[right] && mPlayer->getkeyMap()[up])
 	{
-		mPlayer->startmoveX(Speed);
-		mPlayer->startmoveY(Speed);
+		if (mPlayer->isWall(x+PX*0.5, y+PY*0.3))
+		{
+			mPlayer->startmoveX(Speed);
+			mPlayer->startmoveY(Speed);
+		}
+
 	}
 	if (mPlayer->getkeyMap()[left] && mPlayer->getkeyMap()[up])
 	{
-		mPlayer->startmoveX(-Speed);
-		mPlayer->startmoveY(Speed);
+		if (mPlayer->isWall(x-PX*0.5, y+PY*0.3))
+		{
+			mPlayer->startmoveX(-Speed);
+			mPlayer->startmoveY(Speed);
+		}
+
 	}
 	if (mPlayer->getkeyMap()[left] && mPlayer->getkeyMap()[down])
 	{
-		mPlayer->startmoveX(-Speed);
-		mPlayer->startmoveY(-Speed);
+		if (mPlayer->isWall(x-PX*0.5, y-PY*0.5))
+		{
+			mPlayer->startmoveX(-Speed);
+			mPlayer->startmoveY(-Speed);
+		}
+
 	}
 	if (mPlayer->getkeyMap()[right] && mPlayer->getkeyMap()[down])
 	{
-		mPlayer->startmoveX(Speed);
-		mPlayer->startmoveY(-Speed);
+		if (mPlayer->isWall(x+PX*0.5, y-PY*0.5))
+		{
+			mPlayer->startmoveX(Speed);
+			mPlayer->startmoveY(-Speed);
+		}
+
 	}
 	mPlayer->playerMove();
 	mPlayer->stopmoveX();

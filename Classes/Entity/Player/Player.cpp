@@ -207,7 +207,29 @@ void Player::FalseKeyCode(EventKeyboard::KeyCode keycode)//键盘松开，对应keycode
 {
 	keyMap[keycode] = false;
 }
+void Player::bindMap(TMXTiledMap* aMap)
+{
+	map = aMap;
+}
+bool Player::isWall(float Px, float Py)//判断传入的这个坐标，在地图上对应的地方是不是墙
+{
+	int mapX = (int)(Px / 64);
+	int mapY = (int)(12 - Py / 64);
+	CCLOG("X:%d    Y:%d", mapX, mapY);
+	int tileGid = map->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
+	//CCLOG("%d", tileGid);
+	if (tileGid)
+	{
+		//CCLOG("TTTTTTTTTTTTTTTTTTT");是墙，不能走
+		return false;
+	}
 
+	else
+	{
+		//CCLOG("FFFFFFFFFFFFFFFFFFF");不是墙，能走
+		return true;
+	}
+}
 void Player::update(float delta)//update for Player
 {
 	//Player运动

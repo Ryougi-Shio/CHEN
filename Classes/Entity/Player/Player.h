@@ -32,9 +32,11 @@ public:
 	float getspeedY();
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> getkeyMap();
 	float getSpeed();
+	void bindMap(TMXTiledMap* aMap);
 	void TrueKeyCode(EventKeyboard::KeyCode keycode);	
 	void FalseKeyCode(EventKeyboard::KeyCode keycode);
 	virtual void update(float delta);
+	bool isWall(float Px, float Py);
 	CREATE_FUNC(Player);
 
 private:
@@ -46,4 +48,5 @@ private:
 	bool ismoveY;
 	bool isFlip=0;
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> keyMap;
+	TMXTiledMap* map;
 };

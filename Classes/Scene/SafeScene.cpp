@@ -33,6 +33,7 @@ bool SafeScene::init()
 	//玩家创建
 	player = Player::create();
 	player->setPosition(64 * 4 + 32, 64 * 4 + 32);
+	player->bindMap(map);
 	this->addChild(player,2);
 
 
@@ -58,6 +59,8 @@ bool SafeScene::init()
 }
 void SafeScene::update(float dt)
 {
-	//调用Player的update，里面有运动的实现
+	//调用Player的update，Player的update再调用PlayMove的move函数（禁止套娃）
+	//isWall(player->getPositionX(), player->getPositionY())
 	player->update(dt);
 }
+

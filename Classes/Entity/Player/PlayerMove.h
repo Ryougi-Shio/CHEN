@@ -11,6 +11,7 @@ class PlayerMove:public Node
 public:
 	void bindPlayer(Player* player);//绑定玩家
 	void Move();//负责移动的函数
+
 	Player* getPlayer();
 
 	CREATE_FUNC(PlayerMove);

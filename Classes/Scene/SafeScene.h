@@ -14,7 +14,7 @@ public:
 	
 	virtual bool init();
 	virtual void update(float dt);
-	bool isCanReach(float x,float y);
+	bool isWall(float Px, float Py);
 	CREATE_FUNC(SafeScene);
 private:
 	TMXTiledMap* map;
