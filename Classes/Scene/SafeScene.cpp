@@ -1,6 +1,7 @@
 #include"SafeScene.h"
 #include"cocos2d.h"
 #include"json.h"
+#include"Gate.h"
 USING_NS_CC;
 bool SafeScene::init()
 {
@@ -12,6 +13,8 @@ bool SafeScene::init()
 	auto backgroundSprite = Sprite::create("background/SafeScene.png");
 	backgroundSprite->setPosition(origin.x + backgroundSprite->getContentSize().width / 2, origin.y + backgroundSprite->getContentSize().height / 2);
 	this->addChild(backgroundSprite,1);
+
+
 
 	//更改bgm以及绑定tiledmap
 	getmusicManager()->changeMusic("bgm/Room.mp3");
@@ -32,12 +35,18 @@ bool SafeScene::init()
 	addChild(menu,5);
 
 	//玩家创建
-
 	player = Player::create();
 	player->setPosition(64 * 4 + 32, 64 * 4 + 32);
 	player->getplayermove()->bindMap(map);//PlayerMove跟这个地图绑定
 	this->addChild(player,2);
 
+	//传送门创建
+	safeGate = Gate::create();
+	safeGate->setPosition(64*9.45,64*10);
+	safeGate->bindPlayer(player);
+	safeGate->bindStart(this);
+	safeGate->bindDestination(this);
+	this->addChild(safeGate, 5);
 
 	////eventlistener,键盘监听，用于移动人物
 	auto myKeyListener = EventListenerKeyboard::create();

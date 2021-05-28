@@ -1,6 +1,7 @@
 #pragma once
 #include"NormalScene.h"
 #include"Player.h"
+#include"Gate.h"
 USING_NS_CC;
 /*
 * ¼Ò
@@ -19,4 +20,5 @@ public:
 private:
 	TMXTiledMap* map;
 	Player* player;
+	Gate* safeGate;
 };
