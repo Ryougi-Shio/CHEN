@@ -2,8 +2,7 @@
 #include"PlayerStates.h"
 bool Player::init()
 {
-	ismoveX = 0;
-	ismoveY = 0;
+
 	bindSprite(Sprite::create("Player/knight_rest1.png"));
 	TFSM = PlayerTFSM::create();
 	TFSM->retain();
@@ -15,7 +14,10 @@ bool Player::init()
 	PLAYERMOVE->bindPlayer(this);
 	return 1;
 }
-
+PlayerMove* Player::getplayermove()
+{
+	return PLAYERMOVE;
+}
 void Player::rest()
 {
 
@@ -101,138 +103,21 @@ void Player::run_flip()
 }
 
 /*
-* 玩家移动原理：
-* keyMap存贮键码，如按下W时，将W键码置true，松开W，将W键码置false，根据keyMap中键码的状态进行移动
-* 移动后，将移动速度置0
-* 目前bug：
-* 目前需求：边界判定以及镜头移动，以及动画状态机的切换。
+
+* 目前bug：动画有延迟
+* 目前需求：玩家UI，学习json如何使用。
 */
 
-void Player::playerMove()
-{
-	auto move = MoveBy::create(0, Vec2(movespeedX, movespeedY));
-	this->runAction(move);
-
-	
-	if (movespeedX > 0)
-	{
-		TFSM->changeState(new RunState());
-		isFlip = 0;
-
-	}
-	if (movespeedX < 0)
-	{
-		TFSM->changeState(new RunState_Flip());
-		isFlip = 1;
-	}
-	
-	if ((!movespeedX) && (!movespeedY))
-	{
-		if(!isFlip)
-			TFSM->changeState(new RestState());
-		else
-			TFSM->changeState(new RestState_Flip());
-	}
-	if (movespeedY)
-	{
-		if(!isFlip)
-			TFSM->changeState(new RunState());
-		else
-			TFSM->changeState(new RunState_Flip());
-	}
-}
 
 void Player::TFSMupdate(float dt)
 {
 	TFSM->update(dt);
 }
 
-void Player::startmoveX(float x)
-{
-	movespeedX = x;
-	ismoveX = 1;
-}
 
-void Player::startmoveY(float y)
-{
-	movespeedY = y;
-	ismoveY = 1;
-}
 
-void Player::stopmoveX()
-{
-	movespeedX = 0;
-	ismoveX = 0;
-}
-
-void Player::stopmoveY()
-{
-	movespeedY = 0;
-	ismoveY = 0;
-}
-
-bool Player::getismoveX()
-{
-	return ismoveX;
-}
-
-bool Player::getismoveY()
-{
-	return ismoveY;
-}
-
-float Player::getspeedX()
-{
-	return movespeedX;
-}
-
-float Player::getspeedY()
-{
-	return movespeedY;
-}
-
-std::map<cocos2d::EventKeyboard::KeyCode, bool> Player::getkeyMap()//获取keyMap
-{
-	return keyMap;
-}
-float Player::getSpeed()
-{
-	return Speed;
-}
-void Player::TrueKeyCode(EventKeyboard::KeyCode keycode)//键盘按下，对应keycode置true
-{
-	keyMap[keycode] = true;
-}
-void Player::FalseKeyCode(EventKeyboard::KeyCode keycode)//键盘松开，对应keycode置false
-{
-	keyMap[keycode] = false;
-}
-void Player::bindMap(TMXTiledMap* aMap)
-{
-	map = aMap;
-}
-bool Player::isWall(float Px, float Py)//判断传入的这个坐标，在地图上对应的地方是不是墙
-{
-	int mapX = (int)(Px / 64);
-	int mapY = (int)(12 - Py / 64);
-	CCLOG("X:%d    Y:%d", mapX, mapY);
-	int tileGid = map->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
-	//CCLOG("%d", tileGid);
-	if (tileGid)
-	{
-		//CCLOG("TTTTTTTTTTTTTTTTTTT");是墙，不能走
-		return false;
-	}
-
-	else
-	{
-		//CCLOG("FFFFFFFFFFFFFFFFFFF");不是墙，能走
-		return true;
-	}
-}
 void Player::update(float delta)//update for Player
 {
 	//Player运动
 	PLAYERMOVE->Move();
-
 }

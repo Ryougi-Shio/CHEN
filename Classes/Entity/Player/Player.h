@@ -21,32 +21,19 @@ public:
 	void run_flip();
 	void player_animate(const char[]);
 	void TFSMupdate(float dt);//动画状态机专用update，每0.4f一次调用
-	void playerMove();//移动函数
-	void startmoveX(float x);
-	void startmoveY(float y);
-	void stopmoveX();
-	void stopmoveY();
-	bool getismoveX();
-	bool getismoveY();
-	float getspeedX();
-	float getspeedY();
-	std::map<cocos2d::EventKeyboard::KeyCode, bool> getkeyMap();
-	float getSpeed();
-	void bindMap(TMXTiledMap* aMap);
-	void TrueKeyCode(EventKeyboard::KeyCode keycode);	
-	void FalseKeyCode(EventKeyboard::KeyCode keycode);
-	virtual void update(float delta);
-	bool isWall(float Px, float Py);
-	CREATE_FUNC(Player);
+	PlayerMove* getplayermove();
 
+
+
+
+	virtual void update(float delta);
+
+	CREATE_FUNC(Player);
+	friend class PlayerMove;
 private:
 	PlayerTFSM* TFSM;
 	PlayerMove* PLAYERMOVE;
-	float movespeedX, movespeedY;
-	float Speed=NORMAL;
-	bool ismoveX;
-	bool ismoveY;
-	bool isFlip=0;
-	std::map<cocos2d::EventKeyboard::KeyCode, bool> keyMap;
-	TMXTiledMap* map;
+
+
+
 };

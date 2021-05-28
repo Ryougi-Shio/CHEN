@@ -31,9 +31,10 @@ bool SafeScene::init()
 	addChild(menu,5);
 
 	//玩家创建
+
 	player = Player::create();
 	player->setPosition(64 * 4 + 32, 64 * 4 + 32);
-	player->bindMap(map);
+	player->getplayermove()->bindMap(map);//PlayerMove跟这个地图绑定
 	this->addChild(player,2);
 
 
@@ -42,7 +43,7 @@ bool SafeScene::init()
 	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘按下时响应
 	{
 		//CCLOG("keycode%d", keycode);
-		player->TrueKeyCode(keycode);
+		player->getplayermove()->TrueKeyCode(keycode);//PlayerMove里keyMap的对应键码置true
 
 	};
 
@@ -50,13 +51,14 @@ bool SafeScene::init()
 	{
 
 		//CCLOG("keyboard is released,code is %d", keycode);
-		player->FalseKeyCode(keycode);
+		player->getplayermove()->FalseKeyCode(keycode);
 	};
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
 	this->scheduleUpdate();
 	return 1;
 }
+
 void SafeScene::update(float dt)
 {
 	//调用Player的update，Player的update再调用PlayMove的move函数（禁止套娃）
