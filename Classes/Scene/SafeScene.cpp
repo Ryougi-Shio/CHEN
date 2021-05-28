@@ -1,5 +1,6 @@
 #include"SafeScene.h"
 #include"cocos2d.h"
+#include"json.h"
 USING_NS_CC;
 bool SafeScene::init()
 {
@@ -56,6 +57,8 @@ bool SafeScene::init()
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
 	this->scheduleUpdate();
+
+
 	return 1;
 }
 
@@ -63,6 +66,16 @@ void SafeScene::update(float dt)
 {
 	//调用Player的update，Player的update再调用PlayMove的move函数（禁止套娃）
 	//isWall(player->getPositionX(), player->getPositionY())
+	//json使用示例
+	Json::Reader reader;
+	Json::Value root;
+	std::string data = FileUtils::getInstance()->getStringFromFile("json/text.json");
+	if (reader.parse(data, root, false) == true)
+	{
+		CCLOG("id=%d", root["id"].asInt());
+		CCLOG("name=%s", root["name"].asInt());
+	}
 	player->update(dt);
+
 }
 

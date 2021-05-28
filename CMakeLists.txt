@@ -69,10 +69,32 @@ Classes/PlayerTFSM/State/State.cpp
 Classes/Scene/NormalScene.cpp
 Classes/Scene/SafeScene.cpp
 Classes/Scene/StartScene.cpp
+
+
+
+Classes/json/json_reader.cpp
+Classes/json/json_value.cpp
+Classes/json/json_writer.cpp
+
+
+
+Classes/json/sconscript
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
 
+Classes/json/autolink.h
+Classes/json/config.h
+Classes/json/features.h
+Classes/json/forwards.h
+Classes/json/json.h
+Classes/json/json_batchallocator.h
+Classes/json/reader.h
+Classes/json/value.h
+Classes/json/writer.h
+Classes/json/json_internalarray.inl
+Classes/json/json_internalmap.inl
+Classes/json/json_valueiterator.inl
 
 Classes/Entity/Entity.h
 Classes/Entity/Player/Player.h
