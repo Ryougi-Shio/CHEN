@@ -1,6 +1,7 @@
 #pragma once
 #include"Entity.h"
-#include"PlayerTFSM/PlayerTFSM.h"
+#include"PlayerTFSM.h"
+#include"PlayerMove.h"
 #define NORMAL 2
 USING_NS_CC;
 /*
@@ -30,6 +31,7 @@ public:
 	float getspeedX();
 	float getspeedY();
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> getkeyMap();
+	float getSpeed();
 	void TrueKeyCode(EventKeyboard::KeyCode keycode);	
 	void FalseKeyCode(EventKeyboard::KeyCode keycode);
 	virtual void update(float delta);
@@ -37,6 +39,7 @@ public:
 
 private:
 	PlayerTFSM* TFSM;
+	PlayerMove* PLAYERMOVE;
 	float movespeedX, movespeedY;
 	float Speed=NORMAL;
 	bool ismoveX;
