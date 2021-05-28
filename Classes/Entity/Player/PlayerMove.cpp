@@ -1,6 +1,7 @@
 #include"PlayerMove.h"
 #include"Player.h"
 #include"PlayerStates.h"
+
 #define PX 52
 #define PY 60
 USING_NS_CC;
@@ -113,7 +114,7 @@ bool PlayerMove::isWall(float Px, float Py)
 
 	else
 	{
-		CCLOG("FFFFFFF");//不是墙，能走
+		//CCLOG("FFFFFFF");//不是墙，能走
 		return true;
 	}
 

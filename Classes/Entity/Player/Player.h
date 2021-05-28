@@ -9,7 +9,7 @@ USING_NS_CC;
 * 包含
 * 初始化
 * 移动
-* 动画状态函数（目前只有休息状态）
+* 动画状态函数
 */
 class Player : public Entity
 {
@@ -19,7 +19,6 @@ public:
 	void rest_flip();
 	void run();//跑步动画函数
 	void run_flip();
-	void player_animate(const char[]);
 	void TFSMupdate(float dt);//动画状态机专用update，每0.4f一次调用
 	PlayerMove* getplayermove();
 
@@ -33,6 +32,9 @@ public:
 private:
 	PlayerTFSM* TFSM;
 	PlayerMove* PLAYERMOVE;
+	int Health;//血量
+	int Armor;//护甲
+	int Mana;//法力
 
 
 
