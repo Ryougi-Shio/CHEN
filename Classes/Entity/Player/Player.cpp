@@ -10,6 +10,9 @@ bool Player::init()
 	TFSM->bindPlayer(this);
 	this->scheduleUpdate();//开启调用update函数的能力
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
+	PLAYERMOVE = PlayerMove::create();
+	PLAYERMOVE->retain();
+	PLAYERMOVE->bindPlayer(this);
 	return 1;
 }
 
@@ -104,6 +107,7 @@ void Player::run_flip()
 * 目前bug：
 * 目前需求：边界判定以及镜头移动，以及动画状态机的切换。
 */
+
 void Player::playerMove()
 {
 	auto move = MoveBy::create(0, Vec2(movespeedX, movespeedY));
@@ -191,7 +195,10 @@ std::map<cocos2d::EventKeyboard::KeyCode, bool> Player::getkeyMap()//获取keyMap
 {
 	return keyMap;
 }
-
+float Player::getSpeed()
+{
+	return Speed;
+}
 void Player::TrueKeyCode(EventKeyboard::KeyCode keycode)//键盘按下，对应keycode置true
 {
 	keyMap[keycode] = true;
@@ -200,52 +207,32 @@ void Player::FalseKeyCode(EventKeyboard::KeyCode keycode)//键盘松开，对应keycode
 {
 	keyMap[keycode] = false;
 }
+void Player::bindMap(TMXTiledMap* aMap)
+{
+	map = aMap;
+}
+bool Player::isWall(float Px, float Py)//判断传入的这个坐标，在地图上对应的地方是不是墙
+{
+	int mapX = (int)(Px / 64);
+	int mapY = (int)(12 - Py / 64);
+	CCLOG("X:%d    Y:%d", mapX, mapY);
+	int tileGid = map->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
+	//CCLOG("%d", tileGid);
+	if (tileGid)
+	{
+		//CCLOG("TTTTTTTTTTTTTTTTTTT");是墙，不能走
+		return false;
+	}
 
+	else
+	{
+		//CCLOG("FFFFFFFFFFFFFFFFFFF");不是墙，能走
+		return true;
+	}
+}
 void Player::update(float delta)//update for Player
 {
 	//Player运动
-	auto right = (EventKeyboard::KeyCode)127;
-	auto left = (EventKeyboard::KeyCode)124;
-	auto up = (EventKeyboard::KeyCode)146;
-	auto down = (EventKeyboard::KeyCode)142;
-	if (keyMap[up])
-	{
-		startmoveY(Speed);
-	}
-	if (keyMap[down])
-	{
-		startmoveY(-Speed);
-	}
-	if (keyMap[left])
-	{
-		startmoveX(-Speed);
-	}
-	if (keyMap[right])
-	{
-		startmoveX(Speed);
-	}
-	if (keyMap[right] && keyMap[up])
-	{
-		startmoveX(Speed);
-		startmoveY(Speed);
-	}
-	if (keyMap[left] && keyMap[up])
-	{
-		startmoveX(-Speed);
-		startmoveY(Speed);
-	}
-	if (keyMap[left] && keyMap[down])
-	{
-		startmoveX(-Speed);
-		startmoveY(-Speed);
-	}
-	if (keyMap[right] && keyMap[down])
-	{
-		startmoveX(Speed);
-		startmoveY(-Speed);
-	}
-	playerMove();
-	stopmoveX();
-	stopmoveY();
+	PLAYERMOVE->Move();
 
 }

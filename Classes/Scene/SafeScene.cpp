@@ -6,10 +6,17 @@ bool SafeScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	
+
+	//背景图片精灵
+	auto backgroundSprite = Sprite::create("background/SafeScene.png");
+	backgroundSprite->setPosition(origin.x + backgroundSprite->getContentSize().width / 2, origin.y + backgroundSprite->getContentSize().height / 2);
+	this->addChild(backgroundSprite,1);
+
 	//更改bgm以及绑定tiledmap
 	getmusicManager()->changeMusic("bgm/Room.mp3");
 	map = TMXTiledMap::create("maps/SafeScene.tmx");
 	bindTiledMap(map);
+
 	//设置按钮
 	auto settings = MenuItemImage::create("ui/settings.png", "ui/settings.png", [&](Ref* sender) {
 		getmusicManager()->effectPlay("effect/button.mp3");
@@ -21,12 +28,13 @@ bool SafeScene::init()
 	//菜单
 	auto menu = Menu::create(settings, nullptr);
 	menu->setPosition(Vec2::ZERO);
-	addChild(menu);
+	addChild(menu,5);
 
 	//玩家创建
 	player = Player::create();
 	player->setPosition(64 * 4 + 32, 64 * 4 + 32);
-	addChild(player);
+	player->bindMap(map);
+	this->addChild(player,2);
 
 
 	////eventlistener,键盘监听，用于移动人物
@@ -51,6 +59,8 @@ bool SafeScene::init()
 }
 void SafeScene::update(float dt)
 {
-	//调用Player的update，里面有运动的实现
+	//调用Player的update，Player的update再调用PlayMove的move函数（禁止套娃）
+	//isWall(player->getPositionX(), player->getPositionY())
 	player->update(dt);
 }
+
