@@ -1,7 +1,7 @@
 #pragma once
 #include"State.h"
 class Player;
-//移动状态
+//移动状态，向右
 class RunState : public State
 {
 public:
@@ -9,7 +9,7 @@ public:
 private:
 
 };
-
+//移动，向左 Flip意为翻转
 class RunState_Flip : public State
 {
 public:
@@ -26,6 +26,7 @@ public:
 private:
 
 };
+//休息，向左
 class RestState_Flip :public State
 {
 public:
