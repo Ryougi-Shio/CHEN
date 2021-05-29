@@ -4,18 +4,19 @@
 #include"Gate.h"
 USING_NS_CC;
 /*
-* 家
-* 包含
-* 传送门
-* 玩家
+*战斗的地图
+* 需求：
+*肉鸽的随机地图生成
+*（随机？）敌人
+*完成关卡后出现传送门进入下一关
+*可交互对象，如陷阱、强化药剂、购买物品、宝箱
 */
-class SafeScene : public NormalScene
+class BattleScene:public NormalScene
 {
 public:
-	
 	virtual bool init();
 	virtual void update(float dt);
-	CREATE_FUNC(SafeScene);
+	CREATE_FUNC(BattleScene);
 private:
 	TMXTiledMap* map;
 	Player* player;

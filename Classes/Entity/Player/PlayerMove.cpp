@@ -136,6 +136,7 @@ void PlayerMove::Move()
 	auto left = (EventKeyboard::KeyCode)124;
 	auto up = (EventKeyboard::KeyCode)146;
 	auto down = (EventKeyboard::KeyCode)142;
+	auto E = EventKeyboard::KeyCode::KEY_E;
 	float x = mPlayer->getPositionX();
 	float y = mPlayer->getPositionY();
 
