@@ -10,19 +10,31 @@ bool SafeScene::init()
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	
 
+<<<<<<< main
 	//����ͼƬ����
+=======
+	//����ͼƬ����
+>>>>>>> main
 	auto backgroundSprite = Sprite::create("background/SafeScene.png");
 	backgroundSprite->setPosition(origin.x + backgroundSprite->getContentSize().width / 2, origin.y + backgroundSprite->getContentSize().height / 2);
 	this->addChild(backgroundSprite,1);
 
 
 
+<<<<<<< main
 	//���bgm�Լ���tiledmap
+=======
+	//���bgm�Լ���tiledmap
+>>>>>>> main
 	getmusicManager()->changeMusic("bgm/Room.mp3");
 	map = TMXTiledMap::create("maps/SafeScene.tmx");
 	bindTiledMap(map);
 
+<<<<<<< main
 	//���ð�ť
+=======
+	//���ð�ť
+>>>>>>> main
 	auto settings = MenuItemImage::create("ui/settings.png", "ui/settings.png", [&](Ref* sender) {
 		getmusicManager()->effectPlay("effect/button.mp3");
 		getmusicManager()->menu(this);
@@ -38,10 +50,17 @@ bool SafeScene::init()
 	//��Ҵ���
 	player = Player::create();
 	player->setPosition(64 * 4 + 32, 64 * 4 + 32);
+<<<<<<< main
 	player->getplayermove()->bindMap(map);//PlayerMove������ͼ��
 	this->addChild(player,2);
 
 	//�����Ŵ���
+=======
+	player->getplayermove()->bindMap(map);//PlayerMove������ͼ��
+	this->addChild(player,2);
+
+	//�����Ŵ���
+>>>>>>> main
 	safeGate = Gate::create();
 	safeGate->setPosition(64*9.45,64*10);
 	safeGate->bindPlayer(player);
@@ -54,7 +73,11 @@ bool SafeScene::init()
 	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//���̰���ʱ��Ӧ
 	{
 		//CCLOG("keycode%d", keycode);
+<<<<<<< main
 		player->getplayermove()->TrueKeyCode(keycode);//PlayerMove��keyMap�Ķ�Ӧ������true
+=======
+		player->getplayermove()->TrueKeyCode(keycode);//PlayerMove��keyMap�Ķ�Ӧ������true
+>>>>>>> main
 
 	};
 
@@ -74,14 +97,23 @@ bool SafeScene::init()
 
 void SafeScene::update(float dt)
 {
+<<<<<<< main
 	//����Player��update��Player��update�ٵ���PlayMove��move�����ֹ���ޣ�
 	//isWall(player->getPositionX(), player->getPositionY())
 	//jsonʹ��ʾ��
+=======
+	//����Player��update��Player��update�ٵ���PlayMove��move�����ֹ���ޣ�
+	//isWall(player->getPositionX(), player->getPositionY())
+	//jsonʹ��ʾ��
+>>>>>>> main
 	player->update(dt);
 	safeGate->update(dt);
 }
 
+<<<<<<< main
+=======
 =======
 
 >>>>>>> main
 
+>>>>>>> main
