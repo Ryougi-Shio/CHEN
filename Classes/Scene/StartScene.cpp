@@ -3,6 +3,7 @@
 #include"AudioEngine.h"
 #include"ui/CocosGUI.h"
 #include"SafeScene.h"
+#include"BattleScene.h"
 USING_NS_CC;
 /*初始界面的初始化
 * 需包含：
@@ -49,6 +50,7 @@ void StartScene::menuStartCallBack(Ref* sender)
 {
 	musicManager->effectPlay("effect/button.mp3");
 	Director::getInstance()->replaceScene(SafeScene::create());
+	//Director::getInstance()->replaceScene(BattleScene::create());
 }
 
 void StartScene::menuCloseCallBack(Ref* sender)

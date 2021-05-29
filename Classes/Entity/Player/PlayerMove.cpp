@@ -1,6 +1,7 @@
 #include"PlayerMove.h"
 #include"Player.h"
 #include"PlayerStates.h"
+#include"PlayerTFSM/PlayerTFSM.h"
 
 #define PX 52
 #define PY 60
@@ -161,42 +162,40 @@ void PlayerMove::Move()
 		if (isWall(x+PX*0.5, y))
 		startmoveX(Speed);
 	}
-	if (keyMap[right] && keyMap[up])
+	/*else if (keyMap[right] && keyMap[up])
 	{
-		if (isWall(x+PX*0.5, y+PY*0.3))
+		if (isWall(x+PX*0.5, y)&& (x , y + PY * 0.3))
 		{
 			startmoveX(Speed);
 			startmoveY(Speed);
 		}
-
 	}
-	if (keyMap[left] && keyMap[up])
+	else if (keyMap[left] && keyMap[up])
 	{
-		if (isWall(x-PX*0.5, y+PY*0.3))
+		if (isWall(x, y+PY*0.3)&& isWall(x - PX * 0.5, y ))
 		{
 			startmoveX(-Speed);
 			startmoveY(Speed);
 		}
 
 	}
-	if (keyMap[left] && keyMap[down])
+	else if (keyMap[left] && keyMap[down])
 	{
-		if (isWall(x-PX*0.5, y-PY*0.5))
+		if (isWall(x-PX*0.5, y)&& isWall(x, y - PY * 0.5))
 		{
 			startmoveX(-Speed);
 			startmoveY(-Speed);
 		}
 
 	}
-	if (keyMap[right] && keyMap[down])
+	else if (keyMap[right] && keyMap[down])
 	{
-		if (isWall(x+PX*0.5, y-PY*0.5))
+		if (isWall(x+PX*0.5, y)&& isWall(x, y - PY * 0.5))
 		{
 			startmoveX(Speed);
 			startmoveY(-Speed);
 		}
-
-	}
+	}*/
 	playerMove();
 	stopmoveX();
 	stopmoveY();

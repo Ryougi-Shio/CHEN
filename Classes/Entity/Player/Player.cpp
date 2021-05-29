@@ -1,9 +1,14 @@
 #include"Player.h"
 #include"PlayerStates.h"
+#include"Player/PlayerAttribute.h"
+#include"PlayerTFSM/PlayerTFSM.h"
+#include"Player/PlayerMove.h"
 bool Player::init()
 {
 
 	bindSprite(Sprite::create("Player/knight_rest1.png"));
+	playerAttribute = PlayerAttribute::create();
+	playerAttribute->retain();
 	TFSM = PlayerTFSM::create();
 	TFSM->retain();
 	TFSM->bindPlayer(this);
@@ -14,6 +19,12 @@ bool Player::init()
 	PLAYERMOVE->bindPlayer(this);
 	return 1;
 }
+
+PlayerAttribute* Player::getPlayerAttribute()
+{
+	return playerAttribute;
+}
+
 PlayerMove* Player::getplayermove()
 {
 	return PLAYERMOVE;
