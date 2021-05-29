@@ -1,6 +1,8 @@
 #include"Gate.h"
 #include"NormalScene.h"
+#include"BattleScene.h"
 #include"Player.h"
+#include"Player/PlayerMove.h"
 #define WIDTH 116
 #define LENGTH 116
 USING_NS_CC;
@@ -14,7 +16,7 @@ void Gate::bindPlayer(Player* mPlayer)
 {
 	player = mPlayer;
 }
-bool Gate::isAround(float Px, float Py)
+bool Gate::isAround(float Px, float Py)//判断玩家是否在周围
 {
 	float Gx = this->getPositionX();
 	float Gy = this->getPositionY();
@@ -24,26 +26,7 @@ bool Gate::isAround(float Px, float Py)
 		return false;
 
 }
-void Gate::transferMenu()
-{
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto origin = Director::getInstance()->getVisibleOrigin();
-	//UI背景图片
-	auto UIbackground = Sprite::create("UI/TransferUI.png");
-	UIbackground->setPosition(visibleSize / 2);
-	this->addChild(UIbackground);
 
-	//返回按钮
-	auto back= MenuItemImage::create("UI/false_button.png", "UI/false_button.png", [&](Ref* sender) {
-		start->getmusicManager()->effectPlay("effect/button.mp3");
-		this->removeChild(UIbackground);
-		});
-	back->setPosition(Vec2(200,170));
-
-	auto menu = Menu::create(back, nullptr);
-	menu->setPosition(Vec2::ZERO);
-	UIbackground->addChild(menu);
-}
 void Gate::bindStart(NormalScene* mScene)
 {
 	start = mScene;
@@ -60,7 +43,7 @@ NormalScene* Gate::getDestination()
 {
 	return destination;
 }
-
+//提示按'E'，目前BUG：玩家远离后提示不会消失
 void Gate::notice()
 {
 	auto keymap = player->getplayermove()->getkeyMap();
@@ -69,7 +52,7 @@ void Gate::notice()
 	noticeLabel->setPosition(getPosition().x, getPosition().y + noticeLabel->getContentSize().height * 1.5);
 	if (keymap[EventKeyboard::KeyCode::KEY_E])
 	{
-		;
+		Director::getInstance()->replaceScene(BattleScene::create());
 	}
 }
 
@@ -83,6 +66,6 @@ void Gate::update(float delta)
 	}
 	else
 	{
-		start->removeChild(noticeLabel);
+		;//此处应清除notice，但目前没有办法
 	}
 }

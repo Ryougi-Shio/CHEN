@@ -1,8 +1,9 @@
 #pragma once
 #include"Entity.h"
-#include"PlayerTFSM.h"
-#include"PlayerMove.h"
 #define NORMAL 2
+class PlayerAttribute;
+class PlayerTFSM;
+class PlayerMove;
 USING_NS_CC;
 /*
 * 玩家类
@@ -10,6 +11,7 @@ USING_NS_CC;
 * 初始化
 * 移动
 * 动画状态函数
+* 血量，护甲，金钱管理
 */
 class Player : public Entity
 {
@@ -20,11 +22,8 @@ public:
 	void run();//跑步动画函数
 	void run_flip();
 	void TFSMupdate(float dt);//动画状态机专用update，每0.4f一次调用
+	PlayerAttribute* getPlayerAttribute();
 	PlayerMove* getplayermove();
-
-
-
-
 	virtual void update(float delta);
 
 	CREATE_FUNC(Player);
@@ -32,10 +31,8 @@ public:
 private:
 	PlayerTFSM* TFSM;
 	PlayerMove* PLAYERMOVE;
-	int Health;//血量
-	int Armor;//护甲
-	int Mana;//法力
-
+	PlayerAttribute* playerAttribute;
+	
 
 
 };

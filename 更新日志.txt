@@ -7,3 +7,9 @@ playermove类(包含墙体边界判断还有动画)
 传送门类
 开始场景背景图
 导入json库
+v0.0.3 -yy
+增加了battle scene
+随机生成战斗地图
+v0.0.4 -wyy
+playerAttribute类(管理人物HP,护甲，金钱以及这些属性的显示)
+加入了CloseMonster类(无任何实现,只有少许函数定义)
