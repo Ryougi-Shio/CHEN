@@ -23,7 +23,7 @@ bool BattleScene::init()
 	getmusicManager()->changeMusic("bgm/Room.mp3");
 	srand((unsigned)time(NULL));
 	int i = rand()%3;
-	char s[40];
+	char s[40];	
 	sprintf(s, "maps/BattleScene%d.tmx", i);
 	map = TMXTiledMap::create(s);
 	bindTiledMap(map);
