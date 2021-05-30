@@ -25,14 +25,14 @@ public:
 	PlayerAttribute* getPlayerAttribute();
 	PlayerMove* getplayermove();
 	virtual void update(float delta);
-
+	void AnimateFrameCache_init();
 	CREATE_FUNC(Player);
 	friend class PlayerMove;
 private:
 	PlayerTFSM* TFSM;
 	PlayerMove* PLAYERMOVE;
 	PlayerAttribute* playerAttribute;
-	
+	SpriteFrameCache* m_frameCache;
 
 
 };

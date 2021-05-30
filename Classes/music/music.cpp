@@ -1,6 +1,7 @@
 #include"music.h"
 #include"ui/CocosGUI.h"
 #include"SafeScene.h"
+#include"StartScene.h"
 USING_NS_CC;
 
 //初始化
@@ -134,11 +135,11 @@ void MusicManager::menu(Scene* p)
 	});
 	closeItem->setPosition(UIbackground->getContentSize().width / 2, closeItem->getContentSize().height * 2 + closeGameItem->getContentSize().height * 2);
 
-	//返回家园场景
+	//返回开始场景
 	auto homeLabel = Label::createWithTTF("Home", "fonts/Marker Felt.ttf", 48);
 	auto homeItem = MenuItemLabel::create(homeLabel, [=](Ref* sender) {
 		effectPlay("effect/button.mp3");
-		Director::getInstance()->replaceScene(SafeScene::create());
+		Director::getInstance()->replaceScene(StartScene::create());
 		});
 	homeItem->setPosition(UIbackground->getContentSize().width / 2, closeItem->getContentSize().height * 2 + closeGameItem->getContentSize().height * 2+homeItem->getContentSize().height*1.5);
 

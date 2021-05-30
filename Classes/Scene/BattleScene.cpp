@@ -5,6 +5,11 @@
 #include <time.h> 
 #include"Player/PlayerMove.h"
 #include"Player/PlayerAttribute.h"
+#include"Monster/Monster.h"
+#include"Monster/CloseMonster/CloseMonster_1.h"
+#include"Monster/CloseMonster/CloseMonster_2.h"
+#include"Monster/CloseMonster/CloseMonster_3.h"
+#include"Monster/CloseMonster/CloseMonster_4.h"
 USING_NS_CC;
 bool BattleScene::init()
 {
@@ -24,6 +29,7 @@ bool BattleScene::init()
 	srand((unsigned)time(NULL));
 	int i = rand()%3;
 	char s[40];	
+	i = 0;
 	sprintf(s, "maps/BattleScene%d.tmx", i);
 	map = TMXTiledMap::create(s);
 	bindTiledMap(map);
@@ -50,6 +56,28 @@ bool BattleScene::init()
 	this->addChild(getPlayer()->getPlayerAttribute(), 5);
 	this->addChild(getPlayer(), 2);
 
+
+	//近战怪物创建
+	 Monster_1 =  CloseMonster_1::create();
+	 Monster_1->bindScene(this);
+	 Monster_1->Birth("Monster_birth1");
+	this->addChild( Monster_1, 4);
+
+	CloseMonster_2* Monster_2 = CloseMonster_2::create();
+	Monster_2->bindScene(this);
+	Monster_2->Birth("Monster_birth2");
+	this->addChild(Monster_2, 4);
+
+	CloseMonster_3* Monster_3 = CloseMonster_3::create();
+	Monster_3->bindScene(this);
+	Monster_3->Birth("Monster_birth3");
+	this->addChild(Monster_3, 4);
+
+	CloseMonster_4* Monster_4 = CloseMonster_4::create();
+	Monster_4->bindScene(this);
+	Monster_4->Birth("Monster_birth4");
+	this->addChild(Monster_4, 4);
+
 	//传送门创建
 	safeGate = Gate::create();
 	safeGate->setPosition(64 * 9.45, 64 * 10);
@@ -74,14 +102,19 @@ bool BattleScene::init()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
 	this->scheduleUpdate();
 
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene::test), 1.0f);
 
 	return 1;
 }
 void BattleScene::update(float dt)
 {
 	//调用Player的update，Player的update再调用PlayMove的move函数（禁止套娃）
-	//isWall(player->getPositionX(), player->getPositionY())
+
 
 	getPlayer()->update(dt);
 	//safeGate->update(dt);
+}
+void BattleScene::test(float dt)
+{
+	Monster_1->takingDamage(1);
 }

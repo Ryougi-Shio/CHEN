@@ -20,3 +20,7 @@ Player* NormalScene::getPlayer()
 {
 	return m_player;
 }
+TMXTiledMap* NormalScene::getMap()
+{
+	return m_map;
+}
