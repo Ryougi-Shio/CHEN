@@ -27,4 +27,5 @@ private:
 	static int effect;
 	static float effectVolume;
 	static AudioEngine* manager;
+	
 };

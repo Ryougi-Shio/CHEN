@@ -13,6 +13,7 @@ class NormalScene :public cocos2d::Scene
 {
 public:
 	MusicManager* getmusicManager();
+	TMXTiledMap* getMap();
 	void bindTiledMap(TMXTiledMap* map);
 	void bindPlayer(Player* player);
 	Player* getPlayer();
