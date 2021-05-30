@@ -25,7 +25,7 @@
 
 cmake_minimum_required(VERSION 3.6)
 
-set(APP_NAME m)
+set(APP_NAME soul_knight)
 
 project(${APP_NAME})
 
@@ -35,7 +35,7 @@ if(XCODE)
     endif()
 endif()
 
-if(NOT DEFINED BUILD_ENGINE_DONE) # to test m into root project
+if(NOT DEFINED BUILD_ENGINE_DONE) # to test soul_knight into root project
     set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
     set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
 
@@ -60,7 +60,18 @@ list(APPEND GAME_SOURCE
 
 
 Classes/Entity/Entity.cpp
-Classes/Entity/Player.cpp
+Classes/Entity/Player/Player.cpp
+Classes/Entity/Player/PlayerMove.cpp
+Classes/Entity/Player/PlayerAttribute.cpp
+Classes/Entity/Gate/Gate.cpp
+Classes/Entity/Monster/Monster.cpp
+Classes/Entity/Monster/CloseMonster/CloseMonster_1.cpp
+Classes/Entity/Monster/CloseMonster/CloseMonster_2.cpp
+Classes/Entity/Monster/CloseMonster/CloseMonster_3.cpp
+Classes/Entity/Monster/CloseMonster/CloseMonster_4.cpp
+Classes/Entity/Monster/MonsterTFSM/MonsterTFSM.cpp
+Classes/Entity/Monster/MonsterTFSM/State_M/MonsterStates.cpp
+Classes/Entity/Monster/MonsterTFSM/State_M/State_M.cpp
 Classes/music/music.cpp
 Classes/PlayerTFSM/PlayerTFSM.cpp
 Classes/PlayerTFSM/State/PlayerStates.cpp
@@ -68,13 +79,35 @@ Classes/PlayerTFSM/State/State.cpp
 Classes/Scene/NormalScene.cpp
 Classes/Scene/SafeScene.cpp
 Classes/Scene/StartScene.cpp
+Classes/Scene/BattleScene.cpp
+
+
+
+Classes/json/json_reader.cpp
+Classes/json/json_value.cpp
+Classes/json/json_writer.cpp
+
+
+
+Classes/json/sconscript
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
 
 
 Classes/Entity/Entity.h
-Classes/Entity/Player.h
+Classes/Entity/Player/Player.h
+Classes/Entity/Player/PlayerMove.h
+Classes/Entity/Player/PlayerAttribute.h
+Classes/Entity/Gate/Gate.h
+Classes/Entity/Monster/Monster.h
+Classes/Entity/Monster/CloseMonster/CloseMonster_1.h
+Classes/Entity/Monster/CloseMonster/CloseMonster_2.h
+Classes/Entity/Monster/CloseMonster/CloseMonster_3.h
+Classes/Entity/Monster/CloseMonster/CloseMonster_4.h
+Classes/Entity/Monster/MonsterTFSM/MonsterTFSM.h
+Classes/Entity/Monster/MonsterTFSM/State_M/MonsterStates.h
+Classes/Entity/Monster/MonsterTFSM/State_M/State_M.h
 Classes/music/music.h
 Classes/PlayerTFSM/PlayerTFSM.h
 Classes/PlayerTFSM/State/PlayerStates.h
@@ -82,6 +115,21 @@ Classes/PlayerTFSM/State/State.h
 Classes/Scene/NormalScene.h
 Classes/Scene/SafeScene.h
 Classes/Scene/StartScene.h
+Classes/Scene/BattleScene.h
+
+
+Classes/json/autolink.h
+Classes/json/config.h
+Classes/json/features.h
+Classes/json/forwards.h
+Classes/json/json.h
+Classes/json/json_batchallocator.h
+Classes/json/reader.h
+Classes/json/value.h
+Classes/json/writer.h
+Classes/json/json_internalarray.inl
+Classes/json/json_internalmap.inl
+Classes/json/json_valueiterator.inl
      )
 
 if(ANDROID)
