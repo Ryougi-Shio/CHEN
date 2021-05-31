@@ -52,6 +52,7 @@ void Gate::notice()
 	noticeLabel->setPosition(getPosition().x, getPosition().y + noticeLabel->getContentSize().height * 1.5);
 	if (keymap[EventKeyboard::KeyCode::KEY_E])
 	{
+		SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();//ÇåÀí¾«ÁéÖ¡»º´æ
 		Director::getInstance()->replaceScene(BattleScene::create());
 	}
 }

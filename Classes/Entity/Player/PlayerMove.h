@@ -22,6 +22,7 @@ public:
 	float getspeedX();
 	float getspeedY();
 	float getSpeed();
+	bool getIsFlip();
 	//判断传入的坐标在地图上对应的点是不是墙壁
 
 	bool isWall(float Px, float Py);

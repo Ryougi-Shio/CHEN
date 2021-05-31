@@ -14,6 +14,10 @@ Player* PlayerMove::getPlayer()
 {
 	return mPlayer;
 }
+bool PlayerMove::getIsFlip()
+{
+	return isFlip;
+}
 void PlayerMove::playerMove()
 {
 	auto move = MoveBy::create(0, Vec2(movespeedX, movespeedY));
@@ -162,40 +166,6 @@ void PlayerMove::Move()
 		if (isWall(x+PX*0.5, y))
 		startmoveX(Speed);
 	}
-	/*else if (keyMap[right] && keyMap[up])
-	{
-		if (isWall(x+PX*0.5, y)&& (x , y + PY * 0.3))
-		{
-			startmoveX(Speed);
-			startmoveY(Speed);
-		}
-	}
-	else if (keyMap[left] && keyMap[up])
-	{
-		if (isWall(x, y+PY*0.3)&& isWall(x - PX * 0.5, y ))
-		{
-			startmoveX(-Speed);
-			startmoveY(Speed);
-		}
-
-	}
-	else if (keyMap[left] && keyMap[down])
-	{
-		if (isWall(x-PX*0.5, y)&& isWall(x, y - PY * 0.5))
-		{
-			startmoveX(-Speed);
-			startmoveY(-Speed);
-		}
-
-	}
-	else if (keyMap[right] && keyMap[down])
-	{
-		if (isWall(x+PX*0.5, y)&& isWall(x, y - PY * 0.5))
-		{
-			startmoveX(Speed);
-			startmoveY(-Speed);
-		}
-	}*/
 	playerMove();
 	stopmoveX();
 	stopmoveY();

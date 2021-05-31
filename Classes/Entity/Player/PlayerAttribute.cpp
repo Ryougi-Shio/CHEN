@@ -25,7 +25,7 @@ bool PlayerAttribute::init()
 	sprintf(moneys, "%d", mmoney);
 	moneyLabel = Label::createWithTTF(std::string(moneys), "fonts/Marker Felt.ttf", 16);
 	moneyLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
-		hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height);
+		hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height+3);
 	getSprite()->addChild(moneyLabel);
 
 	scheduleUpdate();
