@@ -10,7 +10,6 @@ bool SafeScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	
-
 	//背景图片精灵
 	auto backgroundSprite = Sprite::create("background/SafeScene.png");
 	backgroundSprite->setPosition(origin.x + backgroundSprite->getContentSize().width / 2, origin.y + backgroundSprite->getContentSize().height / 2);
@@ -38,6 +37,7 @@ bool SafeScene::init()
 
 	//玩家创建
 	bindPlayer(Player::create());
+	getPlayer()->PistolInit();//手枪
 	getPlayer()->getPlayerAttribute()->hpApMoneyinit(5, 5);//玩家属性初始化
 	getPlayer()->setPosition(64 * 4 + 32, 64 * 4 + 32);
 	getPlayer()->getplayermove()->bindMap(map);//PlayerMove跟这个地图绑定

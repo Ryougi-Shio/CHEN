@@ -3,7 +3,7 @@ v0.0.1 -wyy
 音乐管理器
 实体，场景基类，简易player类
 v0.0.2 -yy
-playermove类(包含墙体边界判断还有动画)
+PlayerMove类(包含墙体边界判断还有动画)
 传送门类
 开始场景背景图
 导入json库
@@ -13,3 +13,9 @@ v0.0.3 -yy
 v0.0.4 -wyy
 playerAttribute类(管理人物HP,护甲，金钱以及这些属性的显示)
 加入了CloseMonster类(无任何实现,只有少许函数定义)
+v0.0.5-yy
+增加Monster基类，实现CloseMonster类
+包括随机移动和追逐玩家以及各种动画
+v0.0.6-wyy
+增加Weapon类Ammo类,实现Pistol手枪
+实现跟随鼠标单击开枪

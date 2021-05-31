@@ -10,12 +10,18 @@
 #include"Monster/CloseMonster/CloseMonster_2.h"
 #include"Monster/CloseMonster/CloseMonster_3.h"
 #include"Monster/CloseMonster/CloseMonster_4.h"
+#include"PistolAmmo.h"
+#include"Pistol.h"
+#include"CCVector.h"
 USING_NS_CC;
 bool BattleScene::init()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
-
+	if (initWithPhysics()) {
+		getPhysicsWorld()->setGravity(Vec2::ZERO);
+		getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	}
 
 	//背景图片精灵
 	auto backgroundSprite = Sprite::create("background/BattleScene.png");
@@ -48,7 +54,12 @@ bool BattleScene::init()
 	addChild(menu, 5);
 
 	//玩家创建
+	auto physicsBody = PhysicsBody::createBox(Size(40.0f, 40.0f),
+		PhysicsMaterial(0.0f, 0.0f, 0.0f));
 	bindPlayer(Player::create());
+	getPlayer()->getSprite()->addComponent(physicsBody); 
+	getPlayer()->getSprite()->getPhysicsBody()->setCategoryBitmask(0x02);//0010
+	getPlayer()->getSprite()->getPhysicsBody()->setCollisionBitmask(0x01);//0001
 	getPlayer()->setPosition(64 * 4 + 32, 64 * 4 + 32);
 	getPlayer()->getplayermove()->bindMap(map);//PlayerMove跟这个地图绑定
 	getPlayer()->getPlayerAttribute()->setPosition(getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().width / 2,
@@ -98,21 +109,110 @@ bool BattleScene::init()
 	{
 		getPlayer()->getplayermove()->FalseKeyCode(keycode);
 	};
-
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
+
+	//鼠标
+	auto myMouseListener = EventListenerMouse::create();
+	myMouseListener->onMouseMove = [=](cocos2d::Event* event)
+	{
+		EventMouse* e = (EventMouse*)event;
+		getPlayer()->changeMouseLocation(e->getLocation());
+
+
+	};
+	myMouseListener->onMouseDown = [=](cocos2d::Event* event)
+	{
+		EventMouse* e = (EventMouse*)event;
+		getPlayer()->trueMouseMap(e->getMouseButton());
+
+	};
+	myMouseListener->onMouseUp = [=](cocos2d::Event* event)
+	{
+		EventMouse* e = (EventMouse*)event;
+		getPlayer()->flaseMouseMap(e->getMouseButton());
+	};
+
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(myMouseListener, this);
 	this->scheduleUpdate();
-
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene::test), 1.0f);
-
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene::DeleteAmmo), 0.01f);
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene::Ammoupdate), getPlayer()->getWeapon1()->getShootSpeed());
 	return 1;
+}
+bool BattleScene::isWall(float x,float y)
+{
+	int mapX = (int)(x / 64);
+	int mapY = (int)(12 - y / 64);
+
+	int tileGid = map->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
+	//CCLOG("X:%d    Y:%d", mapX, mapY);
+	//CCLOG("%d", tileGid);
+	if (tileGid)
+	{
+		return true;	//是墙
+	}
+
+	else
+	{
+		return false;		//不是墙
+	}
+}
+void BattleScene::DeleteAmmo(float dt)
+{
+
+
+	if (AmmoList.size()!=0)
+	{
+		int i = 0;
+		auto ix = AmmoList.begin();
+		int size = AmmoList.size();
+		for (; i<size;ix++,i++)
+		{
+			CCLOG("size:%d  i=%d", size,i);
+			if (isWall((*ix)->getPositionX(), (*ix)->getPositionY()))
+			{
+				removeChild(AmmoList[i]);
+				AmmoList.erase(ix);
+				break;
+			}
+
+		}
+	}
+	
 }
 void BattleScene::update(float dt)
 {
-	//调用Player的update，Player的update再调用PlayMove的move函数（禁止套娃）
-
-
+	//调用Player的update，Player的update再调用PlayMove的move函数
 	getPlayer()->update(dt);
+	
 	//safeGate->update(dt);
+}
+void BattleScene::Ammoupdate(float dt)
+{
+	float x = getPlayer()->getMouseLocation().x;
+	float y = Director::getInstance()->getVisibleSize().height - getPlayer()->getMouseLocation().y;
+	float Px = getPlayer()->getPositionX() - getPlayer()->getContentSize().width / 2;
+	float Py = getPlayer()->getPositionY() - getPlayer()->getContentSize().height / 2;
+	float Wx = (Px + getPlayer()->getWeapon1()->getPositionX() + getPlayer()->getWeapon1()->getContentSize().width / 2);
+	float Wy = (Py + getPlayer()->getWeapon1()->getPositionY());
+	Vec2 v = Vec2(Vec2(x - Wx, y - Wy) / sqrt((x - Wx) * (x - Wx) + (y - Wy) * (y - Wy)));
+	//CCLOG("%f %f", Px, Py);
+	if (getPlayer()->getMouseMap()[EventMouse::MouseButton::BUTTON_LEFT])
+	{
+		AmmoList.push_back(getPlayer()->getWeapon1()->Attack());
+
+		addChild(AmmoList.back());
+		auto physicBody = PhysicsBody::createBox(Size(10.0f, 10.0f), PhysicsMaterial(0, 0, 0));
+		AmmoList.back()->addComponent(physicBody);
+		AmmoList.back()->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
+		AmmoList.back()->getPhysicsBody()->setVelocity(v*500);
+		AmmoList.back()->getPhysicsBody()->setCategoryBitmask(0x02);//0010
+		AmmoList.back()->getPhysicsBody()->setCollisionBitmask(0x01);//0001
+		
+	}
+	
+
 }
 void BattleScene::test(float dt)
 {

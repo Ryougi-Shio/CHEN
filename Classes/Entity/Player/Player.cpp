@@ -3,9 +3,14 @@
 #include"Player/PlayerAttribute.h"
 #include"PlayerTFSM/PlayerTFSM.h"
 #include"Player/PlayerMove.h"
+#include"Weapon/Pistol.h"
 bool Player::init()
 {
-
+	if (weapon1!=nullptr)
+	{
+		weapon1->bindPlayer(this);
+		this->addChild(weapon1, 2);
+	}
 	bindSprite(Sprite::create("Player/knight_rest1.png"));
 	playerAttribute = PlayerAttribute::create();
 	playerAttribute->retain();
@@ -128,10 +133,56 @@ void Player::TFSMupdate(float dt)
 	TFSM->update(dt);
 }
 
+void Player::trueMouseMap(EventMouse::MouseButton key)
+{
+	mouseMap[key] = 1;
+}
 
+void Player::flaseMouseMap(EventMouse::MouseButton key)
+{
+	mouseMap[key] = 0;
+}
 
 void Player::update(float delta)//update for Player
 {
 	//PlayerÔË¶¯
+
 	PLAYERMOVE->Move();
+	weapon1->update(delta);
+	float x = mouseLocation.x;
+	float y = mouseLocation.y;
+//	pistol->getSprite()->setRotation(x);
+
+	//CCLOG("%f,%f", x, y);
 }
+bool Player::getIsFlip()
+{
+	return PLAYERMOVE->getIsFlip();
+}
+std::map<EventMouse::MouseButton, bool> Player::getMouseMap()
+{
+	return mouseMap;
+}
+Weapon* Player::getWeapon1()
+{
+	return weapon1;
+}
+void Player::PistolInit()
+{
+	weapon1 = Pistol::create();
+	weapon1->retain();
+	weapon1->bindPlayer(this);
+	weapon1->setPosition(getSprite()->getContentSize().width/2 , getContentSize().height / 2);
+}
+
+void Player::changeMouseLocation(Vec2 location)
+{
+	mouseLocation = location;
+}
+
+Vec2 Player::getMouseLocation()
+{
+	
+	return mouseLocation;
+}
+Weapon* Player::weapon1;

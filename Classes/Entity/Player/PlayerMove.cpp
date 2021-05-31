@@ -14,6 +14,10 @@ Player* PlayerMove::getPlayer()
 {
 	return mPlayer;
 }
+bool PlayerMove::getIsFlip()
+{
+	return isFlip;
+}
 void PlayerMove::playerMove()
 {
 	auto move = MoveBy::create(0, Vec2(movespeedX, movespeedY));
