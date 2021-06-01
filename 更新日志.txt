@@ -22,3 +22,7 @@ v0.0.6-wyy
 实现跟随鼠标单击开枪
 物理引擎使用，包括玩家，怪物，子弹
 现在子弹能与怪物碰撞并且打死怪物。
+v0.0.7 -wyy
+添加normalbattlescene类，含有9张Battlemap
+battlescene删除，改为battlescene1，继承normalbattlescene
+添加BattleMap类，含一张TiledMap和怪物

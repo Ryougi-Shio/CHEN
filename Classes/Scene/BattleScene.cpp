@@ -13,6 +13,7 @@
 #include"PistolAmmo.h"
 #include"Pistol.h"
 #include"CCVector.h"
+#include"music.h"
 USING_NS_CC;
 bool BattleScene::init()
 {
@@ -25,21 +26,29 @@ bool BattleScene::init()
 	}
 
 	//背景图片精灵
-	auto backgroundSprite = Sprite::create("background/BattleScene.png");
-	backgroundSprite->setPosition(origin.x + backgroundSprite->getContentSize().width / 2, origin.y + backgroundSprite->getContentSize().height / 2);
-	this->addChild(backgroundSprite, -1);
+	for (int i = 0; i < 9; i++)
+	{
+		auto backgroundSprite = Sprite::create("background/BattleScene.png");
+		backgroundSprite->setPosition(origin.x + backgroundSprite->getContentSize().width / 2 + backgroundSprite->getContentSize().width * (i % 3),
+			origin.y + backgroundSprite->getContentSize().height / 2 + backgroundSprite->getContentSize().height * (i / 3));
+		this->addChild(backgroundSprite, -1);
+	}
 
 
 
 	//更改bgm以及绑定tiledmap
 	getmusicManager()->changeMusic("bgm/Room.mp3");
 	srand((unsigned)time(NULL));
-	int i = rand()%3;
-	char s[40];	
-	i = 0;
-	sprintf(s, "maps/BattleScene%d.tmx", i);
-	map = TMXTiledMap::create(s);
-	bindTiledMap(map);
+	for (int x = 0; x < 9; x++)
+	{
+		int i = rand() % 3;
+		char s[40];
+		sprintf(s, "maps/BattleScene%d.tmx", i);
+		//m_map.pushBack(TMXTiledMap::create(s));
+		//m_map.back()->setPosition(visibleSize.width / 2 * 0 + visibleSize.width * (x % 3), visibleSize.height / 2 * 0 + visibleSize.height * (x / 3));
+	}
+	//parentMap = m_map.at(0);
+	addChild(parentMap);
 
 	//设置按钮
 	auto settings = MenuItemImage::create("ui/settings.png", "ui/settings.png", [&](Ref* sender) {
@@ -63,7 +72,7 @@ bool BattleScene::init()
 	getPlayer()->getPhysicsBody()->setCategoryBitmask(0x02);//0010
 	getPlayer()->getPhysicsBody()->setCollisionBitmask(0x01);//0001
 	getPlayer()->setPosition(64 * 4 + 32, 64 * 4 + 32);
-	getPlayer()->getplayermove()->bindMap(map);//PlayerMove跟这个地图绑定
+	//getPlayer()->getplayermove()->bindMap(parentMap);//PlayerMove跟这个地图绑定
 	getPlayer()->getPlayerAttribute()->setPosition(getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().width / 2,
 		visibleSize.height - getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().height / 2);//属性UI位置设置
 	this->addChild(getPlayer()->getPlayerAttribute(), 5);
@@ -104,8 +113,8 @@ bool BattleScene::init()
 	safeGate = Gate::create();
 	safeGate->setPosition(64 * 9.45, 64 * 10);
 	safeGate->bindPlayer(getPlayer());
-	safeGate->bindStart(this);
-	safeGate->bindDestination(this);
+	//safeGate->bindStart(this);
+	//safeGate->bindDestination(this);
 	//this->addChild(safeGate, 5);
 
 	////eventlistener,键盘监听，用于移动人物
@@ -152,6 +161,7 @@ bool BattleScene::init()
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene::test), 1.0f);
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene::DeleteAmmo), 0.01f);
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene::Ammoupdate), getPlayer()->getWeapon1()->getShootSpeed());
+	changeMap(2);
 	return 1;
 }
 bool BattleScene::isWall(float x,float y)
@@ -159,15 +169,15 @@ bool BattleScene::isWall(float x,float y)
 	int mapX = (int)(x / 64);
 	int mapY = (int)(12 - y / 64);
 
-	int tileGid = map->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
+	//int tileGid = parentMap->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
 	//CCLOG("X:%d    Y:%d", mapX, mapY);
 	//CCLOG("%d", tileGid);
-	if (tileGid)
+	//if (tileGid)
 	{
 		return true;	//是墙
 	}
 
-	else
+	//else
 	{
 		return false;		//不是墙
 	}

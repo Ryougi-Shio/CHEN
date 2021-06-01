@@ -1,5 +1,5 @@
 #pragma once
-#include"NormalScene.h"
+#include"NormalBattleScene.h"
 #include"Player.h"
 #include"Gate.h"
 #include"Ammo/PistolAmmo.h"
@@ -15,7 +15,7 @@ USING_NS_CC;
 *完成关卡后出现传送门进入下一关
 *可交互对象，如陷阱、强化药剂、购买物品、宝箱
 */
-class BattleScene:public NormalScene
+class BattleScene:public NormalBattleScene
 {
 public:
 	virtual bool init();
@@ -27,7 +27,6 @@ public:
 	bool onContactBegin(PhysicsContact& contact);
 	CREATE_FUNC(BattleScene);
 private:
-	TMXTiledMap* map;
 	Gate* safeGate;
 	CloseMonster_1* Monster_1;
 	std::vector<PistolAmmo*> AmmoList;

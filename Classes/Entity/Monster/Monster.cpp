@@ -1,10 +1,11 @@
 #include"Monster.h"
-#include"NormalScene.h"
+#include"NormalBattleScene.h"
 #include"MonsterStates.h"
 #include"MonsterTFSM.h"
 #include"Player.h"
 #include <stdlib.h>
 #include <time.h> 
+#include"Map/BattleMap.h"
 
 #define RANGE 250
 #define WIDTH 46
@@ -14,7 +15,7 @@ USING_NS_CC;
 void  Monster::Birth(const std::string place_name)
 {
 	//对象层的使用
-	TMXObjectGroup* objGroup = mScene->getMap()->getObjectGroup("Monster");//获取对象层
+	TMXObjectGroup* objGroup = mScene->getParentMap()->getBattleMap()->getObjectGroup("Monster");//获取对象层
 	auto MonsterBirth = objGroup->getObject(place_name);//获取对象
 	setPosition(Vec2(MonsterBirth.at("x").asFloat(), MonsterBirth.at("y").asFloat()));//出生位置设置
 }
@@ -31,7 +32,7 @@ bool  Monster::isAround()
 	else
 		return false;
 }
-void  Monster::bindScene(NormalScene* scene)
+void  Monster::bindScene(NormalBattleScene* scene)
 {
 	mScene = scene;
 }
@@ -104,7 +105,7 @@ bool  Monster::isWall(float x,float y)
 	int mapX = (int)(x/ 64);
 	int mapY = (int)(12 - y/ 64);
 
-	int tileGid = mScene->getMap()->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
+	int tileGid = mScene->getParentMap()->getBattleMap()->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
 
 	if (tileGid)
 	{

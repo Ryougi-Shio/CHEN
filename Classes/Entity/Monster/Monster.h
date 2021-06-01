@@ -5,6 +5,7 @@
 class NormalScene;
 class MonsterTFSM;
 class BattleScene;
+class NormalBattleScene;
 USING_NS_CC;
 //怪物基类
 class  Monster : public Entity
@@ -17,7 +18,7 @@ public:
 	void StrollAround();//怪物小范围随意移动
 	void ApproachPlayer();//怪物向玩家方向靠近
 	bool isAround();//判断玩家是否在附近
-	void bindScene(NormalScene* scene);
+	void bindScene(NormalBattleScene* scene);
 	void takingDamage(int damage);//怪物受到伤害
 	bool isWall(float x,float y);//判断这里是不是墙壁
 	void Birth(const std::string place_name);
@@ -39,7 +40,7 @@ public:
 
 protected:
 	int mHp;
-	NormalScene* mScene;
+	NormalBattleScene* mScene;
 	MonsterTFSM* TFSM_M;
 	float movespeedX;
 	float movespeedY;

@@ -1,6 +1,6 @@
 #include"Gate.h"
 #include"NormalScene.h"
-#include"BattleScene.h"
+#include"BattleScene1.h"
 #include"Player.h"
 #include"Player/PlayerMove.h"
 #define WIDTH 116
@@ -53,7 +53,7 @@ void Gate::notice()
 	if (keymap[EventKeyboard::KeyCode::KEY_E])
 	{
 		SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();//ÇåÀí¾«ÁéÖ¡»º´æ
-		Director::getInstance()->replaceScene(BattleScene::create());
+		Director::getInstance()->replaceScene(BattleScene1::create());
 	}
 }
 
