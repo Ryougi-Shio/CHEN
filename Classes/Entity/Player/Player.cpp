@@ -4,6 +4,7 @@
 #include"PlayerTFSM/PlayerTFSM.h"
 #include"Player/PlayerMove.h"
 #include"Weapon/Pistol.h"
+#include"music.h"
 bool Player::init()
 {
 	if (weapon1!=nullptr)
@@ -14,6 +15,7 @@ bool Player::init()
 	bindSprite(Sprite::create("Player/knight_rest1.png"));
 	playerAttribute = PlayerAttribute::create();
 	playerAttribute->retain();
+	playerAttribute->bindPlayer(this);
 	TFSM = PlayerTFSM::create();
 	TFSM->retain();
 	TFSM->bindPlayer(this);
@@ -119,7 +121,22 @@ void Player::run_flip()
 	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();//«Â¿Ìæ´¡È÷°ª∫¥Ê
 
 }
+void Player::dead()
+{
+	Vector<SpriteFrame*>frameArray;
+	auto frameCache= SpriteFrameCache::getInstance();
+	frameCache->addSpriteFramesWithFile("Player/knight_animate.plist", "Player/knight_animate.png");
+	auto frame1 =frameCache->getSpriteFrameByName("knight_down.png");
+	frameArray.pushBack(frame1);
 
+
+	Animation* animation = Animation::createWithSpriteFrames(frameArray);
+	animation->setDelayPerUnit(0.1f);
+	auto* action = Animate::create(animation);
+	this->getSprite()->runAction(action);
+
+	AnimationCache::destroyInstance();
+}
 
 /*
 
@@ -173,6 +190,7 @@ void Player::PistolInit()
 	weapon1->retain();
 	weapon1->bindPlayer(this);
 	weapon1->setPosition(getSprite()->getContentSize().width/2 , getContentSize().height / 2);
+	
 }
 
 void Player::changeMouseLocation(Vec2 location)
@@ -184,5 +202,9 @@ Vec2 Player::getMouseLocation()
 {
 	
 	return mouseLocation;
+}
+void Player::deadNotice()
+{
+	
 }
 Weapon* Player::weapon1;

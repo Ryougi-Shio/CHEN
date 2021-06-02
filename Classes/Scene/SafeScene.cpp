@@ -82,7 +82,7 @@ void SafeScene::update(float dt)
 	//调用Player的update，Player的update再调用PlayMove的move函数（禁止套娃）
 	//isWall(player->getPositionX(), player->getPositionY())
 	
-	getPlayer()->update(dt);
+
 	safeGate->update(dt);
 }
 

@@ -3,11 +3,11 @@
 #include"cocos2d.h"
 #include"Ammo.h"
 USING_NS_CC;
-class PistolAmmo : public Entity
+class MonsterPistolAmmo : public Entity
 {
 public:
 	virtual bool init();
 	float speed = 500.0f;
-	CREATE_FUNC(PistolAmmo);
+	CREATE_FUNC(MonsterPistolAmmo);
 private:
 };

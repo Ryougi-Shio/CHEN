@@ -1,5 +1,6 @@
 #pragma once
 #include"Monster.h"
+#include"MonsterPistolAmmo.h"
 class CloseMonster_1 :public Monster
 {
 public:
@@ -10,6 +11,7 @@ public:
 	virtual void run_flip();
 	virtual void dead();
 	virtual void dead_flip();
+	MonsterPistolAmmo* MonsterAttack();
 	CREATE_FUNC(CloseMonster_1);
 private:
 	

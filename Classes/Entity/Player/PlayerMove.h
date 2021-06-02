@@ -1,6 +1,6 @@
 #pragma once
 #include"cocos2d.h"
-#define NORMAL 2
+#define NORMAL 4
 class Player;
 USING_NS_CC;
 /*

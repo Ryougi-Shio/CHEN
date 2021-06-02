@@ -21,6 +21,7 @@ public:
 	void ApHealingStart(float dt);//开始恢复护甲
 	void ApHealing(float dt);//护甲回复
 	void bindPlayer(Player* player);
+	void DeadUpdate(float dt);
 	virtual void update(float dt);
 	CREATE_FUNC(PlayerAttribute);
 private:
