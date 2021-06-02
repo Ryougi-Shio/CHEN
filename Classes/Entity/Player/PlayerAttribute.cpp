@@ -27,7 +27,7 @@ bool PlayerAttribute::init()
 	moneyLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
 		hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height+3);
 	getSprite()->addChild(moneyLabel);
-
+	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::DeadUpdate), 0.01f);
 	scheduleUpdate();
 	return 1;
 }
@@ -108,7 +108,14 @@ void PlayerAttribute::bindPlayer(Player* player)
 {
 	mplayer = player;
 }
-
+void PlayerAttribute::DeadUpdate(float dt)
+{
+	if (mhp<=0)
+	{
+		mplayer->unscheduleAllCallbacks();
+		mplayer->dead();
+	}
+}
 int PlayerAttribute::mhp;
 int PlayerAttribute::map;
 int PlayerAttribute::mmoney;

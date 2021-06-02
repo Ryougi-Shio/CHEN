@@ -35,6 +35,9 @@ public:
 	bool getIsFlip();
 	std::map<EventMouse::MouseButton, bool> getMouseMap();
 	Weapon* getWeapon1();
+	void dead();
+	void deadNotice();
+
 	CREATE_FUNC(Player);
 	friend class PlayerMove;
 private:

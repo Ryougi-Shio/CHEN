@@ -6,7 +6,7 @@ class Player;
 /*通用场景类，不生成实例
 * 包含
 * 1:音乐管理器
-* 2：绑定TiledMap
+* 2：绑定一张TiledMap
 * 3:绑定player
 */
 class NormalScene :public cocos2d::Scene

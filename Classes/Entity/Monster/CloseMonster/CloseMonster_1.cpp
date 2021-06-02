@@ -6,6 +6,7 @@
 #include"Player.h"
 #include <stdlib.h>
 #include <time.h> 
+#include"MonsterPistolAmmo.h"
 bool CloseMonster_1::init()
 {
 	bindSprite(Sprite::create("Monster/O_small_monster_move4.png"));
@@ -19,20 +20,24 @@ bool CloseMonster_1::init()
 	m_frameCache->addSpriteFramesWithFile("Monster/O_small_monster_animate.plist", "Monster/O_small_monster_animate.png");
 	this->schedule(CC_SCHEDULE_SELECTOR(Monster::MoveUpdate), 0.5f);//每0.5f调用一次运动更新函数
 	this->schedule(CC_SCHEDULE_SELECTOR(Monster::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
-
+	this->schedule(CC_SCHEDULE_SELECTOR(Monster::DeadUpdate), 0.01f);
 	return 1;
+}
+MonsterPistolAmmo* CloseMonster_1::MonsterAttack()
+{
+	return MonsterPistolAmmo::create();
 }
 void CloseMonster_1::dead()
 {
+	isdead = 1;
 	Vector<SpriteFrame*>frameArray;
 
-	auto frame1 = m_frameCache->getSpriteFrameByName("O_small_monster_move4.png");
+	auto frame1 = m_frameCache->getSpriteFrameByName("O_small_monster_dead.png");
 	frameArray.pushBack(frame1);
-	auto frame2 = m_frameCache->getSpriteFrameByName("O_small_monster_dead.png");
-	frameArray.pushBack(frame2);
+
 
 	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.4f);
+	animation->setDelayPerUnit(0.1f);
 	auto* action = Animate::create(animation);
 	this->getSprite()->runAction(action);
 
@@ -40,15 +45,15 @@ void CloseMonster_1::dead()
 }
 void CloseMonster_1::dead_flip()
 {
+	isdead = 1;
 	Vector<SpriteFrame*>frameArray;
 
-	auto frame1 = m_frameCache->getSpriteFrameByName("O_small_monster_move4_flip.png");
+	auto frame1 = m_frameCache->getSpriteFrameByName("O_small_monster_dead_flip.png");
 	frameArray.pushBack(frame1);
-	auto frame2 = m_frameCache->getSpriteFrameByName("O_small_monster_dead_flip.png");
-	frameArray.pushBack(frame2);
+
 
 	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.4f);
+	animation->setDelayPerUnit(0.1f);
 	auto* action = Animate::create(animation);
 	this->getSprite()->runAction(action);
 
