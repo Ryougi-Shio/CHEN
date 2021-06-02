@@ -26,12 +26,12 @@ public:
 
 	
 	virtual void rest();
-	virtual void rest_flip();
+
 	virtual void run();
-	virtual void run_flip();
+
 	virtual void dead();
-	virtual void dead_flip();
-	
+
+	void FlipUpdate(float dt);
 	void TFSMupdate(float dt);
 	void DeadUpdate(float dt);//ºÏ≤‚À¿Õˆ
 	bool getIsDead();

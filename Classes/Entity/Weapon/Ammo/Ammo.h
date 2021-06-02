@@ -6,7 +6,8 @@ class Ammo : public Entity
 {
 public:
 
-	float speed ;
+	double start;
 
 private:
+
 };

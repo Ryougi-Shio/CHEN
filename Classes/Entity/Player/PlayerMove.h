@@ -10,6 +10,7 @@ USING_NS_CC;
 class PlayerMove:public Node
 {
 public:
+
 	void bindPlayer(Player* player);//绑定玩家
 	void Move();//负责移动的函数
 	void playerMove();//进行runAction并改变状态机的函数
@@ -23,6 +24,7 @@ public:
 	float getspeedY();
 	float getSpeed();
 	bool getIsFlip();
+
 	//判断传入的坐标在地图上对应的点是不是墙壁
 
 	bool isWall(float Px, float Py);
@@ -30,6 +32,7 @@ public:
 	void TrueKeyCode(EventKeyboard::KeyCode keycode);
 	void FalseKeyCode(EventKeyboard::KeyCode keycode);
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> getkeyMap();
+
 	Player* getPlayer();
 
 	CREATE_FUNC(PlayerMove);
@@ -42,4 +45,5 @@ private:
 	bool ismoveX=0;
 	bool ismoveY=0;
 	bool isFlip = 0;//记录是否翻转，人物朝向左为0，人物朝向右为1
+
 };

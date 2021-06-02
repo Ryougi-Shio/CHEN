@@ -9,7 +9,7 @@
 #include"Monster.h"
 bool BattleScene1::init()
 {
-	srand((unsigned)time(NULL));
+	srand((unsigned)time(NULL));//根据时间取随机种子
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	if (initWithPhysics()) {
@@ -19,7 +19,7 @@ bool BattleScene1::init()
 	}
 
 	getmusicManager()->changeMusic("bgm/Room.mp3");
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 9; i++)//取九张地图
 	{
 		m_battleMap.pushBack(BattleMap::create());
 		m_battleMap.back()->bindScene(this);
@@ -81,22 +81,22 @@ bool BattleScene1::init()
 	};
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
 
-	//鼠标
+	//鼠标监听
 	auto myMouseListener = EventListenerMouse::create();
-	myMouseListener->onMouseMove = [=](cocos2d::Event* event)
+	myMouseListener->onMouseMove = [=](cocos2d::Event* event)//移动
 	{
 		EventMouse* e = (EventMouse*)event;
 		getPlayer()->changeMouseLocation(e->getLocation());
 
 
 	};
-	myMouseListener->onMouseDown = [=](cocos2d::Event* event)
+	myMouseListener->onMouseDown = [=](cocos2d::Event* event)//按下
 	{
 		EventMouse* e = (EventMouse*)event;
 		getPlayer()->trueMouseMap(e->getMouseButton());
 
 	};
-	myMouseListener->onMouseUp = [=](cocos2d::Event* event)
+	myMouseListener->onMouseUp = [=](cocos2d::Event* event)//松开
 	{
 		EventMouse* e = (EventMouse*)event;
 		getPlayer()->flaseMouseMap(e->getMouseButton());
@@ -110,8 +110,8 @@ bool BattleScene1::init()
 	this->scheduleUpdate();
 //	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::test), 1.0f);
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::DeleteAmmo), 0.001f);
-	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::Ammoupdate), getPlayer()->getWeapon1()->getShootSpeed());
-	
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::Ammoupdate), 0.01f);//每0.01s检测玩家子弹是否需要生成	
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::AmmoUpdate_Monster), 0.3f);//怪物子弹
 	return 1;
 }
 
@@ -123,50 +123,25 @@ void BattleScene1::update(float dt)
 		changeMap(rand() % 9);
 	}
 }
-
-void BattleScene1::Ammoupdate(float dt)
+void BattleScene1::AmmoUpdate_Monster(float dt)
 {
-	int dd=parentMap->getMonster().at(0)->getIsDead();
-	CCLOG("%d", dd);
-	
-
-
-
-	float x = getPlayer()->getMouseLocation().x;
-	float y = Director::getInstance()->getVisibleSize().height - getPlayer()->getMouseLocation().y;
+	//怪物Pistol子弹
 	float Px = getPlayer()->getPositionX() - getPlayer()->getContentSize().width / 2;
 	float Py = getPlayer()->getPositionY() - getPlayer()->getContentSize().height / 2;
-	float Wx = (Px + getPlayer()->getWeapon1()->getPositionX() + getPlayer()->getWeapon1()->getContentSize().width / 2);
-	float Wy = (Py + getPlayer()->getWeapon1()->getPositionY());
-	Vec2 v = Vec2(Vec2(x - Wx, y - Wy) / sqrt((x - Wx) * (x - Wx) + (y - Wy) * (y - Wy)));
-	//CCLOG("%f %f", Px, Py);
-	if (getPlayer()->getMouseMap()[EventMouse::MouseButton::BUTTON_LEFT]&&getPlayer()->getPlayerAttribute()->getHp()>0)
-	{
-		AmmoList.push_back(getPlayer()->getWeapon1()->Attack());
-		AmmoList.back()->setTag(MyTag::PlayerAmmo_TAG);
-		addChild(AmmoList.back(),3);
-		auto physicBody = PhysicsBody::createBox(Size(10.0f, 10.0f), PhysicsMaterial(0, 0, 0));
-		AmmoList.back()->addComponent(physicBody);
-		//AmmoList.back()->getPhysicsBody()->setDynamic(false);
-		AmmoList.back()->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
-		AmmoList.back()->getPhysicsBody()->setVelocity(v * 500);
-		AmmoList.back()->getPhysicsBody()->setCategoryBitmask(0x0001);//0001
-		AmmoList.back()->getPhysicsBody()->setCollisionBitmask(0x0001);//0001
-		AmmoList.back()->getPhysicsBody()->setContactTestBitmask(0x0001);
-	}
-	//怪物子弹
 	for (int i = 0; i < parentMap->getMonster().size(); i++)
 	{
-		CCLOG("%d", i);
+		bool CanShoot = 0;
 		float Mx = parentMap->getMonster().at(i)->getPositionX();
 		float My = parentMap->getMonster().at(i)->getPositionY();
-		Vec2 m = Vec2(Vec2(Px -Mx, Py - My) / sqrt((Px - Mx) * (Px - Mx) + (Py - My)*(Py - My)));
-		if (parentMap->getMonster().at(i)->getIsDead() == 0&&parentMap->getMonster().at(i)->isAround())//没死
+		Vec2 m = Vec2(Vec2(Px - Mx, Py - My) / sqrt((Px - Mx) * (Px - Mx) + (Py - My) * (Py - My)));
+
+		if (parentMap->getMonster().at(i)->getIsDead() == 0 && parentMap->getMonster().at(i)->isAround())//没死
 		{
 
 			m_monsterPistolAmmoList.push_back(parentMap->getMonster().at(i)->MonsterAttack());
+			m_monsterPistolAmmoList.back()->start = clock();
 			m_monsterPistolAmmoList.back()->setTag(MyTag::MonsterAmmo_TAG);
-			addChild(m_monsterPistolAmmoList.back(),3);
+			addChild(m_monsterPistolAmmoList.back(), 3);
 			auto physicBody = PhysicsBody::createBox(Size(10.0f, 10.0f), PhysicsMaterial(0, 0, 0));
 			m_monsterPistolAmmoList.back()->addComponent(physicBody);
 			m_monsterPistolAmmoList.back()->getPhysicsBody()->setDynamic(false);
@@ -178,6 +153,74 @@ void BattleScene1::Ammoupdate(float dt)
 			m_monsterPistolAmmoList.back()->getPhysicsBody()->setContactTestBitmask(0x0010);
 		}
 	}
+}
+void BattleScene1::Ammoupdate(float dt)//玩家子弹的生成
+{
+
+	float x = getPlayer()->getMouseLocation().x;
+	float y = Director::getInstance()->getVisibleSize().height - getPlayer()->getMouseLocation().y;
+	float Px = getPlayer()->getPositionX() - getPlayer()->getContentSize().width / 2;
+	float Py = getPlayer()->getPositionY() - getPlayer()->getContentSize().height / 2;
+	float Wx = (Px + getPlayer()->getWeapon1()->getPositionX() + getPlayer()->getWeapon1()->getContentSize().width / 2);
+	float Wy = (Py + getPlayer()->getWeapon1()->getPositionY());
+	Vec2 v = Vec2(Vec2(x - Wx, y - Wy) / sqrt((x - Wx) * (x - Wx) + (y - Wy) * (y - Wy)));//从人物指向鼠标位置的单位向量
+
+	//玩家Pistol子弹
+	if (getPlayer()->getMouseMap()[EventMouse::MouseButton::BUTTON_LEFT]&&getPlayer()->getPlayerAttribute()->getHp()>0&&getPlayer()->getWeapon1()->getTag()==0)
+	{
+		bool CanShoot = 0;
+		if (AmmoList.size() == 0)//第一发子弹允许射出
+			CanShoot = 1;
+		else if (clock() - AmmoList.back()->start > 300)//两子弹之间时间间隔大于0.3s才允许射出
+			CanShoot = 1;
+		if (CanShoot)
+		{
+			AmmoList.push_back(getPlayer()->getWeapon1()->Attack());
+			AmmoList.back()->setTag(MyTag::PlayerAmmo_TAG);
+			AmmoList.back()->start = clock();//每个子弹内部的start负责记录出生时刻
+			addChild(AmmoList.back(), 3);
+			auto physicBody = PhysicsBody::createBox(Size(10.0f, 10.0f), PhysicsMaterial(0, 0, 0));
+			AmmoList.back()->addComponent(physicBody);
+			AmmoList.back()->getPhysicsBody()->setDynamic(false);
+			AmmoList.back()->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
+			AmmoList.back()->getPhysicsBody()->setVelocity(v * 500);
+			AmmoList.back()->getPhysicsBody()->setCategoryBitmask(0x0001);//0001
+			AmmoList.back()->getPhysicsBody()->setCollisionBitmask(0x0001);//0001
+			AmmoList.back()->getPhysicsBody()->setContactTestBitmask(0x0001);
+		}
+	
+	}
+	//玩家Sword子弹
+	if (getPlayer()->getMouseMap()[EventMouse::MouseButton::BUTTON_LEFT] && getPlayer()->getPlayerAttribute()->getHp() > 0 && getPlayer()->getWeapon1()->getTag() == 1)
+	{
+		bool CanShoot = 0;
+		if (AmmoList.size() == 0)
+			CanShoot = 1;
+		else if (clock() - AmmoList.back()->start > 300)
+			CanShoot = 1;
+			
+		if (CanShoot)
+		{
+			AmmoList.push_back(getPlayer()->getWeapon1()->Attack());
+			AmmoList.back()->start = clock();
+			AmmoList.back()->setTag(MyTag::PlayerAmmo_Sword_TAG);
+			addChild(AmmoList.back(), 3);
+			auto physicBody = PhysicsBody::createBox(Size(60.0f, 60.0f), PhysicsMaterial(0, 0, 0));
+			AmmoList.back()->addComponent(physicBody);
+			AmmoList.back()->getPhysicsBody()->setDynamic(false);
+			AmmoList.back()->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
+
+			AmmoList.back()->getPhysicsBody()->setCategoryBitmask(0x0001);//0001
+			AmmoList.back()->getPhysicsBody()->setCollisionBitmask(0x0001);//0001
+			AmmoList.back()->getPhysicsBody()->setContactTestBitmask(0x0001);
+			if (getPlayer()->getIsFlip())
+				AmmoList.back()->getSprite()->setFlippedX(1);
+		}
+		if (AmmoList.size())
+			getPlayer()->getWeapon1()->getSprite()->setOpacity(0);
+		
+	}
+	
 }
 
 bool BattleScene1::isWall(float x, float y)
@@ -199,17 +242,38 @@ void BattleScene1::DeleteAmmo(float dt)
 		int i = 0;
 		auto ix = AmmoList.begin();
 		int size = AmmoList.size();
-		for (; i < size; ix++, i++)
-		{
-			if (isWall((*ix)->getPositionX(), (*ix)->getPositionY()))
-			{
-				removeChild(AmmoList[i]);
-				AmmoList.erase(ix);
-				break;
-			}
 
+		if (getPlayer()->getWeapon1()->getTag() == Weapon::MyWeapon::Sword_Player)//Sword的子弹回收
+		{
+			for (; i < size; ix++, i++)
+			{
+				AmmoList[i]->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
+				double NowTime = clock();
+			
+				if (NowTime - AmmoList[i]->start -300>= -10 && NowTime - AmmoList[i]->start - 300 <= 10)
+				{
+					removeChild(AmmoList[i]);
+					AmmoList.erase(ix);
+					break;
+				}
+			}
 		}
+		else
+		{	//Pistol的子弹撞墙回收
+			for (; i < size; ix++, i++)
+			{
+				if (isWall((*ix)->getPositionX(), (*ix)->getPositionY()))
+				{
+					removeChild(AmmoList[i]);
+					AmmoList.erase(ix);
+					break;
+				}
+
+			}
+		}
+
 	}
+	//怪物手枪子弹的撞墙回收 
 	if (m_monsterPistolAmmoList.size() != 0)
 	{
 		int i = 0;
@@ -226,11 +290,12 @@ void BattleScene1::DeleteAmmo(float dt)
 
 		}
 	}
-}
 
+}
+//碰撞检测
 bool BattleScene1::onContactBegin(PhysicsContact& contact)
 {
-	PistolAmmo* ammo;
+	Ammo* ammo;
 	MonsterPistolAmmo* ammo_M;
 	Monster* monster;
 	Player* player;
@@ -238,8 +303,8 @@ bool BattleScene1::onContactBegin(PhysicsContact& contact)
 	auto nodeB = contact.getShapeB()->getBody()->getNode();
 	int TagA = nodeA->getTag();
 	int TagB = nodeB->getTag();
-	if (TagA == MyTag::PlayerAmmo_TAG)
-		ammo = dynamic_cast<PistolAmmo*>(nodeA);
+	if (TagA == MyTag::PlayerAmmo_TAG|| TagA == MyTag::PlayerAmmo_Sword_TAG)
+		ammo = dynamic_cast<Ammo*>(nodeA);
 	else if (TagA == MyTag::Monster_TAG)
 		monster = dynamic_cast<Monster*>(nodeA);
 	else if (TagA == 0)
@@ -247,15 +312,16 @@ bool BattleScene1::onContactBegin(PhysicsContact& contact)
 	else if (TagA == MyTag::MonsterAmmo_TAG)
 		ammo_M = dynamic_cast<MonsterPistolAmmo*>(nodeA);
 
-	if (TagB == MyTag::PlayerAmmo_TAG)
-		ammo = dynamic_cast<PistolAmmo*>(nodeB);
+	if (TagB== MyTag::PlayerAmmo_TAG || TagB == MyTag::PlayerAmmo_Sword_TAG)
+		ammo = dynamic_cast<Ammo*>(nodeB);
 	else if (TagB == MyTag::Monster_TAG)
 		monster = dynamic_cast<Monster*>(nodeB);
 	else if (TagB == 0)
 		player = dynamic_cast<Player*>(nodeB);
 	else if (TagB == MyTag::MonsterAmmo_TAG)
 		ammo_M = dynamic_cast<MonsterPistolAmmo*>(nodeB);
-	if ((TagB==MyTag::Monster_TAG&&TagA==MyTag::PlayerAmmo_TAG)|| (TagA == MyTag::Monster_TAG && TagB == MyTag::PlayerAmmo_TAG))//怪物撞玩家子弹
+	//怪物撞玩家手枪子弹
+	if ((TagB==MyTag::Monster_TAG&&TagA==MyTag::PlayerAmmo_TAG)|| (TagA == MyTag::Monster_TAG && TagB == MyTag::PlayerAmmo_TAG))
 	{
 		int i = 0;
 		auto ix = AmmoList.begin();
@@ -271,7 +337,17 @@ bool BattleScene1::onContactBegin(PhysicsContact& contact)
 		}
 		monster->takingDamage(1);
 	}
-	if ((TagA==MyTag::Player_TAG&&TagB==MyTag::MonsterAmmo_TAG)|| (TagB == MyTag::Player_TAG && TagA == MyTag::MonsterAmmo_TAG))//玩家撞怪物子弹
+	//怪物撞玩家刀剑子弹
+	if ((TagB == MyTag::Monster_TAG && TagA == MyTag::PlayerAmmo_Sword_TAG) || (TagA == MyTag::Monster_TAG && TagB == MyTag::PlayerAmmo_Sword_TAG))
+	{
+		int i = 0;
+		auto ix = AmmoList.begin();
+		int size = AmmoList.size();
+
+		monster->takingDamage(1);
+	}
+	//玩家撞怪物子弹
+	if ((TagA==MyTag::Player_TAG&&TagB==MyTag::MonsterAmmo_TAG)|| (TagB == MyTag::Player_TAG && TagA == MyTag::MonsterAmmo_TAG))
 	{
 		int i = 0;
 		auto ix = m_monsterPistolAmmoList.begin();

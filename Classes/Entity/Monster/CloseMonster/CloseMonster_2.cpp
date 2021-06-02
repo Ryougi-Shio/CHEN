@@ -26,18 +26,12 @@ void CloseMonster_2::dead()
 {
 	;
 }
-void CloseMonster_2::dead_flip()
-{
-	;
-}
+
 void CloseMonster_2::rest()
 {
 	;
 }
-void CloseMonster_2::rest_flip()
-{
-	;
-}
+
 void CloseMonster_2::run()
 {
 
@@ -59,24 +53,5 @@ void CloseMonster_2::run()
 	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
 
 
-
-}
-void CloseMonster_2::run_flip()
-{
-	Vector<SpriteFrame*>frameArray;
-	for (int i = 2; i <= 5; i++)
-	{
-		char s[50];
-		sprintf(s, "pig_monster%d_flip.png", i);
-		auto frame = m_frameCache->getSpriteFrameByName(s);
-		frameArray.pushBack(frame);
-	}
-	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.1f);
-	auto* action = Animate::create(animation);
-	this->getSprite()->runAction(action);
-
-	AnimationCache::destroyInstance();
-	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
 
 }

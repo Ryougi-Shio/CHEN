@@ -19,6 +19,7 @@ void  Monster::Birth(const std::string place_name)
 	TMXObjectGroup* objGroup = mScene->getParentMap()->getBattleMap()->getObjectGroup("Monster");//获取对象层
 	auto MonsterBirth = objGroup->getObject(place_name);//获取对象
 	setPosition(Vec2(MonsterBirth.at("x").asFloat(), MonsterBirth.at("y").asFloat()));//出生位置设置
+	this->schedule(CC_SCHEDULE_SELECTOR(Monster::FlipUpdate), 0.01f);
 }
 
 
@@ -147,34 +148,23 @@ void Monster::rest()
 {
 	;
 }
-void Monster::rest_flip()
-{
-	;
-}void Monster::run()
-{
-	;
-}
-void Monster::run_flip()
+
+void Monster::run()
 {
 	;
 }
+
 void Monster::dead()
 {
 	;
 }
-void Monster::dead_flip()
-{
-	;
-}
+
 void Monster::DeadUpdate(float dt)
 {
 	if (mHp <= 0)
 	{
 		this->stopAllActions();
-		if (!isFlip)
-			dead();
-		else
-			dead_flip();
+		dead();
 		this->unschedule(CC_SCHEDULE_SELECTOR(Monster::MoveUpdate));
 		this->unschedule(CC_SCHEDULE_SELECTOR(Monster::TFSMupdate));
 	}
@@ -187,40 +177,26 @@ MonsterPistolAmmo* Monster::MonsterAttack()
 void  Monster::	MoveUpdate(float dt)
 {
 	if (isAround())
-	{
 		ApproachPlayer();
-	}
 	else
-	{
 		StrollAround();
-	}
 	move();
-	if (movespeedX > 0)
+
+	if (movespeedX)
 	{
 		TFSM_M->changeState(new RunState_M());//改变状态机
-		isFlip = 0;
-
+		if (movespeedX > 0)
+			isFlip = 0;
+		else
+			isFlip = 1;
 	}
-	if (movespeedX < 0)
-	{
-		TFSM_M->changeState(new RunState_Flip_M());
-		isFlip = 1;
-	}
-
 	if ((!movespeedX) && (!movespeedY))
-	{
-		if (!isFlip)
-			TFSM_M->changeState(new RestState_M());
-		else
-			TFSM_M->changeState(new RestState_Flip_M());
-	}
+		TFSM_M->changeState(new RestState_M());
+		
 	if (movespeedY)
-	{
-		if (!isFlip)
-			TFSM_M->changeState(new RunState_M());
-		else
-			TFSM_M->changeState(new RunState_Flip_M());
-	}
+		TFSM_M->changeState(new RunState_M());
+
+
 }
 void Monster::TFSMupdate(float dt)
 {
@@ -229,9 +205,14 @@ void Monster::TFSMupdate(float dt)
 	{
 		this->unschedule(CC_SCHEDULE_SELECTOR(Monster::MoveUpdate));
 		this->unschedule(CC_SCHEDULE_SELECTOR(Monster::TFSMupdate));
-		if (!isFlip)
-			dead();
-		else
-			dead_flip();
+		dead();
+
 	}
+}
+void Monster::FlipUpdate(float dt)
+{
+	if (isFlip)
+		this->getSprite()->setFlippedX(1);
+	else
+		this->getSprite()->setFlippedX(0);
 }
