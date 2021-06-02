@@ -4,6 +4,7 @@
 #include"PlayerTFSM/PlayerTFSM.h"
 #include"Player/PlayerMove.h"
 #include"Weapon/Pistol.h"
+#include"Weapon/Sword.h"
 #include"music.h"
 bool Player::init()
 {
@@ -21,9 +22,11 @@ bool Player::init()
 	TFSM->bindPlayer(this);
 	this->scheduleUpdate();//开启调用update函数的能力
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
+	this->schedule(CC_SCHEDULE_SELECTOR(Player::FlipUpdate), 0.01f);
 	PLAYERMOVE = PlayerMove::create();
 	PLAYERMOVE->retain();
 	PLAYERMOVE->bindPlayer(this);
+	
 	AnimateFrameCache_init();
 	return 1;
 }
@@ -64,26 +67,7 @@ void Player::rest()
 
 
 }
-void Player::rest_flip()
-{
-	
-	Vector<SpriteFrame*>frameArray;
-	for (int i = 1; i <= 4; i++)
-	{
-		char s[40];
-		sprintf(s, "knight_rest%d_flip.png", i);
-		auto frame = m_frameCache->getSpriteFrameByName(s);
-		frameArray.pushBack(frame);
-	}
-	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	//animation->setLoops(-1);//-1表示无限播放
-	animation->setDelayPerUnit(0.1f);
-	auto* action = Animate::create(animation);
-	getSprite()->runAction(action);
 
-	AnimationCache::destroyInstance();
-
-}
 void Player::run()
 {
 	
@@ -102,25 +86,7 @@ void Player::run()
 	AnimationCache::destroyInstance();
 	
 }
-void Player::run_flip()
-{
-	
-	Vector<SpriteFrame*>frameArray;
-	for (int i = 2; i <= 4; i++)
-	{
-		char s[40];
-		sprintf(s, "knight_move%d_flip.png", i);
-		auto frame = m_frameCache->getSpriteFrameByName(s);
-		frameArray.pushBack(frame);
-	}
-	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.1f);
-	auto* action = Animate::create(animation);
-	getSprite()->runAction(action);
-	AnimationCache::destroyInstance();
-	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();//清理精灵帧缓存
 
-}
 void Player::dead()
 {
 	Vector<SpriteFrame*>frameArray;
@@ -140,7 +106,7 @@ void Player::dead()
 
 /*
 
-* 目前bug：动画有延迟
+* 目前bug：
 * 目前需求：
 */
 
@@ -165,7 +131,10 @@ void Player::update(float delta)//update for Player
 	//Player运动
 
 	PLAYERMOVE->Move();
-	weapon1->update(delta);
+	if(weapon1)
+		weapon1->update(delta);
+	if (weapon2)
+		weapon2->update(delta);
 	float x = mouseLocation.x;
 	float y = mouseLocation.y;
 //	pistol->getSprite()->setRotation(x);
@@ -176,6 +145,7 @@ bool Player::getIsFlip()
 {
 	return PLAYERMOVE->getIsFlip();
 }
+
 std::map<EventMouse::MouseButton, bool> Player::getMouseMap()
 {
 	return mouseMap;
@@ -184,15 +154,28 @@ Weapon* Player::getWeapon1()
 {
 	return weapon1;
 }
+Weapon* Player::getWeapon2()
+{
+	return weapon2;
+}
 void Player::PistolInit()
 {
 	weapon1 = Pistol::create();
 	weapon1->retain();
 	weapon1->bindPlayer(this);
 	weapon1->setPosition(getSprite()->getContentSize().width/2 , getContentSize().height / 2);
+	weapon1->setTag(Weapon::MyWeapon::Pistol_Player);
 	
 }
+void Player::SwordInit()
+{
+	weapon1 = Sword::create();
+	weapon1->retain();
+	weapon1->bindPlayer(this);
+	weapon1->setPosition(getSprite()->getContentSize().width / 2+5,-20);
 
+	weapon1->setTag(Weapon::MyWeapon::Sword_Player);
+}
 void Player::changeMouseLocation(Vec2 location)
 {
 	mouseLocation = location;
@@ -207,4 +190,12 @@ void Player::deadNotice()
 {
 	
 }
+void Player::FlipUpdate(float dt)//翻转
+{
+	if (getIsFlip() == 0)
+		this->getSprite()->setFlippedX(0);
+	else
+		this->getSprite()->setFlippedX(1);
+}
 Weapon* Player::weapon1;
+Weapon* Player::weapon2;

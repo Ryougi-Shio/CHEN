@@ -43,30 +43,12 @@ void CloseMonster_1::dead()
 
 	AnimationCache::destroyInstance();
 }
-void CloseMonster_1::dead_flip()
-{
-	isdead = 1;
-	Vector<SpriteFrame*>frameArray;
 
-	auto frame1 = m_frameCache->getSpriteFrameByName("O_small_monster_dead_flip.png");
-	frameArray.pushBack(frame1);
-
-
-	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.1f);
-	auto* action = Animate::create(animation);
-	this->getSprite()->runAction(action);
-
-	AnimationCache::destroyInstance();
-}
 void CloseMonster_1::rest()
 {
 	;
 }
-void CloseMonster_1::rest_flip()
-{
-	;
-}
+
 void CloseMonster_1::run()
 {
 
@@ -89,21 +71,4 @@ void CloseMonster_1::run()
 
 
 
-}
-void CloseMonster_1::run_flip()
-{
-	Vector<SpriteFrame*>frameArray;
-	for (int i = 1; i <= 4; i++)
-	{
-		char s[50];
-		sprintf(s, "O_small_monster_move%d_flip.png", i);
-		auto frame = m_frameCache->getSpriteFrameByName(s);
-		frameArray.pushBack(frame);
-	}
-	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.1f);
-	auto* action = Animate::create(animation);
-	this->getSprite()->runAction(action);
-
-	AnimationCache::destroyInstance();
 }

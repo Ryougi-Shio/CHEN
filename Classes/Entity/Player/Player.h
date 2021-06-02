@@ -19,9 +19,9 @@ class Player : public Entity
 public:
 	virtual bool init();
 	void rest();//待机动画函数
-	void rest_flip();
+
 	void run();//跑步动画函数
-	void run_flip();
+
 	void TFSMupdate(float dt);//动画状态机专用update，每0.4f一次调用
 	PlayerAttribute* getPlayerAttribute();
 	PlayerMove* getplayermove();
@@ -30,11 +30,14 @@ public:
 	void trueMouseMap(EventMouse::MouseButton key);
 	void flaseMouseMap(EventMouse::MouseButton key);
 	void PistolInit();
+	void SwordInit();
 	void changeMouseLocation(Vec2 location);
 	Vec2 getMouseLocation();
 	bool getIsFlip();
+	void FlipUpdate(float dt);
 	std::map<EventMouse::MouseButton, bool> getMouseMap();
 	Weapon* getWeapon1();
+	Weapon* getWeapon2();
 	void dead();
 	void deadNotice();
 
@@ -47,6 +50,7 @@ private:
 	SpriteFrameCache* m_frameCache;
 
 	static Weapon* weapon1;
+	static Weapon* weapon2;
 	std::map<EventMouse::MouseButton, bool> mouseMap;
 	Vec2 mouseLocation;
 };

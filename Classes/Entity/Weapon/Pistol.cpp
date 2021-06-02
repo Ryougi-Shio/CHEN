@@ -12,7 +12,7 @@ bool Pistol::init()
 	return 1;
 }
 
-PistolAmmo* Pistol::Attack()
+Ammo* Pistol::Attack()
 {
 	return PistolAmmo::create();
 }
@@ -33,9 +33,17 @@ void Pistol::update(float dt)
 		getSprite()->setRotation(-r);
 	}
 	if (getPlayer()->getIsFlip())
+	{
+		getSprite()->setFlippedY(1);
 		setPositionX(-getPlayer()->getSprite()->getContentSize().width / 2);
+
+	}
 	else
+	{
+		getSprite()->setFlippedY(0);
 		setPositionX(getPlayer()->getSprite()->getContentSize().width / 2);
+	}
+
 
 }
 

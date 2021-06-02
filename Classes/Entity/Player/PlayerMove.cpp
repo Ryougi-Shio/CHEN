@@ -6,6 +6,7 @@
 #define PX 52
 #define PY 60
 USING_NS_CC;
+
 void PlayerMove::bindPlayer(Player* player)
 {
 	mPlayer = player;
@@ -18,38 +19,33 @@ bool PlayerMove::getIsFlip()
 {
 	return isFlip;
 }
+
 void PlayerMove::playerMove()
 {
 	auto move = MoveBy::create(0, Vec2(movespeedX, movespeedY));
 	this->getPlayer()->runAction(move);//进行实质移动
 
 
-	if (movespeedX > 0)
+	if (movespeedX)
 	{
 		mPlayer->TFSM->changeState(new RunState());//改变状态机
-		isFlip = 0;
+		if (movespeedX > 0)
+			isFlip = 0;
+		else
+			isFlip = 1;
+	}
 
-	}
-	if (movespeedX < 0)
-	{
-		mPlayer->TFSM->changeState(new RunState_Flip());
-		isFlip = 1;
-	}
 
 	if ((!movespeedX) && (!movespeedY))
-	{
-		if (!isFlip)
-			mPlayer->TFSM->changeState(new RestState());
-		else
-			mPlayer->TFSM->changeState(new RestState_Flip());
-	}
+		mPlayer->TFSM->changeState(new RestState());
+	
 	if (movespeedY)
 	{
-		if (!isFlip)
-			mPlayer->TFSM->changeState(new RunState());
-		else
-			mPlayer->TFSM->changeState(new RunState_Flip());
+		mPlayer->TFSM->changeState(new RunState());
+
 	}
+
+	
 }
 void PlayerMove::startmoveX(float x)
 {
@@ -108,9 +104,7 @@ bool PlayerMove::isWall(float Px, float Py)
 {
 	int mapX = (int)(Px / 64);
 	int mapY = (int)(12 - Py / 64);
-	//CCLOG("X:%d    Y:%d", mapX, mapY);
 	int tileGid = map->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
-	//CCLOG("%d", tileGid);
 	if (tileGid)
 	{
 		//CCLOG("TTTTTTT");//是墙，不能走

@@ -26,10 +26,7 @@ void CloseMonster_4::dead()
 {
 	;
 }
-void CloseMonster_4::dead_flip()
-{
-	;
-}
+
 void CloseMonster_4::rest()
 {
 	Vector<SpriteFrame*>frameArray;
@@ -48,23 +45,7 @@ void CloseMonster_4::rest()
 	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
 
 }
-void CloseMonster_4::rest_flip()
-{
-	Vector<SpriteFrame*>frameArray;
 
-	auto frame1 = m_frameCache->getSpriteFrameByName("Y_craw_monster2_flip.png");
-	frameArray.pushBack(frame1);
-	auto frame2 = m_frameCache->getSpriteFrameByName("Y_craw_monster6_flip.png");
-	frameArray.pushBack(frame2);
-
-	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.2f);
-	auto* action = Animate::create(animation);
-	this->getSprite()->runAction(action);
-
-	AnimationCache::destroyInstance();
-	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
-}
 void CloseMonster_4::run()
 {
 
@@ -74,28 +55,6 @@ void CloseMonster_4::run()
 	{
 		char s[50];
 		sprintf(s, "Y_craw_monster%d.png", i);
-		auto frame = m_frameCache->getSpriteFrameByName(s);
-		frameArray.pushBack(frame);
-	}
-	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.1f);
-	auto* action = Animate::create(animation);
-	this->getSprite()->runAction(action);
-
-	AnimationCache::destroyInstance();
-	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
-
-
-
-}
-void CloseMonster_4::run_flip()
-{
-
-	Vector<SpriteFrame*>frameArray;
-	for (int i = 2; i <= 5; i++)
-	{
-		char s[50];
-		sprintf(s, "Y_craw_monster%d_flip.png", i);
 		auto frame = m_frameCache->getSpriteFrameByName(s);
 		frameArray.pushBack(frame);
 	}
