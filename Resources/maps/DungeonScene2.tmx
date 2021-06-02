@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="64" tileheight="64" infinite="0" nextlayerid="7" nextobjectid="6">
+ <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64" tilecount="48" columns="6">
+  <image source="ground.png" width="384" height="512"/>
+ </tileset>
+ <tileset firstgid="49" name="wall" tilewidth="64" tileheight="64" tilecount="10" columns="10">
+  <image source="wall.png" width="640" height="64"/>
+ </tileset>
+ <tileset firstgid="59" name="ground_else" tilewidth="64" tileheight="64" tilecount="49" columns="7">
+  <image source="tiles1.png" width="448" height="448"/>
+ </tileset>
+ <layer id="1" name="ground" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJyVktEJwDAIRDOdK/RL3X+LVkhAHmpo4ChJ7+lFImstKRTr2YrljS+kn2x7HGzmLXk18YYaVW9LOvvDO/7deAVvEPNXXsFZl3FS1V+b/o4v53ebP7Pm/P5z/lP+js/1ySvuV/F8P9N77GpU3heY8Toe
+  </data>
+ </layer>
+ <objectgroup id="3" name="Monster">
+  <object id="2" name="Monster_birth3" x="734.352" y="348.154" width="74.9339" height="74.9339"/>
+  <object id="3" name="Monster_birth2" x="806.98" y="145.256" width="74.9339" height="74.9339"/>
+  <object id="4" name="Monster_birth1" x="726.282" y="571.65" width="74.9339" height="74.9339"/>
+ </objectgroup>
+ <layer id="2" name="wall" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJytkkELwCAIhd+v816doo7baf//PgQl53JtsAdChZ8v1AKgSCRzPjDUgxyOjKvIsZA74a4sNTzfzL0GLMwfrHbnv8lbxPv/aw2SiNjI/4u0l3/6c77tX3+oMeP9/KLZKZ8WfFvwM//60p+9dYf8Xs721+YodwKd+hws
+  </data>
+ </layer>
+</map>

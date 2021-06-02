@@ -72,6 +72,13 @@ Classes/Entity/Monster/CloseMonster/CloseMonster_4.cpp
 Classes/Entity/Monster/MonsterTFSM/MonsterTFSM.cpp
 Classes/Entity/Monster/MonsterTFSM/State_M/MonsterStates.cpp
 Classes/Entity/Monster/MonsterTFSM/State_M/State_M.cpp
+Classes/Entity/Weapon/Pistol.cpp
+Classes/Entity/Weapon/Sword.cpp
+Classes/Entity/Weapon/Weapon.cpp
+Classes/Entity/Weapon/Ammo/Ammo.cpp
+Classes/Entity/Weapon/Ammo/MonsterPistolAmmo.cpp
+Classes/Entity/Weapon/Ammo/PistolAmmo.cpp
+Classes/Entity/Weapon/Ammo/SwordAmmo.cpp
 Classes/music/music.cpp
 Classes/PlayerTFSM/PlayerTFSM.cpp
 Classes/PlayerTFSM/State/PlayerStates.cpp
@@ -80,6 +87,7 @@ Classes/Scene/NormalScene.cpp
 Classes/Scene/SafeScene.cpp
 Classes/Scene/StartScene.cpp
 Classes/Scene/BattleScene.cpp
+Classes/Map/BattleMap.cpp
 
 
 
@@ -108,6 +116,13 @@ Classes/Entity/Monster/CloseMonster/CloseMonster_4.h
 Classes/Entity/Monster/MonsterTFSM/MonsterTFSM.h
 Classes/Entity/Monster/MonsterTFSM/State_M/MonsterStates.h
 Classes/Entity/Monster/MonsterTFSM/State_M/State_M.h
+Classes/Entity/Weapon/Pistol.h
+Classes/Entity/Weapon/Sword.h
+Classes/Entity/Weapon/Weapon.h
+Classes/Entity/Weapon/Ammo/Ammo.h
+Classes/Entity/Weapon/Ammo/MonsterPistolAmmo.h
+Classes/Entity/Weapon/Ammo/PistolAmmo.h
+Classes/Entity/Weapon/Ammo/SwordAmmo.h
 Classes/music/music.h
 Classes/PlayerTFSM/PlayerTFSM.h
 Classes/PlayerTFSM/State/PlayerStates.h
@@ -116,6 +131,7 @@ Classes/Scene/NormalScene.h
 Classes/Scene/SafeScene.h
 Classes/Scene/StartScene.h
 Classes/Scene/BattleScene.h
+Classes/Map/BattleMap.h
 
 
 Classes/json/autolink.h
