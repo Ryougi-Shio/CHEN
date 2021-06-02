@@ -39,7 +39,7 @@ bool SafeScene::init()
 	bindPlayer(Player::create());
 //	getPlayer()->PistolInit();//手枪
 	getPlayer()->SwordInit();//剑
-	getPlayer()->getPlayerAttribute()->hpApMoneyinit(5, 5);//玩家属性初始化
+	getPlayer()->getPlayerAttribute()->hpApMoneyinit();//玩家属性初始化
 	getPlayer()->setPosition(64 * 4 + 32, 64 * 4 + 32);
 	getPlayer()->getplayermove()->bindMap(map);//PlayerMove跟这个地图绑定
 	getPlayer()->getPlayerAttribute()->setPosition(getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().width / 2,

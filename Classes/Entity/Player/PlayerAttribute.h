@@ -12,7 +12,7 @@ USING_NS_CC;
 class PlayerAttribute :public Entity
 {
 public:
-	void hpApMoneyinit(int hp, int ap);//初始化三个属性
+	void hpApMoneyinit();//初始化三个属性
 	virtual bool init();
 	int getHp();
 	int getAp();
@@ -22,16 +22,19 @@ public:
 	void ApHealing(float dt);//护甲回复
 	void bindPlayer(Player* player);
 	void DeadUpdate(float dt);
+	void changeHero(char hero[]);
 	virtual void update(float dt);
 	CREATE_FUNC(PlayerAttribute);
 private:
 	static int mhp;
 	static int map;
 	static int mmoney;
+	int maxHp;
+	int maxAp;
 	Player* mplayer;
 	bool isDamaged;
 	Label* moneyLabel;
 	Label* apLabel;
 	Label* hpLabel;
-	
+	static char heroName[10];
 };
