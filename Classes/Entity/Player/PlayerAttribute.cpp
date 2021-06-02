@@ -1,21 +1,33 @@
 #include"PlayerAttribute.h"
 #include"Player/Player.h"
-#define MaxHp 5
-#define MaxAp 5
+#include"json/json.h"
 USING_NS_CC;
 bool PlayerAttribute::init()
 {
+	Json::Reader reader;
+	Json::Value root;
+	std::string data = FileUtils::getInstance()->getStringFromFile("json/Hero.json");
+	if (reader.parse(data, root, false) == true)
+	{
+		CCLOG("%d", root.isMember("knight"));
+		if (strlen(heroName) == 0)
+		{
+			changeHero("knight");
+		}
+		maxHp = root[heroName]["Hp"].asInt();
+		maxAp = root[heroName]["Ap"].asInt();
+	}
 	bindSprite(Sprite::create("UI/attribute_UI.png"));
 	getSprite()->setPosition(Vec2::ZERO);
 	//hpUI
 	char hps[7];
-	sprintf(hps, "%d/%d", mhp, MaxHp);
+	sprintf(hps, "%d/%d", mhp, maxHp);
 	hpLabel = Label::createWithTTF(std::string(hps), "fonts/Marker Felt.ttf", 16);
 	hpLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height - hpLabel->getContentSize().height);
 	getSprite()->addChild(hpLabel);
 	//apUI
 	char aps[7];
-	sprintf(aps, "%d/%d", map, MaxAp);
+	sprintf(aps, "%d/%d", map, maxAp);
 	apLabel = Label::createWithTTF(std::string(aps), "fonts/Marker Felt.ttf", 16);
 	apLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
 		hpLabel->getContentSize().height - apLabel->getContentSize().height);
@@ -35,10 +47,10 @@ bool PlayerAttribute::init()
 void PlayerAttribute::update(float dt)
 {
 	char hps[7];
-	sprintf(hps, "%d/%d", mhp, MaxHp);
+	sprintf(hps, "%d/%d", mhp, maxHp);
 	hpLabel->setString(std::string(hps));
 	char aps[7];
-	sprintf(aps, "%d/%d", map, MaxAp);
+	sprintf(aps, "%d/%d", map, maxAp);
 	apLabel->setString(std::string(aps));
 	char moneys[7];
 	sprintf(moneys, "%d", mmoney);
@@ -52,7 +64,7 @@ void PlayerAttribute::ApHealingStart(float dt)
 //»Ö¸´»¤¼×
 void PlayerAttribute::ApHealing(float dt)
 {
-	if (map<MaxAp)
+	if (map<maxAp)
 	{
 		map++;
 	}
@@ -82,10 +94,10 @@ void PlayerAttribute::takeDamage(int damage)
 	this->scheduleOnce(CC_SCHEDULE_SELECTOR(PlayerAttribute::ApHealingStart), 2.0f);
 }
 
-void PlayerAttribute::hpApMoneyinit(int hp, int ap)
+void PlayerAttribute::hpApMoneyinit()
 {
-	mhp = hp;
-	map = ap;
+	mhp = maxHp;
+	map = maxAp;
 	mmoney = 0;
 }
 
@@ -116,6 +128,11 @@ void PlayerAttribute::DeadUpdate(float dt)
 		mplayer->dead();
 	}
 }
+void PlayerAttribute::changeHero(char hero[])
+{
+	strcpy(heroName, hero);
+}
 int PlayerAttribute::mhp;
 int PlayerAttribute::map;
 int PlayerAttribute::mmoney;
+char PlayerAttribute::heroName[10];

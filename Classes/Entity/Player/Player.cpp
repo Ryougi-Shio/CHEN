@@ -8,12 +8,20 @@
 #include"music.h"
 bool Player::init()
 {
+	if (strlen(heroName) == 0)
+	{
+		changeHero("knight");
+	}
 	if (weapon1!=nullptr)
 	{
 		weapon1->bindPlayer(this);
 		this->addChild(weapon1, 2);
 	}
-	bindSprite(Sprite::create("Player/knight_rest1.png"));
+	{
+		char s[40];
+		sprintf(s, "Player/%s_rest1.png", heroName);
+		bindSprite(Sprite::create(s));
+	}
 	playerAttribute = PlayerAttribute::create();
 	playerAttribute->retain();
 	playerAttribute->bindPlayer(this);
@@ -43,7 +51,10 @@ PlayerMove* Player::getplayermove()
 void Player::AnimateFrameCache_init()
 {
 	m_frameCache = SpriteFrameCache::getInstance();//获取动画缓存实例对象
-	m_frameCache->addSpriteFramesWithFile("Player/knight_animate.plist", "Player/knight_animate.png");//添加帧动画文件到缓存
+	char plist[40],png[40];
+	sprintf(plist, "Player/%s_animate.plist", heroName);
+	sprintf(png, "Player/%s_animate.png", heroName);
+	m_frameCache->addSpriteFramesWithFile(plist, png);//添加帧动画文件到缓存
 }
 void Player::rest()
 {
@@ -53,7 +64,7 @@ void Player::rest()
 	for (int i = 1; i <= 4; i++)
 	{
 		char s[40];
-		sprintf(s, "knight_rest%d.png", i);
+		sprintf(s, "%s_rest%d.png",heroName,i);
 		auto frame = m_frameCache->getSpriteFrameByName(s);
 		frameArray.pushBack(frame);//将帧加入到序列中
 	}
@@ -75,7 +86,7 @@ void Player::run()
 	for (int i = 2; i <= 4; i++)
 	{
 		char s[40];
-		sprintf(s, "knight_move%d.png", i);
+		sprintf(s, "%s_move%d.png",heroName,i);
 		auto frame = m_frameCache->getSpriteFrameByName(s);
 		frameArray.pushBack(frame);
 	}
@@ -91,8 +102,15 @@ void Player::dead()
 {
 	Vector<SpriteFrame*>frameArray;
 	auto frameCache= SpriteFrameCache::getInstance();
-	frameCache->addSpriteFramesWithFile("Player/knight_animate.plist", "Player/knight_animate.png");
-	auto frame1 =frameCache->getSpriteFrameByName("knight_down.png");
+	{
+		char plist[40], png[40];
+		sprintf(plist, "Player/%s_animate.plist", heroName);
+		sprintf(png, "Player/%s_animate.png", heroName);
+		frameCache->addSpriteFramesWithFile(plist, png);
+	}
+	char frame[40];
+	sprintf(frame, "%s_down.png", heroName);
+	auto frame1 =frameCache->getSpriteFrameByName(frame);
 	frameArray.pushBack(frame1);
 
 
@@ -190,6 +208,18 @@ void Player::deadNotice()
 {
 	
 }
+void Player::changeHero(char hero[])
+{
+	strcpy(heroName, hero);
+	if (playerAttribute!=nullptr)
+	{
+		playerAttribute->changeHero(hero);
+	}
+}
+char* Player::getHeroName()
+{
+	return heroName;
+}
 void Player::FlipUpdate(float dt)//翻转
 {
 	if (getIsFlip() == 0)
@@ -199,3 +229,4 @@ void Player::FlipUpdate(float dt)//翻转
 }
 Weapon* Player::weapon1;
 Weapon* Player::weapon2;
+char Player::heroName[10];

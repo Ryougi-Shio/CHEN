@@ -40,7 +40,8 @@ public:
 	Weapon* getWeapon2();
 	void dead();
 	void deadNotice();
-
+	void changeHero(char hero[]);
+	char* getHeroName();
 	CREATE_FUNC(Player);
 	friend class PlayerMove;
 private:
@@ -48,9 +49,9 @@ private:
 	PlayerMove* PLAYERMOVE;
 	PlayerAttribute* playerAttribute;
 	SpriteFrameCache* m_frameCache;
-
 	static Weapon* weapon1;
 	static Weapon* weapon2;
 	std::map<EventMouse::MouseButton, bool> mouseMap;
 	Vec2 mouseLocation;
+	static char heroName[10];
 };
