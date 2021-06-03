@@ -19,5 +19,3 @@ v0.0.5-yy
 v0.0.6-wyy
 增加Weapon类Ammo类,实现Pistol手枪
 实现跟随鼠标单击开枪
-v0.0.6.1
-更新了cmakelist（之前里面未包含Weapon文件夹）,添加三张图（dungeon开头的那三个）
