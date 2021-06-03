@@ -37,8 +37,8 @@ bool SafeScene::init()
 
 	//玩家创建
 	bindPlayer(Player::create());
-//	getPlayer()->PistolInit();//手枪
-	getPlayer()->SwordInit();//剑
+	getPlayer()->PistolInit();//手枪
+///	getPlayer()->SwordInit();//剑
 	getPlayer()->getPlayerAttribute()->hpApMoneyinit();//玩家属性初始化
 	getPlayer()->setPosition(64 * 4 + 32, 64 * 4 + 32);
 	getPlayer()->getplayermove()->bindMap(map);//PlayerMove跟这个地图绑定
@@ -55,6 +55,8 @@ bool SafeScene::init()
 	safeGate->setPosition(64*9.45,64*10);
 	safeGate->bindPlayer(getPlayer());
 	safeGate->bindStart(this);
+//	safeGate->notice();
+
 	//safeGate->bindDestination(BattleScene::create());
 	this->addChild(safeGate, 5);
 

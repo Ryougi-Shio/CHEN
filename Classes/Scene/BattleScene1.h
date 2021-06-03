@@ -1,6 +1,7 @@
 #pragma once
 #include"cocos2d.h"
 #include"NormalBattleScene.h"
+#include"MapGate.h"
 class Gate;
 class PistolAmmo;
 class Ammo;
@@ -16,6 +17,7 @@ public:
 	void DeleteAmmo(float dt);
 	bool onContactBegin(PhysicsContact& contact);
 	void AmmoUpdate_Monster(float dt);
+	void MapGateInit();
 	enum MyTag
 	{
 		Player_TAG,
@@ -24,8 +26,10 @@ public:
 		PlayerAmmo_Sword_TAG,
 		MonsterAmmo_TAG
 	};
+	void inGate();
 	CREATE_FUNC(BattleScene1);
 private:
 	std::vector<Ammo*> AmmoList;
 	std::vector<MonsterPistolAmmo*> m_monsterPistolAmmoList;
+	Vector<MapGate*>m_mapgate;
 };

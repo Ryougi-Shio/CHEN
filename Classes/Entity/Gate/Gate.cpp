@@ -9,7 +9,7 @@ USING_NS_CC;
 bool Gate::init()
 {
 	bindSprite(Sprite::create("maps/transfergate.png"));
-	//this->scheduleUpdate();//开启调用update函数的能力
+
 	return true;
 }
 void Gate::bindPlayer(Player* mPlayer)
@@ -20,7 +20,7 @@ bool Gate::isAround(float Px, float Py)//判断玩家是否在周围
 {
 	float Gx = this->getPositionX();
 	float Gy = this->getPositionY();
-	if ((Px >= Gx - WIDTH * 0.5) && (Px <= Gx + WIDTH * 0.5) && (Py >= Gy - LENGTH * 0.5) && (Py <= Gx + LENGTH * 0.5))
+	if ((Px >= Gx - WIDTH * 0.5) && (Px <= Gx + WIDTH * 0.5) && (Py >= Gy - LENGTH * 0.5) && (Py <= Gy + LENGTH * 0.5))
 		return true;
 	else
 		return false;
@@ -47,14 +47,23 @@ NormalScene* Gate::getDestination()
 void Gate::notice()
 {
 	auto keymap = player->getplayermove()->getkeyMap();
-	noticeLabel = Label::createWithTTF("E", "fonts/Marker Felt.ttf",24);
-	start->addChild(noticeLabel,6);
-	noticeLabel->setPosition(getPosition().x, getPosition().y + noticeLabel->getContentSize().height * 1.5);
+	
+	if (!isOn)
+	{
+		noticeLabel = Label::createWithTTF(Content, "fonts/Marker Felt.ttf", 24);
+		start->addChild(noticeLabel, 6);
+
+		noticeLabel->setPosition(getPosition().x, getPosition().y + noticeLabel->getContentSize().height * 1.5);
+	}
+
+		
+	
 	if (keymap[EventKeyboard::KeyCode::KEY_E])
 	{
 		SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();//清理精灵帧缓存
 		Director::getInstance()->replaceScene(BattleScene1::create());
 	}
+	isOn = 1;
 }
 
 void Gate::update(float delta)
@@ -63,10 +72,15 @@ void Gate::update(float delta)
 	float Py = player->getPositionY();
 	if (isAround(Px, Py))
 	{
+		Content = "E";
 		notice();
+
+
 	}
 	else
 	{
-		;//此处应清除notice，但目前没有办法
+
+//此处应清除notice，但目前没有办法
 	}
+
 }

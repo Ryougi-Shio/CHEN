@@ -32,7 +32,7 @@ public:
 	void TrueKeyCode(EventKeyboard::KeyCode keycode);
 	void FalseKeyCode(EventKeyboard::KeyCode keycode);
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> getkeyMap();
-
+	void FlipToMouse();
 	Player* getPlayer();
 
 	CREATE_FUNC(PlayerMove);

@@ -27,4 +27,6 @@ private:
 	NormalScene* start;
 	NormalScene* destination;
 	Label* noticeLabel;
+	std::string Content;
+	bool isOn=0;
 };

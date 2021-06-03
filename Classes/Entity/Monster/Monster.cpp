@@ -13,13 +13,21 @@
 #define HEIGHTH 48
 USING_NS_CC;
 
-void  Monster::Birth(const std::string place_name)
+void  Monster::Birth()
 {
 	//对象层的使用
 	TMXObjectGroup* objGroup = mScene->getParentMap()->getBattleMap()->getObjectGroup("Monster");//获取对象层
-	auto MonsterBirth = objGroup->getObject(place_name);//获取对象
+	auto s = new char[40];
+	sprintf(s,"Monster_birth%d", rand() % 4 + 1);
+	auto MonsterBirth = objGroup->getObject(s);//获取对象
+	delete s;
 	setPosition(Vec2(MonsterBirth.at("x").asFloat(), MonsterBirth.at("y").asFloat()));//出生位置设置
 	this->schedule(CC_SCHEDULE_SELECTOR(Monster::FlipUpdate), 0.01f);
+}
+
+void Monster::reSetColor(float delay)
+{
+	getSprite()->setColor(Color3B(255, 255, 255));
 }
 
 
@@ -44,7 +52,9 @@ void  Monster::bindScene(NormalBattleScene* scene)
 }
 void  Monster::takingDamage(int damage)
 {
+	getSprite()->setColor(Color3B(255, 0, 0));
 	mHp -= damage;
+	scheduleOnce(CC_SCHEDULE_SELECTOR(Monster::reSetColor), 0.1f);
 }
 void  Monster::move()
 {

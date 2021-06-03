@@ -24,6 +24,7 @@ public:
 	void DeadUpdate(float dt);
 	void changeHero(char hero[]);
 	virtual void update(float dt);
+	void resetColor(float delay);
 	CREATE_FUNC(PlayerAttribute);
 private:
 	static int mhp;

@@ -56,6 +56,10 @@ void PlayerAttribute::update(float dt)
 	sprintf(moneys, "%d", mmoney);
 	moneyLabel->setString(std::string(moneys));
 }
+void PlayerAttribute::resetColor(float delay)
+{
+	mplayer->getSprite()->setColor(Color3B(255, 255, 255));
+}
 //¿ªÊ¼»Ö¸´
 void PlayerAttribute::ApHealingStart(float dt)
 {
@@ -76,6 +80,8 @@ void PlayerAttribute::ApHealing(float dt)
 
 void PlayerAttribute::takeDamage(int damage)
 {
+	mplayer->getSprite()->setColor(Color3B(255, 0, 0));
+	this->scheduleOnce(CC_SCHEDULE_SELECTOR(PlayerAttribute::resetColor), 0.1f);
 	if (map > 0 && damage <= map)//Ö»¼õ¼×
 	{
 		map -= damage;

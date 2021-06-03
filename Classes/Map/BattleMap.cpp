@@ -9,6 +9,7 @@ bool BattleMap::init()
 	sprintf(s, "maps/BattleScene%d.tmx", i);
 	m_map = TMXTiledMap::create(s);
 	this->addChild(m_map);
+
 	return 1;
 }
 
@@ -31,7 +32,7 @@ void BattleMap::createMonster()
 {
 	m_monster.pushBack(CloseMonster_1::create());
 	m_monster.back()->bindScene(m_scene);
-	m_monster.back()->Birth("Monster_birth1");
+	m_monster.back()->Birth();
 	m_monster.back()->setTag(1);
 	this->addChild(m_monster.back());
 }
@@ -47,3 +48,12 @@ void BattleMap::MonsterUpdate(float dt)
 	*/
 
 }
+int BattleMap::getNumber()
+{
+	return Number;
+}
+void BattleMap::setNumber(int i)
+{
+	Number = i;
+}
+
