@@ -22,8 +22,8 @@ public:
 	void bindScene(NormalBattleScene* scene);
 	void takingDamage(int damage);//怪物受到伤害
 	bool isWall(float x,float y);//判断这里是不是墙壁
-	void Birth(const std::string place_name);
-
+	void Birth();
+	void reSetColor(float delay);
 	
 	virtual void rest();
 

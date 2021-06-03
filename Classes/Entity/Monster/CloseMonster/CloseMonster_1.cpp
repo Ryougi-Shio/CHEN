@@ -7,10 +7,24 @@
 #include <stdlib.h>
 #include <time.h> 
 #include"MonsterPistolAmmo.h"
+#include"json.h"
 bool CloseMonster_1::init()
 {
+	Json::Reader reader;
+	Json::Value root;
+	std::string data = FileUtils::getInstance()->getStringFromFile("json/Monster.json");
+	if (reader.parse(data, root, false) == true)
+	{
+		//CCLOG("%d", root.isMember("knight"));
+		//if (strlen(heroName) == 0)
+		//{
+			//changeHero("knight");
+		//}
+		mHp = root["small_monster"]["Hp"].asInt();
+		//maxAp = root[heroName]["Ap"].asInt();
+	}
 	bindSprite(Sprite::create("Monster/O_small_monster_move4.png"));
-	mHp = 5;
+	//mHp = 5;
 
 	TFSM_M = MonsterTFSM::create();
 	TFSM_M->retain();

@@ -28,6 +28,10 @@ void Sword::update(float dt)
 		getSprite()->setFlippedX(0);
 		setPositionX(getPlayer()->getSprite()->getContentSize().width / 2);
 	}
+	if (getPlayer()->getMouseLocation().y >= getPlayer()->getPositionY())
+		setPositionY(5);
+	else
+		setPositionY(0);
 
 
 }

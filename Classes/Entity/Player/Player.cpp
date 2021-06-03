@@ -31,6 +31,7 @@ bool Player::init()
 	this->scheduleUpdate();//开启调用update函数的能力
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::FlipUpdate), 0.01f);
+//	this->schedule(CC_SCHEDULE_SELECTOR(PlayerMove::FlipToMouse),0.01f);
 	PLAYERMOVE = PlayerMove::create();
 	PLAYERMOVE->retain();
 	PLAYERMOVE->bindPlayer(this);
@@ -222,6 +223,7 @@ char* Player::getHeroName()
 }
 void Player::FlipUpdate(float dt)//翻转
 {
+	PLAYERMOVE->FlipToMouse();
 	if (getIsFlip() == 0)
 		this->getSprite()->setFlippedX(0);
 	else

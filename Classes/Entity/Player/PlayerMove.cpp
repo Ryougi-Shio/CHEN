@@ -29,10 +29,7 @@ void PlayerMove::playerMove()
 	if (movespeedX)
 	{
 		mPlayer->TFSM->changeState(new RunState());//¸Ä±ä×´Ì¬»ú
-		if (movespeedX > 0)
-			isFlip = 0;
-		else
-			isFlip = 1;
+
 	}
 
 
@@ -163,4 +160,22 @@ void PlayerMove::Move()
 	playerMove();
 	stopmoveX();
 	stopmoveY();
+}
+void PlayerMove::FlipToMouse()
+{
+	float Mouse_X =mPlayer->getMouseLocation().x;
+	float Player_X = mPlayer->getPositionX();
+
+	if (Mouse_X > Player_X)
+	{
+		isFlip = 0;
+//		CCLOG("000000000000");
+	}
+
+	else
+	{
+		isFlip = 1;
+//	CCLOG("11111111111");
+	}
+
 }

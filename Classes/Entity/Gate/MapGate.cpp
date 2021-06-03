@@ -6,7 +6,7 @@
 bool MapGate::init()
 {
 	bindSprite(Sprite::create("maps/transfergate.png"));
-	this->scheduleUpdate();//开启调用update函数的能力
+//	this->scheduleUpdate();//开启调用update函数的能力
 	return true;
 }
 
@@ -18,7 +18,9 @@ bool MapGate::isAround(float Px, float Py)//判断玩家是否在周围
 {
 	float Gx = this->getPositionX();
 	float Gy = this->getPositionY();
-	if ((Px >= Gx - WIDTH * 0.5) && (Px <= Gx + WIDTH * 0.5) && (Py >= Gy - LENGTH * 0.5) && (Py <= Gx + LENGTH * 0.5))
+//	CCLOG("Player(%f,%f)", Px, Py);
+//	CCLOG("Gate(%f,%f)", Gx, Gy);
+	if ((Px >= Gx - WIDTH * 0.5) && (Px <= Gx + WIDTH * 0.5) && (Py >= Gy - LENGTH * 0.5) && (Py <= Gy + LENGTH * 0.5))
 		return true;
 	else
 		return false;
@@ -35,7 +37,7 @@ void MapGate::notice()
 	if (keymap[EventKeyboard::KeyCode::KEY_E])
 	{
 		SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();//清理精灵帧缓存
-		;
+		
 	}
 }
 
@@ -43,13 +45,38 @@ void MapGate::update(float delta)
 {
 	float Px = player->getPositionX();
 	float Py = player->getPositionY();
+
 	if (isAround(Px, Py))
 	{
-		notice();
+
+
 	}
 	else
 	{
-		;//此处应清除notice，但目前没有办法
+		
 	}
 }
+bool MapGate::getAble()
+{
+	return Able;
+}
+void MapGate::IsAble(bool able)
+{
+	if (Able != able)
+	{
+		if (able)
+		{
+			this->getSprite()->setOpacity(255);
+			this->scheduleUpdate();
+			Able = able;
+		}
+		else
+		{
+			this->getSprite()->setOpacity(0);
+			this->unscheduleUpdate();
+			Able = able;
+		}
 
+	}
+	
+}
