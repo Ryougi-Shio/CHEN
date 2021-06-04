@@ -3,10 +3,14 @@
 USING_NS_CC;
 void RunState_M::execute(Monster*monster)
 {
-	monster->run();
+	char s[10] = "move";
+	
+	monster->MonsterAnimate(s);
 }
 
 void RestState_M::execute(Monster*monster)
 {
-	monster->rest();
+	char s[10] = "rest";
+
+	monster->MonsterAnimate(s);
 }

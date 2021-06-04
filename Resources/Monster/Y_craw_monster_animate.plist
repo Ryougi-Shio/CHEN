@@ -4,186 +4,6 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>Y_craw_monster1.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,48}</string>
-                <key>textureRect</key>
-                <string>{{0,0},{50,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster1_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,48}</string>
-                <key>textureRect</key>
-                <string>{{0,48},{50,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster2.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,46}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,46}</string>
-                <key>textureRect</key>
-                <string>{{0,96},{50,46}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster2_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,46}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,46}</string>
-                <key>textureRect</key>
-                <string>{{0,142},{50,46}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster3.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,48}</string>
-                <key>textureRect</key>
-                <string>{{0,188},{50,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster3_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,48}</string>
-                <key>textureRect</key>
-                <string>{{0,236},{50,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster4.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,48}</string>
-                <key>textureRect</key>
-                <string>{{0,284},{50,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster4_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,48}</string>
-                <key>textureRect</key>
-                <string>{{0,332},{50,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster5.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,48}</string>
-                <key>textureRect</key>
-                <string>{{0,380},{50,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster5_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,48}</string>
-                <key>textureRect</key>
-                <string>{{0,428},{50,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster6.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,44}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,44}</string>
-                <key>textureRect</key>
-                <string>{{0,476},{50,44}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>Y_craw_monster6_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,44}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,44}</string>
-                <key>textureRect</key>
-                <string>{{0,520},{50,44}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
             <key>Y_craw_monster_dead.png</key>
             <dict>
                 <key>aliases</key>
@@ -195,22 +15,127 @@
                 <key>spriteSourceSize</key>
                 <string>{50,40}</string>
                 <key>textureRect</key>
-                <string>{{0,564},{50,40}}</string>
+                <string>{{0,0},{50,40}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>Y_craw_monster_dead_flip.png</key>
+            <key>Y_craw_monster_move1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{50,40}</string>
+                <string>{50,48}</string>
                 <key>spriteSourceSize</key>
-                <string>{50,40}</string>
+                <string>{50,48}</string>
                 <key>textureRect</key>
-                <string>{{0,604},{50,40}}</string>
+                <string>{{0,40},{50,48}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>Y_craw_monster_move2.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{50,46}</string>
+                <key>spriteSourceSize</key>
+                <string>{50,46}</string>
+                <key>textureRect</key>
+                <string>{{0,88},{50,46}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>Y_craw_monster_move3.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{50,48}</string>
+                <key>spriteSourceSize</key>
+                <string>{50,48}</string>
+                <key>textureRect</key>
+                <string>{{0,134},{50,48}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>Y_craw_monster_move4.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{50,48}</string>
+                <key>spriteSourceSize</key>
+                <string>{50,48}</string>
+                <key>textureRect</key>
+                <string>{{0,182},{50,48}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>Y_craw_monster_rest1.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{50,44}</string>
+                <key>spriteSourceSize</key>
+                <string>{50,44}</string>
+                <key>textureRect</key>
+                <string>{{0,230},{50,44}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>Y_craw_monster_rest2.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{50,46}</string>
+                <key>spriteSourceSize</key>
+                <string>{50,46}</string>
+                <key>textureRect</key>
+                <string>{{0,274},{50,46}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>Y_craw_monster_rest3.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{50,44}</string>
+                <key>spriteSourceSize</key>
+                <string>{50,44}</string>
+                <key>textureRect</key>
+                <string>{{0,320},{50,44}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>Y_craw_monster_rest4.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{50,46}</string>
+                <key>spriteSourceSize</key>
+                <string>{50,46}</string>
+                <key>textureRect</key>
+                <string>{{0,364},{50,46}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -226,9 +151,9 @@
             <key>realTextureFileName</key>
             <string>Y_craw_monster_animate.png</string>
             <key>size</key>
-            <string>{50,644}</string>
+            <string>{50,410}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:ff184ac3db8e013c91396662dfccaf0d:5505ea4830e514bcec2ef62b09c846cf:00a0fb2687e7269cd1aabc9178791344$</string>
+            <string>$TexturePacker:SmartUpdate:a93c6260079397d5252672090793534a:c005de373355e3952b7fd3b4fcf9ae51:00a0fb2687e7269cd1aabc9178791344$</string>
             <key>textureFileName</key>
             <string>Y_craw_monster_animate.png</string>
         </dict>

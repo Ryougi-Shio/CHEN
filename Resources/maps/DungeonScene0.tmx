@@ -11,18 +11,23 @@
  </tileset>
  <layer name="ground" width="16" height="12">
   <data encoding="base64" compression="zlib">
-   eJylUUEKACAI85b2/wdHUCRjotJgh8BtzkQe5mEX6rSbA96MRnKNzKG3p9dboI+oJL9LzPc9cO9otywfb4m+HaDvReW/oi6sf7V7pX92k18s+vkFNg==
+   eJzTZWBg0KUQc5GJR/WP6qeGfkowAAuCDp0=
   </data>
  </layer>
  <objectgroup name="Monster">
-  <object name="Monster_birth3" x="213.273" y="537.218" width="74.9339" height="74.9339"/>
-  <object name="Monster_birth4" x="542.982" y="342.39" width="74.9339" height="74.9339"/>
-  <object name="Monster_birth2" x="147.436" y="178.356" width="74.9339" height="74.9339"/>
-  <object name="Monster_birth1" x="726.282" y="571.65" width="74.9339" height="74.9339"/>
+  <object name="Monster_birth1" x="158.468" y="103.302" width="64" height="64"/>
+  <object name="Monster_birth2" x="759.126" y="552.196" width="64" height="64"/>
+  <object name="Monster_birth3" x="874.16" y="129" width="64" height="64"/>
+  <object name="Monster_birth4" x="246.894" y="565.724" width="64" height="64"/>
  </objectgroup>
  <layer name="wall" width="16" height="12">
   <data encoding="base64" compression="zlib">
-   eJxzYmBgcMCDnQjIgzC5YKD1w/yGDIJx4CAsYk5QTC5woJJ+Qu5ExsiAGu53GAT6kTG29OqERx4Afg4UOQ==
+   eJwzZmBgMIZiEyQ2NoxLHhtww8FGBvj0Z+JgE6ufWPtNoPLIdqDzM9HMgPFh4UEuwOd+YvXTyv1DJf6ISZ/45AG0GxOx
+  </data>
+ </layer>
+ <layer name="Light" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtALpUDxQ+kcBYQAAcFYBnQ==
   </data>
  </layer>
 </map>

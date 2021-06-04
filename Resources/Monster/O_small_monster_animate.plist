@@ -19,21 +19,6 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>O_small_monster_dead_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{50,33}</string>
-                <key>spriteSourceSize</key>
-                <string>{50,33}</string>
-                <key>textureRect</key>
-                <string>{{50,0},{50,33}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
             <key>O_small_monster_move1.png</key>
             <dict>
                 <key>aliases</key>
@@ -45,22 +30,7 @@
                 <key>spriteSourceSize</key>
                 <string>{46,48}</string>
                 <key>textureRect</key>
-                <string>{{100,0},{46,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>O_small_monster_move1_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{46,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{46,48}</string>
-                <key>textureRect</key>
-                <string>{{146,0},{46,48}}</string>
+                <string>{{50,0},{46,48}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -75,22 +45,7 @@
                 <key>spriteSourceSize</key>
                 <string>{47,49}</string>
                 <key>textureRect</key>
-                <string>{{192,0},{47,49}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>O_small_monster_move2_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{47,49}</string>
-                <key>spriteSourceSize</key>
-                <string>{47,49}</string>
-                <key>textureRect</key>
-                <string>{{239,0},{47,49}}</string>
+                <string>{{96,0},{47,49}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -105,22 +60,7 @@
                 <key>spriteSourceSize</key>
                 <string>{46,48}</string>
                 <key>textureRect</key>
-                <string>{{286,0},{46,48}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>O_small_monster_move3_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{46,48}</string>
-                <key>spriteSourceSize</key>
-                <string>{46,48}</string>
-                <key>textureRect</key>
-                <string>{{332,0},{46,48}}</string>
+                <string>{{143,0},{46,48}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -135,11 +75,11 @@
                 <key>spriteSourceSize</key>
                 <string>{46,48}</string>
                 <key>textureRect</key>
-                <string>{{378,0},{46,48}}</string>
+                <string>{{189,0},{46,48}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>O_small_monster_move4_flip.png</key>
+            <key>O_small_monster_rest1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -150,11 +90,11 @@
                 <key>spriteSourceSize</key>
                 <string>{46,48}</string>
                 <key>textureRect</key>
-                <string>{{424,0},{46,48}}</string>
+                <string>{{235,0},{46,48}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>O_small_monster_move5.png</key>
+            <key>O_small_monster_rest2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -165,11 +105,11 @@
                 <key>spriteSourceSize</key>
                 <string>{46,48}</string>
                 <key>textureRect</key>
-                <string>{{470,0},{46,48}}</string>
+                <string>{{281,0},{46,48}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>O_small_monster_rest.png</key>
+            <key>O_small_monster_rest3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -180,11 +120,11 @@
                 <key>spriteSourceSize</key>
                 <string>{46,48}</string>
                 <key>textureRect</key>
-                <string>{{516,0},{46,48}}</string>
+                <string>{{327,0},{46,48}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>O_small_monster_rest_flip.png</key>
+            <key>O_small_monster_rest4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -195,7 +135,7 @@
                 <key>spriteSourceSize</key>
                 <string>{46,48}</string>
                 <key>textureRect</key>
-                <string>{{562,0},{46,48}}</string>
+                <string>{{373,0},{46,48}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -211,9 +151,9 @@
             <key>realTextureFileName</key>
             <string>O_small_monster_animate.png</string>
             <key>size</key>
-            <string>{608,49}</string>
+            <string>{419,49}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:4676ad23d411b37a15dcd010ba5b5c9f:e8f3dc9f4e2ebd1004febc8c11468654:9fd691f373567c308324efa27bc79817$</string>
+            <string>$TexturePacker:SmartUpdate:511ed5b8d0118011ffa038a234012227:bab47660c3ed516870a804d51702b361:9fd691f373567c308324efa27bc79817$</string>
             <key>textureFileName</key>
             <string>O_small_monster_animate.png</string>
         </dict>

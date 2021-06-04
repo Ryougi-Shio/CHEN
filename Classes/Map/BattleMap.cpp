@@ -1,10 +1,11 @@
 #include"BattleMap.h"
 #include"CloseMonster_1.h"
-
+#include"RemoteMonster.h"
+#include"Monster.h"
 bool BattleMap::init()
 {
 	int i = rand() % 3;
-	CCLOG("%d",i);
+//	CCLOG("%d",i);
 	char s[40];
 	sprintf(s, "maps/BattleScene%d.tmx", i);
 	m_map = TMXTiledMap::create(s);
@@ -28,24 +29,50 @@ Vector<Monster*> BattleMap::getMonster()
 	return Vector<Monster*>(m_monster);
 }
 
-void BattleMap::createMonster()
+void BattleMap::createMonster(int MonsterNum)
 {
-	m_monster.pushBack(CloseMonster_1::create());
-	m_monster.back()->bindScene(m_scene);
-	m_monster.back()->Birth();
-	m_monster.back()->setTag(1);
-	this->addChild(m_monster.back());
+
+	char s1[30] = "O_small_monster";
+	char s2[30] = "pig_monster";
+	char s3[30] = "snow_monster";
+	char s4[30] = "Y_craw_monster";
+	for (int i = 0; i < MonsterNum; i++)
+	{
+		char Monster_name[30];
+		int Monster_type = rand()%4+1;
+		if (Monster_type == 1)
+		{
+			strcpy(Monster_name,s1);
+		}
+		else if(Monster_type == 2)
+		{
+			strcpy(Monster_name, s2);
+		}
+		else if (Monster_type == 3)
+		{
+			strcpy(Monster_name, s3);
+		}
+		else if (Monster_type == 4)
+		{
+			strcpy(Monster_name, s4);
+		}
+//		CCLOG("%s",Monster_name);
+		m_monster.pushBack(RemoteMonster::create());
+		m_monster.back()->InitWithName(Monster_name);
+		m_monster.back()->FramCacheInit(Monster_name);
+		m_monster.back()->bindScene(m_scene);
+		m_monster.back()->Birth(i+1);
+		m_monster.back()->setTag(1);
+		this->addChild(m_monster.back());
+
+	}
+
+
 }
 
 void BattleMap::MonsterUpdate(float dt)
 {
-	/*
-	if (m_monster.at(0)->getIsDead() == 0)
-	{
-		m_monster.at(0)->schedule(CC_SCHEDULE_SELECTOR(Monster::MoveUpdate), 0.5f);//每0.5f调用一次运动更新函数
-		m_monster.at(0)->schedule(CC_SCHEDULE_SELECTOR(Monster::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
-	}
-	*/
+
 
 }
 int BattleMap::getNumber()

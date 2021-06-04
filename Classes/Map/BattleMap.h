@@ -10,7 +10,7 @@ class BattleMap :public Node
 public:
 	virtual bool init();
 
-	void createMonster();
+	void createMonster(int MonsterNum);
 	void bindScene(NormalBattleScene* scene);
 	virtual void MonsterUpdate(float dt);
 	TMXTiledMap* getBattleMap();

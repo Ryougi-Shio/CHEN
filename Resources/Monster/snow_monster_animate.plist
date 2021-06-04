@@ -19,21 +19,6 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>snow_monster_dead_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{52,38}</string>
-                <key>spriteSourceSize</key>
-                <string>{52,38}</string>
-                <key>textureRect</key>
-                <string>{{52,0},{52,38}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
             <key>snow_monster_move1.png</key>
             <dict>
                 <key>aliases</key>
@@ -45,22 +30,7 @@
                 <key>spriteSourceSize</key>
                 <string>{42,52}</string>
                 <key>textureRect</key>
-                <string>{{104,0},{42,52}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>snow_monster_move1_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{42,52}</string>
-                <key>spriteSourceSize</key>
-                <string>{42,52}</string>
-                <key>textureRect</key>
-                <string>{{146,0},{42,52}}</string>
+                <string>{{52,0},{42,52}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -75,22 +45,7 @@
                 <key>spriteSourceSize</key>
                 <string>{42,52}</string>
                 <key>textureRect</key>
-                <string>{{188,0},{42,52}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>snow_monster_move2_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{42,52}</string>
-                <key>spriteSourceSize</key>
-                <string>{42,52}</string>
-                <key>textureRect</key>
-                <string>{{230,0},{42,52}}</string>
+                <string>{{94,0},{42,52}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -105,22 +60,7 @@
                 <key>spriteSourceSize</key>
                 <string>{42,52}</string>
                 <key>textureRect</key>
-                <string>{{272,0},{42,52}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>snow_monster_move3_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{42,52}</string>
-                <key>spriteSourceSize</key>
-                <string>{42,52}</string>
-                <key>textureRect</key>
-                <string>{{314,0},{42,52}}</string>
+                <string>{{136,0},{42,52}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -135,11 +75,11 @@
                 <key>spriteSourceSize</key>
                 <string>{42,52}</string>
                 <key>textureRect</key>
-                <string>{{356,0},{42,52}}</string>
+                <string>{{178,0},{42,52}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>snow_monster_move4_flip.png</key>
+            <key>snow_monster_rest1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -150,11 +90,11 @@
                 <key>spriteSourceSize</key>
                 <string>{42,52}</string>
                 <key>textureRect</key>
-                <string>{{398,0},{42,52}}</string>
+                <string>{{220,0},{42,52}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>snow_monster_stay1.png</key>
+            <key>snow_monster_rest2.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -165,11 +105,11 @@
                 <key>spriteSourceSize</key>
                 <string>{42,52}</string>
                 <key>textureRect</key>
-                <string>{{440,0},{42,52}}</string>
+                <string>{{262,0},{42,52}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>snow_monster_stay1_flip.png</key>
+            <key>snow_monster_rest3.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -180,11 +120,11 @@
                 <key>spriteSourceSize</key>
                 <string>{42,52}</string>
                 <key>textureRect</key>
-                <string>{{482,0},{42,52}}</string>
+                <string>{{304,0},{42,52}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>snow_monster_stay2.png</key>
+            <key>snow_monster_rest4.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -195,82 +135,7 @@
                 <key>spriteSourceSize</key>
                 <string>{42,52}</string>
                 <key>textureRect</key>
-                <string>{{524,0},{42,52}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>snow_monster_stay2_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{42,52}</string>
-                <key>spriteSourceSize</key>
-                <string>{42,52}</string>
-                <key>textureRect</key>
-                <string>{{566,0},{42,52}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>snow_monster_stay3.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{42,52}</string>
-                <key>spriteSourceSize</key>
-                <string>{42,52}</string>
-                <key>textureRect</key>
-                <string>{{608,0},{42,52}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>snow_monster_stay3_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{42,52}</string>
-                <key>spriteSourceSize</key>
-                <string>{42,52}</string>
-                <key>textureRect</key>
-                <string>{{650,0},{42,52}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>snow_monster_stay4.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{42,52}</string>
-                <key>spriteSourceSize</key>
-                <string>{42,52}</string>
-                <key>textureRect</key>
-                <string>{{692,0},{42,52}}</string>
-                <key>textureRotated</key>
-                <false/>
-            </dict>
-            <key>snow_monster_stay4_flip.png</key>
-            <dict>
-                <key>aliases</key>
-                <array/>
-                <key>spriteOffset</key>
-                <string>{0,0}</string>
-                <key>spriteSize</key>
-                <string>{42,52}</string>
-                <key>spriteSourceSize</key>
-                <string>{42,52}</string>
-                <key>textureRect</key>
-                <string>{{734,0},{42,52}}</string>
+                <string>{{346,0},{42,52}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -286,9 +151,9 @@
             <key>realTextureFileName</key>
             <string>snow_monster_animate.png</string>
             <key>size</key>
-            <string>{776,52}</string>
+            <string>{388,52}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:88ab2caa2df2c6cc6b0fa85edd55c82f:6cf4478041a0f3a00f06c59fb81e15d9:79684363c9d1160d0c825c627e69a4f2$</string>
+            <string>$TexturePacker:SmartUpdate:86619a59a935c1be17356f62c34b96ad:184820d878f87531f3e164b1568c9996:79684363c9d1160d0c825c627e69a4f2$</string>
             <key>textureFileName</key>
             <string>snow_monster_animate.png</string>
         </dict>

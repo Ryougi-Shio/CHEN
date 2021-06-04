@@ -7,13 +7,14 @@
 #include"Pistol.h"
 #include"PistolAmmo.h"
 #include"Monster.h"
-
-static long SwordEnd;
+#include"RemoteMonster.h"
+static long long SwordEnd;
+static long long PistolEnd;
 bool BattleScene1::init()
 {
 	srand((unsigned)time(NULL));//根据时间取随机种子
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto origin = Director::getInstance()->getVisibleOrigin();
+
 	if (initWithPhysics()) {
 		getPhysicsWorld()->setGravity(Vec2::ZERO);
 		getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
@@ -22,22 +23,31 @@ bool BattleScene1::init()
 	getmusicManager()->changeMusic("bgm/Room.mp3");
 	for (int i = 0; i <9; i++)//取九张地图
 	{
+
 		m_battleMap.pushBack(BattleMap::create());
+
 		m_battleMap.back()->bindScene(this);
 		m_battleMap.back()->setPosition(visibleSize.width * (i % 3), visibleSize.width * (i / 3));
 		m_battleMap.back()->setNumber(i);
+
 	}
 	parentMap = m_battleMap.at(0);
-	addChild(m_battleMap.at(0),1);
-	m_battleMap.at(0)->createMonster();
+	m_battleMap.at(0)->createMonster(4);
+	addChild(parentMap,1);
+
 	m_battleMap.at(0)->setTag(2);
-	auto physicsBody_M_1 = PhysicsBody::createBox(Size(46.0f, 48.0f),
-		PhysicsMaterial(0.0f, 0.0f, 0.0f));
-	parentMap->getMonster().back()->addComponent(physicsBody_M_1);
-	physicsBody_M_1->setDynamic(false);
-	physicsBody_M_1->setCategoryBitmask(0x0001);//0011
-	physicsBody_M_1->setCollisionBitmask(0x0001);//0001
-	physicsBody_M_1->setContactTestBitmask(0x0001);
+	for (int i = 0; i < parentMap->getMonster().size(); i++)
+	{
+		auto physicsBody_M = PhysicsBody::createBox(Size(46.0f, 48.0f),
+			PhysicsMaterial(0.0f, 0.0f, 0.0f));
+		parentMap->getMonster().at(i)->addComponent(physicsBody_M);
+		physicsBody_M->setDynamic(false);
+		physicsBody_M->setCategoryBitmask(0x0001);//0011
+		physicsBody_M->setCollisionBitmask(0x0001);//0001
+		physicsBody_M->setContactTestBitmask(0x0001);
+		parentMap->getMonster().at(i)->setPhysicsBody(physicsBody_M);
+	}
+	
 
 	//设置按钮
 	auto settings = MenuItemImage::create("ui/settings.png", "ui/settings.png", [&](Ref* sender) {
@@ -61,7 +71,7 @@ bool BattleScene1::init()
 	getPlayer()->getPhysicsBody()->setCategoryBitmask(0x0010);
 	getPlayer()->getPhysicsBody()->setCollisionBitmask(0x0010);
 	getPlayer()->getPhysicsBody()->setContactTestBitmask(0x0010);
-	getPlayer()->setPosition(64 * 4 + 32, 64 * 4 + 32);
+	getPlayer()->setPosition(64 * 2 + 32, 64 * 2 + 32);
 	getPlayer()->getplayermove()->bindMap(parentMap->getBattleMap());//PlayerMove跟这个地图绑定
 	getPlayer()->getPlayerAttribute()->setPosition(getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().width / 2,
 		visibleSize.height - getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().height / 2);//属性UI位置设置
@@ -115,7 +125,7 @@ bool BattleScene1::init()
 	this->scheduleUpdate();
 //	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::test), 1.0f);
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::DeleteAmmo), 0.001f);
-	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::Ammoupdate), 0.01f);//每0.01s检测玩家子弹是否需要生成	
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::Ammoupdate), 0.01f);//每0.01s检测玩家子弹是否需要生成
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::AmmoUpdate_Monster), 0.3f);//怪物子弹
 	MapGateInit();
 	return 1;
@@ -148,7 +158,7 @@ void BattleScene1::inGate()
 		{
 			if (m_mapgate.at(i)->isAround(getPlayer()->getPositionX(), getPlayer()->getPositionY()) )
 			{
-				CCLOG("%d", parentMap->getNumber());
+//				CCLOG("%d", parentMap->getNumber());
 				switch (i)
 				{
 				case 0:
@@ -222,7 +232,7 @@ void BattleScene1::AmmoUpdate_Monster(float dt)
 		float My = parentMap->getMonster().at(i)->getPositionY();
 		Vec2 m = Vec2(Vec2(Px - Mx, Py - My) / sqrt((Px - Mx) * (Px - Mx) + (Py - My) * (Py - My)));
 
-		if (parentMap->getMonster().at(i)->getIsDead() == 0 && parentMap->getMonster().at(i)->isAround())//没死
+		if (parentMap->getMonster().at(i)->getIsDead() == 0 && parentMap->getMonster().at(i)->CanSee())//没死
 		{
 
 			m_monsterPistolAmmoList.push_back(parentMap->getMonster().at(i)->MonsterAttack());
@@ -256,10 +266,23 @@ void BattleScene1::Ammoupdate(float dt)//玩家子弹的生成
 	if (getPlayer()->getMouseMap()[EventMouse::MouseButton::BUTTON_LEFT]&&getPlayer()->getPlayerAttribute()->getHp()>0&&getPlayer()->getWeapon1()->getTag()==0)
 	{
 		bool CanShoot = 0;
-		if (AmmoList.size() == 0)//第一发子弹允许射出
+
+
+		if (AmmoList.size() == 0)
+		{
+			if (clock() - PistolEnd > 300)
+			{
+				CanShoot = 1;
+			}
+
+		}
+		else if (clock() - AmmoList.back()->start > 300)
 			CanShoot = 1;
-		else if (clock() - AmmoList.back()->start > 300)//两子弹之间时间间隔大于0.3s才允许射出
-			CanShoot = 1;
+
+		if (AmmoList.size() == 0)
+		{
+
+		}
 		if (CanShoot)
 		{
 			AmmoList.push_back(getPlayer()->getWeapon1()->Attack());
@@ -287,7 +310,6 @@ void BattleScene1::Ammoupdate(float dt)//玩家子弹的生成
 		{
 			if (clock() - SwordEnd > 300)
 			{
-				CCLOG("S:%ld,Clock:%ld",SwordEnd,clock());
 				CanShoot = 1;
 			}
 
@@ -366,6 +388,7 @@ void BattleScene1::DeleteAmmo(float dt)
 				{
 					removeChild(AmmoList[i]);
 					AmmoList.erase(ix);
+					PistolEnd = clock();
 					break;
 				}
 
@@ -432,6 +455,7 @@ bool BattleScene1::onContactBegin(PhysicsContact& contact)
 			{
 				removeChild(AmmoList[i]);
 				AmmoList.erase(ix);
+				PistolEnd = clock();
 				break;
 			}
 		}

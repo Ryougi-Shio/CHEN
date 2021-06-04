@@ -15,8 +15,13 @@ bool StartScene::init()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
-	musicManager = musicManager->create();
-	musicManager->startPlay("bgm/Title.mp3");
+	if (AudioEngine::getPlayingAudioCount() == NULL)
+	{
+		musicManager = musicManager->create();
+		musicManager->startPlay("bgm/Title.mp3");
+	}
+	else
+		musicManager->changeMusic("bgm/Title.mp3");
 
 	//±³¾°Í¼Æ¬¾«Áé
 	auto backgroundSprite = Sprite::create("background/StartScene.png");
