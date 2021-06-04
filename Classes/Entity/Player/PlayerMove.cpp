@@ -100,8 +100,10 @@ void PlayerMove::FalseKeyCode(EventKeyboard::KeyCode keycode)//键盘松开，对应key
 bool PlayerMove::isWall(float Px, float Py)
 {
 	int mapX = (int)(Px / 64);
-	int mapY = (int)(12 - Py / 64);
+	int mapY = (int)(11 - int(Py / 64));
 	int tileGid = map->getLayer("wall")->getTileGIDAt(Vec2(mapX, mapY));
+//	CCLOG("%d,%d",mapX,mapY);
+//	CCLOG("%f,%f",Px,Py);
 	if (tileGid)
 	{
 		//CCLOG("TTTTTTT");//是墙，不能走

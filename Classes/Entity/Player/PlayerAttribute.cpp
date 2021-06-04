@@ -9,7 +9,7 @@ bool PlayerAttribute::init()
 	std::string data = FileUtils::getInstance()->getStringFromFile("json/Hero.json");
 	if (reader.parse(data, root, false) == true)
 	{
-		CCLOG("%d", root.isMember("knight"));
+//		CCLOG("%d", root.isMember("knight"));
 		if (strlen(heroName) == 0)
 		{
 			changeHero("knight");
@@ -20,20 +20,20 @@ bool PlayerAttribute::init()
 	bindSprite(Sprite::create("UI/attribute_UI.png"));
 	getSprite()->setPosition(Vec2::ZERO);
 	//hpUI
-	char hps[7];
+	char hps[20];
 	sprintf(hps, "%d/%d", mhp, maxHp);
 	hpLabel = Label::createWithTTF(std::string(hps), "fonts/Marker Felt.ttf", 16);
 	hpLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height - hpLabel->getContentSize().height);
 	getSprite()->addChild(hpLabel);
 	//apUI
-	char aps[7];
+	char aps[20];
 	sprintf(aps, "%d/%d", map, maxAp);
 	apLabel = Label::createWithTTF(std::string(aps), "fonts/Marker Felt.ttf", 16);
 	apLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
 		hpLabel->getContentSize().height - apLabel->getContentSize().height);
 	getSprite()->addChild(apLabel);
 	//moneyUI
-	char moneys[7];
+	char moneys[20];
 	sprintf(moneys, "%d", mmoney);
 	moneyLabel = Label::createWithTTF(std::string(moneys), "fonts/Marker Felt.ttf", 16);
 	moneyLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
@@ -46,13 +46,13 @@ bool PlayerAttribute::init()
 //改变HP和AP的值
 void PlayerAttribute::update(float dt)
 {
-	char hps[7];
+	char hps[20];
 	sprintf(hps, "%d/%d", mhp, maxHp);
 	hpLabel->setString(std::string(hps));
-	char aps[7];
+	char aps[20];
 	sprintf(aps, "%d/%d", map, maxAp);
 	apLabel->setString(std::string(aps));
-	char moneys[7];
+	char moneys[20];
 	sprintf(moneys, "%d", mmoney);
 	moneyLabel->setString(std::string(moneys));
 }
