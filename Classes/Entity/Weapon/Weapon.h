@@ -16,11 +16,7 @@ public:
 	bool getIsGround();
 	float getShootSpeed();
 	void setShootSpeed(float speed);
-	enum MyWeapon
-	{
-		Pistol_Player,
-		Sword_Player
-	};
+
 private:
 	Player* mplayer;
 	bool isground=0;

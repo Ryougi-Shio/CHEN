@@ -7,11 +7,15 @@
 #include <time.h> 
 #include"Map/BattleMap.h"
 #include"MonsterPistolAmmo.h"
-
+#include"json.h"
 #define RANGE 400
 
 USING_NS_CC;
 
+bool Monster::init()
+{
+	return 1;
+}
 void  Monster::Birth(int i)
 {	
 	//对象层的使用
@@ -25,6 +29,9 @@ void  Monster::Birth(int i)
 	delete s;
 	Width = this->getSprite()->getContentSize().width;
 	Height = this->getSprite()->getContentSize().height;
+
+
+
 }
 
 void Monster::reSetColor(float delay)
@@ -157,18 +164,7 @@ bool  Monster::CanReachto(int Mapx, int Mapy,bool isDip=0)
 		}
 	}
 }
-void Monster::MonsterAnimate(char type[])
-{
-	;
-}
-void Monster::InitWithName(char s[])
-{
-	;
-}
-void Monster::FramCacheInit(char Name[])
-{
-	;
-}
+
 void Monster::setPhysicsBody(PhysicsBody* body)
 {
 	PhysicsBody_M = body;
@@ -191,33 +187,14 @@ void Monster::DeadUpdate(float dt)
 	}
 
 }
-MonsterPistolAmmo* Monster::MonsterAttack()
-{
-	return MonsterPistolAmmo::create();
-}
+
 void  Monster::	MoveUpdate(float dt)
 {
+	
 	if (CanSee())
 		ApproachPlayer(mScene->getPlayer()->getPosition());
 	else
-		//StrollAround();
-	//StrollAround();
-
-
-	if (movespeedX)
-	{
-		TFSM_M->changeState(new RunState_M());//改变状态机
-		if (movespeedX > 0)
-			isFlip = 0;
-		else
-			isFlip = 1;
-	}
-	if ((!movespeedX) && (!movespeedY))
-		TFSM_M->changeState(new RestState_M());
-		
-	if (movespeedY)
-		TFSM_M->changeState(new RunState_M());
-
+		StrollAround();
 
 }
 bool Monster::CanSee()
@@ -303,11 +280,20 @@ void Monster::FlipUpdate(float dt)
 	else
 		this->getSprite()->setFlippedX(0);
 }
-void Monster::dead()
+Ammo* Monster::MonsterAttack()
 {
-	;
+	return MonsterPistolAmmo::create();
 }
-
+void Monster::ChangeFlipByDestination(Vec2 destination)
+{
+	float Mx = getPositionX();
+	float My = getPositionY();
+	if (Mx <= destination.x)
+		isFlip = 0;
+	else
+		isFlip = 1;
+//	CCLOG("%d", isFlip);
+}
 bool Monster::moveToDestination(Vec2 destination)
 {
 	
@@ -339,21 +325,27 @@ bool Monster::moveToDestination(Vec2 destination)
 			{
 				return false;
 			}
-			MoveTo* moveTo = MoveTo::create(0.3f, destination);
+			MoveTo* moveTo = MoveTo::create(MonsterSpeed, destination);
 			this->runAction(moveTo);
+
+			//动画
+			TFSM_M->changeState(new RunState_M());
+			ChangeFlipByDestination(destination);
+
 			return true;
 		}
 		else
 		{
 			int i = destination.x;
 			int y = destination.y;
-			CCLOG("%d,,,%d", int(((destination.x + getSprite()->getContentSize().width) / 64)), 11 - int(((destination.y + getSprite()->getContentSize().height) / 64)));
+//			CCLOG("%d,,,%d", int(((destination.x + getSprite()->getContentSize().width) / 64)), 11 - int(((destination.y + getSprite()->getContentSize().height) / 64)));
 			if (CanReachto((destination.x + getSprite()->getContentSize().width) / 64, 11 - int((destination.y + getSprite()->getContentSize().height) / 64), 1))
 			{
 				return false;
 			}
-			MoveTo* moveTo = MoveTo::create(0.15f, destination);
+			MoveTo* moveTo = MoveTo::create(MonsterSpeed, destination);
 			this->runAction(moveTo);
+			TFSM_M->changeState(new RunState_M());
 			return true;
 		}
 	}
@@ -494,4 +486,92 @@ void  Monster::ApproachPlayer(Vec2 playerDestination)
 			}
 		}
 	}
+}
+
+
+
+void Monster::InitWithName(char s[])
+{
+
+	//血量读取
+	strcpy(MonsterName, s);
+
+
+	Json::Reader reader;
+	Json::Value root;
+	std::string data = FileUtils::getInstance()->getStringFromFile("json/Monster.json");
+	if (reader.parse(data, root, false) == true)
+	{
+		mHp = root[MonsterName]["Hp"].asInt();
+	}
+
+	//移动速度读取
+	Json::Reader reader_speed;
+	Json::Value root_speed;
+
+
+
+	if (reader_speed.parse(data, root_speed, false) == true)
+	{
+		MonsterSpeed = root_speed[MonsterName]["MoveSpeed"].asDouble();
+	}
+
+	char s_Rest[50];
+	sprintf(s_Rest, "Monster/%s_rest1.png", MonsterName);
+
+	bindSprite(Sprite::create(s_Rest));
+
+
+	TFSM_M = MonsterTFSM::create();
+	TFSM_M->retain();
+	TFSM_M->bindMonster(this);
+	this->schedule(CC_SCHEDULE_SELECTOR(Monster::MoveUpdate), MonsterSpeed);//每0.5f调用一次运动更新函数
+	this->schedule(CC_SCHEDULE_SELECTOR(Monster::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
+	this->schedule(CC_SCHEDULE_SELECTOR(Monster::DeadUpdate), 0.01f);
+}
+void Monster::FramCacheInit(char Name[])
+{
+	char s_Plist[50], s_Plist_Png[50];
+	sprintf(s_Plist, "Monster/%s_animate.plist", Name);
+	sprintf(s_Plist_Png, "Monster/%s_animate.png", Name);
+
+	m_frameCache = SpriteFrameCache::getInstance();
+	m_frameCache->addSpriteFramesWithFile(s_Plist, s_Plist_Png);
+}
+
+void Monster::dead()
+{
+	isdead = 1;
+	Vector<SpriteFrame*>frameArray;
+	char s[50];
+	sprintf(s, "%s_dead.png", MonsterName);
+	auto frame1 = m_frameCache->getSpriteFrameByName(s);
+	frameArray.pushBack(frame1);
+
+
+	Animation* animation = Animation::createWithSpriteFrames(frameArray);
+	animation->setDelayPerUnit(0.1f);
+	auto* action = Animate::create(animation);
+	this->getSprite()->runAction(action);
+	AnimationCache::destroyInstance();
+}
+
+void Monster::MonsterAnimate(char type[])
+{
+	Vector<SpriteFrame*>frameArray;
+	for (int i = 1; i <= 4; i++)
+	{
+		char s[50];
+		sprintf(s, "%s_%s%d.png", MonsterName, type, i);
+		auto frame = m_frameCache->getSpriteFrameByName(s);
+		frameArray.pushBack(frame);
+	}
+
+	Animation* animation = Animation::createWithSpriteFrames(frameArray);
+	animation->setDelayPerUnit(0.1f);
+	auto* action = Animate::create(animation);
+	this->getSprite()->runAction(action);
+
+	AnimationCache::destroyInstance();
+	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
 }

@@ -2,7 +2,7 @@
 #include"cocos2d.h"
 #include"Monster.h"
 #include"MonsterPistolAmmo.h"
-
+#include"AllTag.h"
 class NormalBattleScene;
 USING_NS_CC;
 class BattleMap :public Node

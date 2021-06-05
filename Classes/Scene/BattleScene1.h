@@ -2,6 +2,7 @@
 #include"cocos2d.h"
 #include"NormalBattleScene.h"
 #include"MapGate.h"
+#include"AllTag.h"
 class Gate;
 class PistolAmmo;
 class Ammo;
@@ -18,18 +19,11 @@ public:
 	bool onContactBegin(PhysicsContact& contact);
 	void AmmoUpdate_Monster(float dt);
 	void MapGateInit();
-	enum MyTag
-	{
-		Player_TAG,
-		Monster_TAG,
-		PlayerAmmo_TAG,
-		PlayerAmmo_Sword_TAG,
-		MonsterAmmo_TAG
-	};
+
 	void inGate();
 	CREATE_FUNC(BattleScene1);
 private:
 	std::vector<Ammo*> AmmoList;
-	std::vector<MonsterPistolAmmo*> m_monsterPistolAmmoList;
+	std::vector<Ammo*> m_monsterAmmoList;
 	Vector<MapGate*>m_mapgate;
 };
