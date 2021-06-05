@@ -15,11 +15,12 @@ public:
 	//void test(float dt);
 	void Ammoupdate(float dt);
 	bool isWall(float x, float y);
+	bool isDamagingLand(float x, float y);
 	void DeleteAmmo(float dt);
 	bool onContactBegin(PhysicsContact& contact);
 	void AmmoUpdate_Monster(float dt);
 	void MapGateInit();
-
+	void LandDamageUpdate(float dt);
 	void inGate();
 	CREATE_FUNC(BattleScene1);
 private:

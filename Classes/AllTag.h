@@ -14,8 +14,9 @@ enum AllTag
 	Y_craw_monster_TAG,
 	snow_monster_TAG,
 	RemoteMonster_TAG,
-
+	TreasureBox_TAG,
 	MonsterAmmo_PistolTAG,
-	MonsterAmmo_CloseTAG
+	MonsterAmmo_CloseTAG,
 
+	NoticeLabel_TAG
 };

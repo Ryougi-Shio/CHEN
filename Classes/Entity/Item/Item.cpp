@@ -24,6 +24,14 @@ void Item::bindScene(Scene* scene)
 {
 	mScene = scene;
 }
+void Item::bindMap(BattleMap* map)
+{
+	mMap = map;
+}
+void Item::setIsCanSee(bool can)
+{
+	isCanSee = can;
+}
 bool Item::isAround()
 {
 	float Px = mPlayer->getPositionX();

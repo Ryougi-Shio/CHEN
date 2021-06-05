@@ -9,6 +9,7 @@
 #include"Monster.h"
 #include"RemoteMonster.h"
 #include"MonsterDashAmmo.h"
+#include"TreasureBoxes.h"
 static long long SwordEnd;
 static long long PistolEnd;
 //¼ÇÂ¼ÉÏÒ»¿Å×Óµ¯ÏûÊ§µÄÊ±¿Ì£¬ºóÐøÔÚÉú³É×Óµ¯Ê±£¬ÐèÆðÂëÓë´Ë¼ä¸ô0.3s
@@ -82,8 +83,15 @@ bool BattleScene1::init()
 		visibleSize.height - getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().height / 2);//ÊôÐÔUIÎ»ÖÃÉèÖÃ
 	this->addChild(getPlayer()->getPlayerAttribute(), 4);
 	this->addChild(getPlayer(), 2);
-
-	
+	//±¦Ïä´´½¨
+	parentMap->BoxInit();
+	parentMap->getBox()->setTag(TreasureBox_TAG);
+	parentMap->getBox()->bindScene(this);
+	parentMap->getBox()->bindMap(parentMap);
+	parentMap->getBox()->bindPlayer(getPlayer());
+	parentMap->addChild(parentMap->getBox(),1);
+	parentMap->getBox()->setPosition(visibleSize/2);
+	//
 	////eventlistener,¼üÅÌ¼àÌý£¬ÓÃÓÚÒÆ¶¯ÈËÎï
 	auto myKeyListener = EventListenerKeyboard::create();
 	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//¼üÅÌ°´ÏÂÊ±ÏìÓ¦
@@ -92,6 +100,8 @@ bool BattleScene1::init()
 		if (keycode==EventKeyboard::KeyCode::KEY_E)//°´E½øÃÅ
 		{
 			inGate();
+			parentMap->getBox()->Interact("Money+30");
+			
 		}
 		if (keycode == EventKeyboard::KeyCode::KEY_Q)//
 		{
@@ -136,6 +146,7 @@ bool BattleScene1::init()
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::DeleteAmmo), 0.001f);
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::Ammoupdate), 0.01f);//Ã¿0.01s¼ì²âÍæ¼Ò×Óµ¯ÊÇ·ñÐèÒªÉú³É
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::AmmoUpdate_Monster), 0.3f);//¹ÖÎï×Óµ¯
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::LandDamageUpdate), 1.0f);//µØÐÎÉËº¦
 	MapGateInit();
 	return 1;
 }
@@ -229,6 +240,7 @@ void BattleScene1::update(float dt)
 	{
 		m_mapgate.at(0)->IsAble(able);
 	}
+	parentMap->getBox()->setIsCanSee(able);
 }
 //¹ÖÎïPistol×Óµ¯
 void BattleScene1::AmmoUpdate_Monster(float dt)
@@ -371,6 +383,17 @@ bool BattleScene1::isWall(float x, float y)//ÅÐ¶Ï´«ÈëµÄÕâ¸ö×ø±ê¶ÔÓ¦ÔÚµØÍ¼ÉÏÊÇ²»Ê
 
 	else
 		return false;	//²»ÊÇÇ½
+}
+bool BattleScene1::isDamagingLand(float x, float y)
+{
+	int mapX = (int)(x / 64);
+	int mapY = (int)(11 - int(y / 64));
+	int tileGid = parentMap->getBattleMap()->getLayer("DamagingLand")->getTileGIDAt(Vec2(mapX, mapY));
+	if (tileGid)
+		return true;	
+
+	else
+		return false;	
 }
 //Çå³ý×Óµ¯
 void BattleScene1::DeleteAmmo(float dt)
@@ -539,4 +562,12 @@ bool BattleScene1::onContactBegin(PhysicsContact& contact)
 		return 1;
 	}
 	return 0;
+}
+void BattleScene1::LandDamageUpdate(float dt)
+{
+	
+	if (isDamagingLand(getPlayer()->getPositionX(), getPlayer()->getPositionY()))
+	{
+		getPlayer()->getPlayerAttribute()->takeDamage(1);
+	}
 }

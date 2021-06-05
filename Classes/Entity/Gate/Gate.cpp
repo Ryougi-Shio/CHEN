@@ -46,13 +46,14 @@ NormalScene* Gate::getDestination()
 //提示按'E'，目前BUG：玩家远离后提示不会消失
 void Gate::notice()
 {
+	
 	auto keymap = player->getplayermove()->getkeyMap();
 	
 	if (!isOn)
 	{
 		noticeLabel = Label::createWithTTF(Content, "fonts/Marker Felt.ttf", 24);
 		start->addChild(noticeLabel, 6);
-
+		noticeLabel->setTag(NoticeLabel_TAG);
 		noticeLabel->setPosition(getPosition().x, getPosition().y + noticeLabel->getContentSize().height * 1.5);
 	}
 
@@ -64,6 +65,8 @@ void Gate::notice()
 		Director::getInstance()->replaceScene(BattleScene1::create());
 	}
 	isOn = 1;
+	
+
 }
 
 void Gate::update(float delta)
@@ -75,12 +78,11 @@ void Gate::update(float delta)
 		Content = "E";
 		notice();
 
-
 	}
 	else
 	{
-
-//此处应清除notice，但目前没有办法
+		start->removeChildByTag(NoticeLabel_TAG);//根据标签remove
+		isOn = 0;
 	}
 
 }

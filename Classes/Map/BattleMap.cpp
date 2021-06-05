@@ -2,6 +2,7 @@
 #include"CloseMonster.h"
 #include"RemoteMonster.h"
 #include"Monster.h"
+#include"TreasureBoxes.h"
 bool BattleMap::init()
 {
 	int i = rand() % 3;
@@ -28,7 +29,10 @@ Vector<Monster*> BattleMap::getMonster()
 {
 	return Vector<Monster*>(m_monster);
 }
-
+TreasureBoxes* BattleMap::getBox()
+{
+	return m_box;
+}
 void BattleMap::createMonster(int MonsterNum)
 {
 
@@ -92,5 +96,10 @@ int BattleMap::getNumber()
 void BattleMap::setNumber(int i)
 {
 	Number = i;
+}
+void BattleMap::BoxInit()
+{
+	m_box = TreasureBoxes::create();
+
 }
 
