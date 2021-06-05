@@ -2,11 +2,13 @@
 #include"Entity/Entity.h"
 #include"cocos2d.h"
 #define NORMAL 35
+#include"AllTag.h"
 class NormalScene;
 class MonsterTFSM;
 class BattleScene;
 class NormalBattleScene;
 class MonsterPistolAmmo;
+class Ammo;
 USING_NS_CC;
 //怪物基类
 class  Monster : public Entity
@@ -14,6 +16,7 @@ class  Monster : public Entity
 public:
 
 	void MoveUpdate(float dt);
+	void ChangeFlipByDestination(Vec2 destination);
 	bool moveToDestination(Vec2 destination);
 //	void move();//怪物实质移动
 	void StrollAround();//怪物小范围随意移动
@@ -25,11 +28,12 @@ public:
 	void Birth(int i);
 	void reSetColor(float delay);
 	
-	virtual void MonsterAnimate(char type[]);
-	virtual MonsterPistolAmmo* MonsterAttack();
-	virtual void InitWithName(char s[]);
-	virtual void dead();
-	virtual void FramCacheInit(char Name[]);
+
+	void MonsterAnimate(char type[]);
+
+	void InitWithName(char s[]);
+	void dead();
+	void FramCacheInit(char Name[]);
 
 	void FlipUpdate(float dt);
 	void TFSMupdate(float dt);
@@ -37,10 +41,14 @@ public:
 	void setPhysicsBody(PhysicsBody* body);
 	bool CanSee();
 
+	virtual bool init();
+	virtual Ammo* MonsterAttack();
+
 	bool getIsDead();
 	PhysicsBody* getMyBody();
 	friend class BattleScene;
-
+	float Width;
+	float Height;
 	CREATE_FUNC( Monster);
 
 protected:
@@ -48,12 +56,11 @@ protected:
 	int mHp;
 	NormalBattleScene* mScene;
 	MonsterTFSM* TFSM_M;
-	float movespeedX;
-	float movespeedY;
-	float Speed=NORMAL;
+	char MonsterName[30];
+	double MonsterSpeed;
 	bool isFlip=0;
 	bool isdead = 0;
-	float Width;
-	float Height;
+
 	PhysicsBody* PhysicsBody_M;
+	SpriteFrameCache* m_frameCache;
 };

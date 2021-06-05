@@ -41,11 +41,14 @@ void NormalBattleScene::changeMap(int x)
 
 		for (int i = 0; i < parentMap->getMonster().size(); i++)
 		{
-			auto physicsBody_M_1 = PhysicsBody::createBox(Size(46.0f, 48.0f),
+			float x = parentMap->getMonster().at(i)->Width;
+			float y = parentMap->getMonster().at(i)->Height;
+			auto physicsBody_M_1 = PhysicsBody::createBox(Size(x,y),
 				PhysicsMaterial(0.0f, 0.0f, 0.0f));
 			physicsBody_M_1->setDynamic(false);
 
 			parentMap->getMonster().at(i)->addComponent(physicsBody_M_1);
+			parentMap->getMonster().at(i)->getPhysicsBody()->setPositionOffset(Vec2(x/2,y/2));
 			physicsBody_M_1->setCategoryBitmask(0x0001);//0011
 			physicsBody_M_1->setCollisionBitmask(0x0001);//0001
 			physicsBody_M_1->setContactTestBitmask(0x0001);

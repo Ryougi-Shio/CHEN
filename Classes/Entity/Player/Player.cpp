@@ -6,6 +6,7 @@
 #include"Weapon/Pistol.h"
 #include"Weapon/Sword.h"
 #include"music.h"
+#include"AllTag.h"
 bool Player::init()
 {
 	if (strlen(heroName) == 0)
@@ -183,7 +184,7 @@ void Player::PistolInit()
 	weapon1->retain();
 	weapon1->bindPlayer(this);
 	weapon1->setPosition(getSprite()->getContentSize().width/2 , getContentSize().height / 2);
-	weapon1->setTag(Weapon::MyWeapon::Pistol_Player);
+	weapon1->setTag(AllTag::PlayerWeapon_Pistol_TAG);
 	
 }
 void Player::SwordInit()
@@ -193,7 +194,7 @@ void Player::SwordInit()
 	weapon1->bindPlayer(this);
 	weapon1->setPosition(getSprite()->getContentSize().width / 2+5,-20);
 
-	weapon1->setTag(Weapon::MyWeapon::Sword_Player);
+	weapon1->setTag(AllTag::PlayerWeapon_Sword_TAG);
 }
 void Player::changeMouseLocation(Vec2 location)
 {
@@ -229,6 +230,7 @@ void Player::FlipUpdate(float dt)//·­×ª
 	else
 		this->getSprite()->setFlippedX(1);
 }
+
 Weapon* Player::weapon1;
 Weapon* Player::weapon2;
 char Player::heroName[10];
