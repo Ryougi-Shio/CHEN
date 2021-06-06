@@ -10,6 +10,7 @@
 #include"RemoteMonster.h"
 #include"MonsterDashAmmo.h"
 #include"TreasureBoxes.h"
+#include"WeaponManager.h"
 static long long SwordEnd;
 static long long PistolEnd;
 //记录上一颗子弹消失的时刻，后续在生成子弹时，需起码与此间隔0.3s
@@ -79,6 +80,11 @@ bool BattleScene1::init()
 	getPlayer()->getPhysicsBody()->setContactTestBitmask(0x0010);
 	getPlayer()->setPosition(64 * 2 + 32, 64 * 2 + 32);
 	getPlayer()->getplayermove()->bindMap(parentMap->getBattleMap());//PlayerMove跟这个地图绑定
+	getPlayer()->PistolInit();//手枪
+	getPlayer()->SwordInit();//剑
+	bindWeaponManager(WeaponManager::create());
+	getWeaponManager()->bindPlayer(getPlayer());
+	getWeaponManager()->get(getPlayer()->getWeapon1(), getPlayer()->getWeapon2());//创建WeaponManager并与角色绑定
 	getPlayer()->getPlayerAttribute()->setPosition(getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().width / 2,
 		visibleSize.height - getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().height / 2);//属性UI位置设置
 	this->addChild(getPlayer()->getPlayerAttribute(), 4);
@@ -103,9 +109,13 @@ bool BattleScene1::init()
 			parentMap->getBox()->Interact("Money+30");
 			
 		}
-		if (keycode == EventKeyboard::KeyCode::KEY_Q)//
+		if (keycode == EventKeyboard::KeyCode::KEY_Q)//按Q切换武器
 		{
-			;
+			int Tag;//武器互换的中间量,只记录tag
+			Tag= getPlayer()->getWeapon1()->getTag();
+			getWeaponManager()->WeaponSwap();
+			getPlayer()->getWeapon1()->setTag(getPlayer()->getWeapon2()->getTag());
+			getPlayer()->getWeapon2()->setTag(Tag);
 		}
 	};
 

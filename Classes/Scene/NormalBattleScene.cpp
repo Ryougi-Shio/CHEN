@@ -4,6 +4,16 @@
 #include"PlayerMove.h"
 #include"TreasureBoxes.h"
 USING_NS_CC;
+void NormalBattleScene::bindWeaponManager(WeaponManager* WeaponManager)
+{
+	m_weaponManager = WeaponManager;
+}
+
+WeaponManager* NormalBattleScene::getWeaponManager()
+{
+	return m_weaponManager;
+}
+
 MusicManager* NormalBattleScene::getmusicManager()
 {
 	return m_musicManager;

@@ -37,7 +37,7 @@ bool SafeScene::init()
 
 	//玩家创建
 	bindPlayer(Player::create());
-	getPlayer()->PistolInit();//手枪
+//	getPlayer()->PistolInit();//手枪
 //	getPlayer()->SwordInit();//剑
 	getPlayer()->getPlayerAttribute()->hpApMoneyinit();//玩家属性初始化
 	getPlayer()->setPosition(64 * 4 + 32, 64 * 4 + 32);
