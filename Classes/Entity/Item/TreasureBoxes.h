@@ -10,7 +10,7 @@ public:
 	virtual void update(float dt);
 	virtual void Interact(char s[]);
 	void notice(char s[]);
-	bool getIsOpen();
+	bool getIsOpen();//0¹Ø±Õ£¬1´ò¿ª
 	CREATE_FUNC(TreasureBoxes);
 private:
 	bool isOpen = 0;

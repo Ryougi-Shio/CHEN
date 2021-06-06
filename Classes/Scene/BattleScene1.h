@@ -6,6 +6,7 @@
 class Gate;
 class PistolAmmo;
 class Ammo;
+class miniMapTab;
 USING_NS_CC;
 class BattleScene1 : public NormalBattleScene
 {
@@ -21,10 +22,12 @@ public:
 	void AmmoUpdate_Monster(float dt);
 	void MapGateInit();
 	void LandDamageUpdate(float dt);
+	void PlayerDeatheUpdate(float dt);
 	void inGate();
 	CREATE_FUNC(BattleScene1);
 private:
 	std::vector<Ammo*> AmmoList;
 	std::vector<Ammo*> m_monsterAmmoList;
+	miniMapTab* MiniMap;
 	Vector<MapGate*>m_mapgate;
 };

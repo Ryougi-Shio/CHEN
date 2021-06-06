@@ -18,5 +18,10 @@ enum AllTag
 	MonsterAmmo_PistolTAG,
 	MonsterAmmo_CloseTAG,
 
-	NoticeLabel_TAG
+	NoticeLabel_TAG,
+	MiniMapRoom_TAG,
+
+	NormalRoom_TAG,
+	ShopRoom_TAG,
+	BoosRoom_TAG
 };

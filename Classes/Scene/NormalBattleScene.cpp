@@ -56,6 +56,7 @@ void NormalBattleScene::changeMap(int x)
 			parentMap->getMonster().at(i)->setPhysicsBody(physicsBody_M_1);
 		}
 		parentMap->BoxInit();
+		parentMap->ItemInit();
 		parentMap->getBox()->setTag(TreasureBox_TAG);
 		parentMap->getBox()->bindScene(this);
 		parentMap->getBox()->bindMap(parentMap);

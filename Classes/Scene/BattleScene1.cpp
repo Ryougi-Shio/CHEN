@@ -10,6 +10,9 @@
 #include"RemoteMonster.h"
 #include"MonsterDashAmmo.h"
 #include"TreasureBoxes.h"
+#include"miniMapTab.h"
+#include"SafeScene.h"
+#include"HealingVial.h"
 static long long SwordEnd;
 static long long PistolEnd;
 //记录上一颗子弹消失的时刻，后续在生成子弹时，需起码与此间隔0.3s
@@ -17,7 +20,7 @@ bool BattleScene1::init()
 {
 	srand((unsigned)time(NULL));//根据时间取随机种子
 	auto visibleSize = Director::getInstance()->getVisibleSize();
-
+	
 	if (initWithPhysics()) {
 		getPhysicsWorld()->setGravity(Vec2::ZERO);
 		getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
@@ -91,7 +94,16 @@ bool BattleScene1::init()
 	parentMap->getBox()->bindPlayer(getPlayer());
 	parentMap->addChild(parentMap->getBox(),1);
 	parentMap->getBox()->setPosition(visibleSize/2);
-	//
+	//小地图创建
+	MiniMap = miniMapTab::create();
+	MiniMap->bindBattleScene(this);
+	this->addChild(MiniMap, 10);
+	MiniMap->setScale(1);
+	MiniMap->setPosition(Vec2(visibleSize.width-MiniMap->getSprite()->getContentSize().width/2
+	, MiniMap->getSprite()->getContentSize().height / 2));
+	//HealingVial in Box
+	parentMap->ItemInit();
+
 	////eventlistener,键盘监听，用于移动人物
 	auto myKeyListener = EventListenerKeyboard::create();
 	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘按下时响应
@@ -101,6 +113,7 @@ bool BattleScene1::init()
 		{
 			inGate();
 			parentMap->getBox()->Interact("Money+30");
+
 			
 		}
 		if (keycode == EventKeyboard::KeyCode::KEY_Q)//
@@ -146,7 +159,8 @@ bool BattleScene1::init()
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::DeleteAmmo), 0.001f);
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::Ammoupdate), 0.01f);//每0.01s检测玩家子弹是否需要生成
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::AmmoUpdate_Monster), 0.3f);//怪物子弹
-	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::LandDamageUpdate), 1.0f);//地形伤害
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::LandDamageUpdate), 0.5f);//地形伤害
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleScene1::PlayerDeatheUpdate), 1.0f);//
 	MapGateInit();
 	return 1;
 }
@@ -254,7 +268,7 @@ void BattleScene1::AmmoUpdate_Monster(float dt)
 		float Mx = parentMap->getMonster().at(i)->getPositionX();//获取怪物坐标
 		float My = parentMap->getMonster().at(i)->getPositionY();
 		Vec2 m = Vec2(Vec2(Px - Mx, Py - My) / sqrt((Px - Mx) * (Px - Mx) + (Py - My) * (Py - My)));
-		CCLOG("%d", parentMap->getMonster().at(i)->getTag());
+//		CCLOG("%d", parentMap->getMonster().at(i)->getTag());
 		if (parentMap->getMonster().at(i)->getIsDead() == 0 && //没死
 			parentMap->getMonster().at(i)->CanSee()&&			//看见玩家
 			((parentMap->getMonster().at(i)->getTag()==AllTag::O_small_monster_TAG)||//是一种远程怪
@@ -569,5 +583,16 @@ void BattleScene1::LandDamageUpdate(float dt)
 	if (isDamagingLand(getPlayer()->getPositionX(), getPlayer()->getPositionY()))
 	{
 		getPlayer()->getPlayerAttribute()->takeDamage(1);
+	}
+}
+void BattleScene1::PlayerDeatheUpdate(float dt)
+{
+	int Hp=getPlayer()->getPlayerAttribute()->getHp();
+	if (Hp <= 0)
+	{	
+	//	_sleep(2000);
+
+//		Director::getInstance()->popScene();
+//		Director::getInstance()->replaceScene(SafeScene::create());
 	}
 }

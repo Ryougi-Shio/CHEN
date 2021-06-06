@@ -14,6 +14,11 @@ class PlayerAttribute :public Entity
 public:
 	void hpApMoneyinit();//初始化三个属性
 	virtual bool init();
+	
+	void AddMoney(int income);
+	bool CutMoney(int outcome);
+	void AddHp(int heal);
+
 	int getHp();
 	int getAp();
 	int getMoney();
@@ -25,6 +30,7 @@ public:
 	void changeHero(char hero[]);
 	virtual void update(float dt);
 	void resetColor(float delay);
+	void CountTimeUpdate(float dt);
 	CREATE_FUNC(PlayerAttribute);
 private:
 	static int mhp;
@@ -32,6 +38,7 @@ private:
 	static int mmoney;
 	int maxHp;
 	int maxAp;
+	long startTime;
 	Player* mplayer;
 	bool isDamaged;
 	Label* moneyLabel;

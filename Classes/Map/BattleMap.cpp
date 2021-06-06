@@ -3,6 +3,10 @@
 #include"RemoteMonster.h"
 #include"Monster.h"
 #include"TreasureBoxes.h"
+#include"HealingVial.h"
+#include"NormalBattleScene.h"
+#include"Player.h"
+#include"PlayerMove.h"
 bool BattleMap::init()
 {
 	int i = rand() % 3;
@@ -10,8 +14,14 @@ bool BattleMap::init()
 	char s[40];
 	sprintf(s, "maps/DungeonScene%d.tmx", i);
 	m_map = TMXTiledMap::create(s);
+
+	m_Items.push_back(HealingVial::create());
+	this->addChild(m_Items.back(), 10);
+	m_Items.back()->setPosition(Vec2(Director::getInstance()->getVisibleSize() / 2));
+	m_Items.back()->getSprite()->setOpacity(0);
 	this->addChild(m_map);
 
+	this->schedule(CC_SCHEDULE_SELECTOR(BattleMap::ItemInBoxUpdate), 0.1f);
 	return 1;
 }
 
@@ -32,6 +42,29 @@ Vector<Monster*> BattleMap::getMonster()
 TreasureBoxes* BattleMap::getBox()
 {
 	return m_box;
+}
+std::vector<Item*> BattleMap::getItems()
+{
+	return m_Items;
+}
+void BattleMap::ItemInit()
+{
+
+	m_Items.back()->bindPlayer(m_scene->getPlayer());
+
+}
+
+void BattleMap::ItemInBoxUpdate(float dt)
+{
+
+
+//	CCLOG("%d", m_Items.back()->getIsUsed());
+	if (m_box->getIsCanSee()==1 && m_box->getIsUsed() == 1&&m_box->getIsOpen()==1 )
+	{
+		m_Items.back()->getSprite()->setOpacity(255);
+		if(m_scene->getPlayer()->getplayermove()->getkeyMap()[EventKeyboard::KeyCode::KEY_R])
+			m_Items.back()->Interact();
+	}
 }
 void BattleMap::createMonster(int MonsterNum)
 {

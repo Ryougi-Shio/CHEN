@@ -40,6 +40,7 @@ bool PlayerAttribute::init()
 		hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height+3);
 	getSprite()->addChild(moneyLabel);
 	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::DeadUpdate), 0.01f);
+	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::CountTimeUpdate), 0.01f);
 	scheduleUpdate();
 	return 1;
 }
@@ -68,13 +69,15 @@ void PlayerAttribute::ApHealingStart(float dt)
 //恢复护甲
 void PlayerAttribute::ApHealing(float dt)
 {
-	if (map<maxAp)
+	if (map<maxAp&&!isDamaged)
 	{
 		map++;
+
 	}
 	else
 	{
 		this->unschedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::ApHealing));//停止回复
+		isDamaged = 1;
 	}
 }
 
@@ -97,14 +100,20 @@ void PlayerAttribute::takeDamage(int damage)
 		mhp -= damage;//只有血了
 	}
 	isDamaged = 1;
+	startTime = clock();
 	this->scheduleOnce(CC_SCHEDULE_SELECTOR(PlayerAttribute::ApHealingStart), 2.0f);
 }
-
+void PlayerAttribute::AddHp(int heal)
+{
+	mhp += heal;
+	mhp = mhp > maxHp ? maxHp : mhp;
+}
 void PlayerAttribute::hpApMoneyinit()
 {
 	mhp = maxHp;
 	map = maxAp;
 	mmoney = 0;
+	isDamaged = 0;
 }
 
 int PlayerAttribute::getHp()
@@ -137,6 +146,30 @@ void PlayerAttribute::DeadUpdate(float dt)
 void PlayerAttribute::changeHero(char hero[])
 {
 	strcpy(heroName, hero);
+}
+void PlayerAttribute::AddMoney(int income)
+{
+	mmoney += income;
+}
+bool PlayerAttribute::CutMoney(int outcome)
+{
+	if (mmoney >= outcome)
+	{
+		mmoney - +outcome;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
+void PlayerAttribute::CountTimeUpdate(float dt)
+{
+	if (clock() - startTime > 2000)
+	{
+		isDamaged = 0;
+	}
 }
 int PlayerAttribute::mhp;
 int PlayerAttribute::map;
