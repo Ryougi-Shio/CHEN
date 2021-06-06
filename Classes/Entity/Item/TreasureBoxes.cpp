@@ -3,14 +3,32 @@
 #include"Player.h"
 #include"PlayerAttribute.h"
 #include"BattleMap.h"
-
+#include"NormalBattleScene.h"
 USING_NS_CC;
 bool TreasureBoxes::init()
 {
 	bindSprite(Sprite::create("Items/box_1.png"));
 	this->schedule(CC_SCHEDULE_SELECTOR(TreasureBoxes::update), 0.01f);
 
+	
+
+
+
+
 	return 1;
+}
+void TreasureBoxes::BoxBirth(int i)
+{
+	TMXObjectGroup* objGroup = mMap->getBattleMap()->getObjectGroup("Item");//获取对象层
+	auto s = new char[40];
+
+	sprintf(s, "Box_%d", i);
+	auto BoxBirth = objGroup->getObject(s);//获取对象
+	int x = BoxBirth.at("x").asInt();
+	int y = BoxBirth.at("y").asInt();
+	setPosition(Vec2(BoxBirth.at("x").asInt(), BoxBirth.at("y").asInt()));//出生位置设置
+
+	delete s;
 }
 void TreasureBoxes::Interact(char s[])
 {

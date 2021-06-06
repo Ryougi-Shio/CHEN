@@ -7,24 +7,32 @@
 #include"NormalBattleScene.h"
 #include"Player.h"
 #include"PlayerMove.h"
+#include"AllTag.h"
 bool BattleMap::init()
 {
-	int i = rand() % 3;
-//	CCLOG("%d",i);
-	char s[40];
-	sprintf(s, "maps/DungeonScene%d.tmx", i);
-	m_map = TMXTiledMap::create(s);
-
-	m_Items.push_back(HealingVial::create());
-	this->addChild(m_Items.back(), 10);
-	m_Items.back()->setPosition(Vec2(Director::getInstance()->getVisibleSize() / 2));
-	m_Items.back()->getSprite()->setOpacity(0);
-	this->addChild(m_map);
 
 	this->schedule(CC_SCHEDULE_SELECTOR(BattleMap::ItemInBoxUpdate), 0.1f);
 	return 1;
 }
+void BattleMap::MapInit(int mode)
+{
+	if (mode == 0)//战斗房间
+	{
+		int i = rand() % 3;
+		char s[40];
+		sprintf(s, "maps/DungeonScene%d.tmx", i);
+		m_map = TMXTiledMap::create(s);
+		m_map->setTag(NormalRoom_TAG);
+		this->addChild(m_map);
+	}
+	if (mode == 1)//商店房间 
+	{
+		m_map = TMXTiledMap::create("maps/ShopScene.tmx");
+		m_map->setTag(ShopRoom_TAG);
+		this->addChild(m_map);
+	}
 
+}
 void BattleMap::bindScene(NormalBattleScene* scene)
 {
 	m_scene = scene;
@@ -39,7 +47,7 @@ Vector<Monster*> BattleMap::getMonster()
 {
 	return Vector<Monster*>(m_monster);
 }
-TreasureBoxes* BattleMap::getBox()
+std::vector <TreasureBoxes*> BattleMap::getBox()
 {
 	return m_box;
 }
@@ -47,24 +55,45 @@ std::vector<Item*> BattleMap::getItems()
 {
 	return m_Items;
 }
-void BattleMap::ItemInit()
+void BattleMap::BoxInit()
 {
-
-	m_Items.back()->bindPlayer(m_scene->getPlayer());
+	m_box.push_back(TreasureBoxes::create());
 
 }
+void BattleMap::ItemInit()
+{
+	m_Items.push_back(HealingVial::create());
 
+
+}
+void BattleMap::BoxCreate()
+{
+	m_box.back()->setTag(TreasureBox_TAG);
+	m_box.back()->bindMap(this);
+	m_box.back()->bindPlayer(m_scene->getPlayer());
+	this->addChild(m_box.back(), 1);
+}
+void BattleMap::ItemCreate()
+{
+	this->addChild(m_Items.back(), 10);
+	m_Items.back()->setPosition(Vec2(this->getBox().back()->getPosition()));
+	m_Items.back()->getSprite()->setOpacity(0);
+	m_Items.back()->bindPlayer(m_scene->getPlayer());
+	m_Items.back()->bindMap(this);
+}
 void BattleMap::ItemInBoxUpdate(float dt)
 {
 
-
-//	CCLOG("%d", m_Items.back()->getIsUsed());
-	if (m_box->getIsCanSee()==1 && m_box->getIsUsed() == 1&&m_box->getIsOpen()==1 )
+	for (int i = 0; i < m_box.size(); i++)
 	{
-		m_Items.back()->getSprite()->setOpacity(255);
-		if(m_scene->getPlayer()->getplayermove()->getkeyMap()[EventKeyboard::KeyCode::KEY_R])
-			m_Items.back()->Interact();
+		if (m_box.at(i)->getIsCanSee() == 1 && m_box.at(i)->getIsUsed() == 1 && m_box.at(i)->getIsOpen() == 1)
+		{
+			m_Items.at(i)->getSprite()->setOpacity(255);
+			if (m_scene->getPlayer()->getplayermove()->getkeyMap()[EventKeyboard::KeyCode::KEY_R])
+				m_Items.at(i)->Interact();
+		}
 	}
+
 }
 void BattleMap::createMonster(int MonsterNum)
 {
@@ -130,9 +159,5 @@ void BattleMap::setNumber(int i)
 {
 	Number = i;
 }
-void BattleMap::BoxInit()
-{
-	m_box = TreasureBoxes::create();
 
-}
 

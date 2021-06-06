@@ -34,12 +34,14 @@ bool BattleScene1::init()
 		m_battleMap.pushBack(BattleMap::create());
 
 		m_battleMap.back()->bindScene(this);
+		m_battleMap.back()->MapInit(1);
 		m_battleMap.back()->setPosition(visibleSize.width * (i % 3), visibleSize.width * (i / 3));
 		m_battleMap.back()->setNumber(i);
 
 	}
 	parentMap = m_battleMap.at(0);//³õÊ¼µØÍ¼È¡×óÏÂ½Ç0ºÅ
-	m_battleMap.at(0)->createMonster(4);//´´½¨4Ö»Ëæ»ú¹ÖÎï
+	if(parentMap->getBattleMap()->getTag()==NormalRoom_TAG)
+		m_battleMap.at(0)->createMonster(4);//´´½¨4Ö»Ëæ»ú¹ÖÎï
 	addChild(parentMap,1);
 
 	m_battleMap.at(0)->setTag(2);
@@ -77,11 +79,13 @@ bool BattleScene1::init()
 	physicsBody->setDynamic(false);
 	bindPlayer(Player::create());
 	getPlayer()->setTag(AllTag::Player_TAG);
-	getPlayer()->PistolInit();//ÊÖÇ¹
-	getPlayer()->SwordInit();//½£
+//	getPlayer()->PistolInit();//ÊÖÇ¹
+//	getPlayer()->SwordInit();//½£
+	/*
 	bindWeaponManager(WeaponManager::create());
 	getWeaponManager()->bindPlayer(getPlayer());
-	getWeaponManager()->get(getPlayer()->getWeapon1(), getPlayer()->getWeapon2());//´´½¨WeaponManager²¢Óë½ÇÉ«°ó¶¨
+	getWeaponManager()->getWeapon(getPlayer()->getWeapon1(), getPlayer()->getWeapon2());//´´½¨WeaponManager²¢Óë½ÇÉ«°ó¶¨
+	*/
 	getPlayer()->addComponent(physicsBody);
 	getPlayer()->getPhysicsBody()->setCategoryBitmask(0x0010);
 	getPlayer()->getPhysicsBody()->setCollisionBitmask(0x0010);
@@ -92,14 +96,31 @@ bool BattleScene1::init()
 		visibleSize.height - getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().height / 2);//ÊôÐÔUIÎ»ÖÃÉèÖÃ
 	this->addChild(getPlayer()->getPlayerAttribute(), 4);
 	this->addChild(getPlayer(), 2);
-	//±¦Ïä´´½¨
+	//±¦Ïä´´½¨,ÑªÆ¿´´½¨
 	parentMap->BoxInit();
-	parentMap->getBox()->setTag(TreasureBox_TAG);
-	parentMap->getBox()->bindScene(this);
-	parentMap->getBox()->bindMap(parentMap);
-	parentMap->getBox()->bindPlayer(getPlayer());
-	parentMap->addChild(parentMap->getBox(),1);
-	parentMap->getBox()->setPosition(visibleSize/2);
+	parentMap->getBox().back()->bindScene(this);
+	parentMap->BoxCreate();
+	parentMap->getBox().back()->BoxBirth(1);
+
+	parentMap->ItemInit();
+	parentMap->getItems().back()->bindScene(this);
+	parentMap->ItemCreate();
+
+	if (parentMap->getBattleMap()->getTag() == ShopRoom_TAG)
+	{
+		for (int i = 2; i <= 3; i++)
+		{
+			parentMap->BoxInit();
+			parentMap->getBox().back()->bindScene(this);
+			parentMap->BoxCreate();
+			parentMap->getBox().back()->BoxBirth(i);
+
+
+			parentMap->ItemInit();
+			parentMap->getItems().back()->bindScene(this);
+			parentMap->ItemCreate();
+		}
+	}
 	//Ð¡µØÍ¼´´½¨
 	MiniMap = miniMapTab::create();
 	MiniMap->bindBattleScene(this);
@@ -108,7 +129,7 @@ bool BattleScene1::init()
 	MiniMap->setPosition(Vec2(visibleSize.width-MiniMap->getSprite()->getContentSize().width/2
 	, MiniMap->getSprite()->getContentSize().height / 2));
 	//HealingVial in Box
-	parentMap->ItemInit();
+
 
 	////eventlistener,¼üÅÌ¼àÌý£¬ÓÃÓÚÒÆ¶¯ÈËÎï
 	auto myKeyListener = EventListenerKeyboard::create();
@@ -118,17 +139,21 @@ bool BattleScene1::init()
 		if (keycode==EventKeyboard::KeyCode::KEY_E)//°´E½øÃÅ
 		{
 			inGate();
-			parentMap->getBox()->Interact("Money+30");
+			for(int i=0;i< parentMap->getBox().size();i++)
+				parentMap->getBox().at(i)->Interact("Money+30");
 
 			
 		}
 		if (keycode == EventKeyboard::KeyCode::KEY_Q)//°´QÇÐ»»ÎäÆ÷
 		{
+			/*
 			int Tag;//ÎäÆ÷»¥»»µÄÖÐ¼äÁ¿,Ö»¼ÇÂ¼tag
 			Tag = getPlayer()->getWeapon1()->getTag();
 			getWeaponManager()->WeaponSwap();
 			getPlayer()->getWeapon1()->setTag(getPlayer()->getWeapon2()->getTag());
 			getPlayer()->getWeapon2()->setTag(Tag);
+
+			*/
 		}
 	};
 
@@ -264,7 +289,8 @@ void BattleScene1::update(float dt)
 	{
 		m_mapgate.at(0)->IsAble(able);
 	}
-	parentMap->getBox()->setIsCanSee(able);
+	for (int i = 0; i < parentMap->getBox().size(); i++)
+		parentMap->getBox().at(i)->setIsCanSee(able);
 }
 //¹ÖÎïPistol×Óµ¯
 void BattleScene1::AmmoUpdate_Monster(float dt)
@@ -389,10 +415,7 @@ void BattleScene1::Ammoupdate(float dt)
 			if (getPlayer()->getIsFlip())
 				AmmoList.back()->getSprite()->setFlippedX(1);
 		}
-		if (AmmoList.size())
-			getPlayer()->getWeapon1()->getSprite()->setOpacity(0);
-		else
-			getPlayer()->getWeapon1()->getSprite()->setOpacity(255);
+
 	}
 	
 }
@@ -410,14 +433,20 @@ bool BattleScene1::isWall(float x, float y)//ÅÐ¶Ï´«ÈëµÄÕâ¸ö×ø±ê¶ÔÓ¦ÔÚµØÍ¼ÉÏÊÇ²»Ê
 }
 bool BattleScene1::isDamagingLand(float x, float y)
 {
-	int mapX = (int)(x / 64);
-	int mapY = (int)(11 - int(y / 64));
-	int tileGid = parentMap->getBattleMap()->getLayer("DamagingLand")->getTileGIDAt(Vec2(mapX, mapY));
-	if (tileGid)
-		return true;	
+	if (parentMap->getBattleMap()->getTag() == NormalRoom_TAG)
+	{
+		int mapX = (int)(x / 64);
+		int mapY = (int)(11 - int(y / 64));
+		int tileGid = parentMap->getBattleMap()->getLayer("DamagingLand")->getTileGIDAt(Vec2(mapX, mapY));
+		if (tileGid)
+			return true;
 
+		else
+			return false;
+	}
 	else
-		return false;	
+		return false;
+
 }
 //Çå³ý×Óµ¯
 void BattleScene1::DeleteAmmo(float dt)
@@ -478,6 +507,13 @@ void BattleScene1::DeleteAmmo(float dt)
 			}
 
 		}
+	}
+	if (getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Sword_TAG)
+	{
+		if (AmmoList.size())
+			getPlayer()->getWeapon1()->getSprite()->setOpacity(0);
+		else
+			getPlayer()->getWeapon1()->getSprite()->setOpacity(255);
 	}
 
 }

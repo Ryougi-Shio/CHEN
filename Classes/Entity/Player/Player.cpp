@@ -185,16 +185,16 @@ void Player::SwordInit()
 		weapon1 = Sword::create();
 		weapon1->retain();
 		weapon1->bindPlayer(this);
-		weapon1->setPosition(getSprite()->getContentSize().width / 2 + 5, -20);
+		weapon1->setPosition(getSprite()->getContentSize().width / 2+5 ,-20 );
 
 		weapon1->setTag(AllTag::PlayerWeapon_Sword_TAG);
 	}
-	else
+	else if(!weapon2)
 	{
 		weapon2 = Sword::create();
 		weapon2->retain();
 		weapon2->bindPlayer(this);
-		weapon2->setPosition(getSprite()->getContentSize().width / 2 + 5, -20);
+		weapon2->setPosition(getSprite()->getContentSize().width / 2 , 0);
 
 		weapon2->setTag(AllTag::PlayerWeapon_Sword_TAG);
 	}
@@ -206,7 +206,7 @@ void Player::PistolInit()
 		weapon1 = Pistol::create();
 		weapon1->retain();
 		weapon1->bindPlayer(this);
-		weapon1->setPosition(getSprite()->getContentSize().width / 2 + 5, -20);
+		weapon1->setPosition(getSprite()->getContentSize().width / 2 ,0);
 
 		weapon1->setTag(AllTag::PlayerWeapon_Pistol_TAG);
 	}
@@ -215,7 +215,7 @@ void Player::PistolInit()
 		weapon2 = Pistol::create();
 		weapon2->retain();
 		weapon2->bindPlayer(this);
-		weapon2->setPosition(getSprite()->getContentSize().width / 2 + 5, -20);
+		weapon2->setPosition(getSprite()->getContentSize().width / 2 , 0);
 
 		weapon2->setTag(AllTag::PlayerWeapon_Pistol_TAG);
 	}

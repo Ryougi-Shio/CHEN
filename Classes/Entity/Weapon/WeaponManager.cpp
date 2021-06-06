@@ -1,11 +1,11 @@
 #include"WeaponManager.h"
 #include"AllTag.h"
+#include"Player.h"
 USING_NS_CC;
 
-bool WeaponManager::get(Weapon* Weapon1, Weapon* Weapon2)
+bool WeaponManager::getWeapon(Weapon* Weapon1, Weapon* Weapon2)
 {
-	Weapon_main = Weapon1;
-	Weapon_sub = Weapon2;
+
 	return 1;
 }
 
@@ -13,8 +13,8 @@ void WeaponManager::WeaponSwap()
 {
 	if (isBagfull())
 	{
-		Weapon* Weapon_swap = Weapon_main;
-		Weapon_main = Weapon_sub;
+		Weapon* Weapon_swap = m_player->getWeapon1();
+		
 		Weapon_sub = Weapon_swap;
 	}
 }

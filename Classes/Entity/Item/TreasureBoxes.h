@@ -11,6 +11,7 @@ public:
 	virtual void Interact(char s[]);
 	void notice(char s[]);
 	bool getIsOpen();//0¹Ø±Õ£¬1´ò¿ª
+	void BoxBirth(int i);
 	CREATE_FUNC(TreasureBoxes);
 private:
 	bool isOpen = 0;

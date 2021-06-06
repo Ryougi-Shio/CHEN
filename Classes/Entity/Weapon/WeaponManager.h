@@ -7,7 +7,7 @@ USING_NS_CC;
 class WeaponManager :public Node
 {
 public:
-	virtual bool get(Weapon* Weapon1, Weapon* Weapon2);
+	virtual bool getWeapon(Weapon* Weapon1, Weapon* Weapon2);
 	void bindPlayer(Player* player);
 	void WeaponSwap();
 	bool isBagfull();

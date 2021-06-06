@@ -4,6 +4,7 @@
 #include"MonsterPistolAmmo.h"
 #include"AllTag.h"
 #include"Item.h"
+#include"TreasureBoxes.h"
 class NormalBattleScene;
 class TreasureBoxes;
 USING_NS_CC;
@@ -20,18 +21,20 @@ public:
 	int getNumber();
 	void setNumber(int i);
 	Vector<Monster*> getMonster();
-	TreasureBoxes* getBox();
+	std::vector <TreasureBoxes*> getBox();
 	std::vector<Item*> getItems();
 	void BoxInit();
+	void BoxCreate();
 	void ItemInit();
-
+	void ItemCreate();
+	void MapInit(int mode);
 
 	CREATE_FUNC(BattleMap);
 private:
 	int Number;//记录地图在场景的编号
 	TMXTiledMap* m_map;
 	Vector<Monster*> m_monster;
-	TreasureBoxes* m_box;
+	std::vector <TreasureBoxes*> m_box;
 	std::vector<Item*>m_Items;
 	NormalBattleScene* m_scene;
 };

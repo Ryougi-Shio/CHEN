@@ -38,7 +38,8 @@ void NormalBattleScene::changeMap(int x)
 	m_player->getplayermove()->bindMap(m_battleMap.at(x)->getBattleMap());
 	if (parentMap->getTag()!=2)
 	{
-		parentMap->createMonster(4);
+		if (parentMap->getBattleMap()->getTag() == NormalRoom_TAG)
+			parentMap->createMonster(4);
 
 		for (int i = 0; i < parentMap->getMonster().size(); i++)
 		{
@@ -55,14 +56,31 @@ void NormalBattleScene::changeMap(int x)
 			physicsBody_M_1->setContactTestBitmask(0x0001);
 			parentMap->getMonster().at(i)->setPhysicsBody(physicsBody_M_1);
 		}
+		//宝箱创建,血瓶创建
 		parentMap->BoxInit();
+		parentMap->getBox().back()->bindScene(this);
+		parentMap->BoxCreate();
+		parentMap->getBox().back()->BoxBirth(1);
+
 		parentMap->ItemInit();
-		parentMap->getBox()->setTag(TreasureBox_TAG);
-		parentMap->getBox()->bindScene(this);
-		parentMap->getBox()->bindMap(parentMap);
-		parentMap->getBox()->bindPlayer(getPlayer());
-		parentMap->addChild(parentMap->getBox(), 1);
-		parentMap->getBox()->setPosition(visibleSize / 2);
+		parentMap->getItems().back()->bindScene(this);
+		parentMap->ItemCreate();
+
+		if (parentMap->getBattleMap()->getTag() == ShopRoom_TAG)
+		{
+			for (int i = 2; i <= 3; i++)
+			{
+				parentMap->BoxInit();
+				parentMap->getBox().back()->bindScene(this);
+				parentMap->BoxCreate();
+				parentMap->getBox().back()->BoxBirth(i);
+
+
+				parentMap->ItemInit();
+				parentMap->getItems().back()->bindScene(this);
+				parentMap->ItemCreate();
+			}
+		}
 	}
 	parentMap->setTag(2);//表示已经到过该地图
 	addChild(parentMap, 1);
