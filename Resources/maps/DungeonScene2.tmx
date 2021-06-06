@@ -25,4 +25,9 @@
    eJxzYmBgcMCDnQjIgzC5YKD1w/yGDIJx4CAsYk5QTC5woJJ+Qu5ExsiAGu53GAT6kTG29OqERx4Afg4UOQ==
   </data>
  </layer>
+ <layer name="DamagingLand" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFlAILMjG19I8C8gEAP8cGIQ==
+  </data>
+ </layer>
 </map>

@@ -30,4 +30,9 @@
    eJxjYBgFtALpUDxQ+kcBYQAAcFYBnQ==
   </data>
  </layer>
+ <layer name="DamagingLand" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAcmCNhctRSqn8UDCwYyvEPAMm5BSk=
+  </data>
+ </layer>
 </map>

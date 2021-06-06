@@ -2,6 +2,7 @@
 #include"Player.h";
 #include"music/music.h"
 #include"PlayerMove.h"
+#include"TreasureBoxes.h"
 USING_NS_CC;
 MusicManager* NormalBattleScene::getmusicManager()
 {
@@ -54,7 +55,13 @@ void NormalBattleScene::changeMap(int x)
 			physicsBody_M_1->setContactTestBitmask(0x0001);
 			parentMap->getMonster().at(i)->setPhysicsBody(physicsBody_M_1);
 		}
-
+		parentMap->BoxInit();
+		parentMap->getBox()->setTag(TreasureBox_TAG);
+		parentMap->getBox()->bindScene(this);
+		parentMap->getBox()->bindMap(parentMap);
+		parentMap->getBox()->bindPlayer(getPlayer());
+		parentMap->addChild(parentMap->getBox(), 1);
+		parentMap->getBox()->setPosition(visibleSize / 2);
 	}
 	parentMap->setTag(2);//表示已经到过该地图
 	addChild(parentMap, 1);
