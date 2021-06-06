@@ -24,6 +24,9 @@ public:
 	void LandDamageUpdate(float dt);
 	void PlayerDeatheUpdate(float dt);
 	void inGate();
+
+
+
 	CREATE_FUNC(BattleScene1);
 private:
 	std::vector<Ammo*> AmmoList;

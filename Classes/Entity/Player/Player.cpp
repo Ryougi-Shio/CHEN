@@ -178,23 +178,47 @@ Weapon* Player::getWeapon2()
 {
 	return weapon2;
 }
-void Player::PistolInit()
-{
-	weapon1 = Pistol::create();
-	weapon1->retain();
-	weapon1->bindPlayer(this);
-	weapon1->setPosition(getSprite()->getContentSize().width/2 , getContentSize().height / 2);
-	weapon1->setTag(AllTag::PlayerWeapon_Pistol_TAG);
-	
-}
 void Player::SwordInit()
 {
-	weapon1 = Sword::create();
-	weapon1->retain();
-	weapon1->bindPlayer(this);
-	weapon1->setPosition(getSprite()->getContentSize().width / 2+5,-20);
+	if (!weapon1)
+	{
+		weapon1 = Sword::create();
+		weapon1->retain();
+		weapon1->bindPlayer(this);
+		weapon1->setPosition(getSprite()->getContentSize().width / 2 + 5, -20);
 
-	weapon1->setTag(AllTag::PlayerWeapon_Sword_TAG);
+		weapon1->setTag(AllTag::PlayerWeapon_Sword_TAG);
+	}
+	else
+	{
+		weapon2 = Sword::create();
+		weapon2->retain();
+		weapon2->bindPlayer(this);
+		weapon2->setPosition(getSprite()->getContentSize().width / 2 + 5, -20);
+
+		weapon2->setTag(AllTag::PlayerWeapon_Sword_TAG);
+	}
+}
+void Player::PistolInit()
+{
+	if (!weapon1)
+	{
+		weapon1 = Pistol::create();
+		weapon1->retain();
+		weapon1->bindPlayer(this);
+		weapon1->setPosition(getSprite()->getContentSize().width / 2 + 5, -20);
+
+		weapon1->setTag(AllTag::PlayerWeapon_Pistol_TAG);
+	}
+	else
+	{
+		weapon2 = Pistol::create();
+		weapon2->retain();
+		weapon2->bindPlayer(this);
+		weapon2->setPosition(getSprite()->getContentSize().width / 2 + 5, -20);
+
+		weapon2->setTag(AllTag::PlayerWeapon_Pistol_TAG);
+	}
 }
 void Player::changeMouseLocation(Vec2 location)
 {

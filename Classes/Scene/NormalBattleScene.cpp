@@ -69,3 +69,12 @@ void NormalBattleScene::changeMap(int x)
 	//parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::MonsterUpdate), 0.01f);
 	
 }
+void NormalBattleScene::bindWeaponManager(WeaponManager* WeaponManager)
+{
+	m_weaponManager = WeaponManager;
+}
+
+WeaponManager* NormalBattleScene::getWeaponManager()
+{
+	return m_weaponManager;
+}

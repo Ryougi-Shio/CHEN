@@ -13,6 +13,7 @@
 #include"miniMapTab.h"
 #include"SafeScene.h"
 #include"HealingVial.h"
+#include"WeaponManager.h"
 static long long SwordEnd;
 static long long PistolEnd;
 //记录上一颗子弹消失的时刻，后续在生成子弹时，需起码与此间隔0.3s
@@ -76,6 +77,11 @@ bool BattleScene1::init()
 	physicsBody->setDynamic(false);
 	bindPlayer(Player::create());
 	getPlayer()->setTag(AllTag::Player_TAG);
+	getPlayer()->PistolInit();//手枪
+	getPlayer()->SwordInit();//剑
+	bindWeaponManager(WeaponManager::create());
+	getWeaponManager()->bindPlayer(getPlayer());
+	getWeaponManager()->get(getPlayer()->getWeapon1(), getPlayer()->getWeapon2());//创建WeaponManager并与角色绑定
 	getPlayer()->addComponent(physicsBody);
 	getPlayer()->getPhysicsBody()->setCategoryBitmask(0x0010);
 	getPlayer()->getPhysicsBody()->setCollisionBitmask(0x0010);
@@ -116,9 +122,13 @@ bool BattleScene1::init()
 
 			
 		}
-		if (keycode == EventKeyboard::KeyCode::KEY_Q)//
+		if (keycode == EventKeyboard::KeyCode::KEY_Q)//按Q切换武器
 		{
-			;
+			int Tag;//武器互换的中间量,只记录tag
+			Tag = getPlayer()->getWeapon1()->getTag();
+			getWeaponManager()->WeaponSwap();
+			getPlayer()->getWeapon1()->setTag(getPlayer()->getWeapon2()->getTag());
+			getPlayer()->getWeapon2()->setTag(Tag);
 		}
 	};
 
