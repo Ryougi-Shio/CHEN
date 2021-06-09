@@ -20,15 +20,17 @@ bool TreasureBoxes::init()
 void TreasureBoxes::BoxBirth(int i)
 {
 	TMXObjectGroup* objGroup = mMap->getBattleMap()->getObjectGroup("Item");//获取对象层
-	auto s = new char[40];
+	char s[40];
 
 	sprintf(s, "Box_%d", i);
 	auto BoxBirth = objGroup->getObject(s);//获取对象
+
 	int x = BoxBirth.at("x").asInt();
 	int y = BoxBirth.at("y").asInt();
+	CCLOG("%d,%d", x, y);
 	setPosition(Vec2(BoxBirth.at("x").asInt(), BoxBirth.at("y").asInt()));//出生位置设置
 
-	delete s;
+
 }
 void TreasureBoxes::Interact(char s[])
 {
@@ -43,7 +45,7 @@ void TreasureBoxes::Interact(char s[])
 				notice(s);
 				isUsed = 1;
 				startTime = clock();
-				mPlayer->getPlayerAttribute()->AddMoney(30);
+	//			mPlayer->getPlayerAttribute()->AddMoney(30);
 			}
 
 		}
@@ -62,9 +64,10 @@ void TreasureBoxes::Interact(char s[])
 void TreasureBoxes::notice(char s[])
 {
 	noticeLabel = Label::createWithTTF(s, "fonts/Marker Felt.ttf", 24);
-	mScene->addChild(noticeLabel, 6);
-	noticeLabel->setTag(NoticeLabel_TAG);
 
+	noticeLabel->setTag(NoticeLabel_TAG);
+	mMap->addChild(noticeLabel,10);
+	noticeLabel->setOpacity(255);
 	noticeLabel->setPosition(getPosition().x, getPosition().y + noticeLabel->getContentSize().height * 1.5);
 }
 void TreasureBoxes::update(float dt)
@@ -73,10 +76,12 @@ void TreasureBoxes::update(float dt)
 		this->getSprite()->setOpacity(255);
 	else
 		this->getSprite()->setOpacity(0);
-	if (isUsed&&clock()-startTime>800)
+	if (noticeLabel)
 	{
-		mScene->removeChildByTag(NoticeLabel_TAG);
+
+		;
 	}
+
 }
 bool TreasureBoxes::getIsOpen()
 {

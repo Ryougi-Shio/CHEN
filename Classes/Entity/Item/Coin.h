@@ -1,15 +1,13 @@
 #pragma once
 #include"Item.h"
-
 USING_NS_CC;
-class HealingVial :public Item
+class Coin :public Item
 {
 public :
 	virtual bool init();
 	virtual void update(float dt);
 	virtual void Interact(int mode);
-	
-	CREATE_FUNC(HealingVial);
+	CREATE_FUNC(Coin);
 private:
 
 };

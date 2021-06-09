@@ -42,9 +42,12 @@ public:
 	void deadNotice();
 	void changeHero(char hero[]);
 	char* getHeroName();
+	void  HeroSkill(int mode);
+	void SkillUpdate(float dt);
 	CREATE_FUNC(Player);
 	friend class PlayerMove;
 private:
+	long skillTime = 0;
 	PlayerTFSM* TFSM;
 	PlayerMove* PLAYERMOVE;
 	PlayerAttribute* playerAttribute;

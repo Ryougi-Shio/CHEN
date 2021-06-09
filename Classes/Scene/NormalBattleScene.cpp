@@ -3,6 +3,7 @@
 #include"music/music.h"
 #include"PlayerMove.h"
 #include"TreasureBoxes.h"
+#include"AllTag.h"
 USING_NS_CC;
 MusicManager* NormalBattleScene::getmusicManager()
 {
@@ -81,7 +82,21 @@ void NormalBattleScene::changeMap(int x)
 				parentMap->ItemCreate();
 			}
 		}
+	
+		//打怪掉钱
+		parentMap->DropsInit();
+		for (int i = 0; i < parentMap->getDrops().size(); i++)
+		{
+			parentMap->getDrops().at(i)->bindScene(this);
+
+		}
+		parentMap->DropsCreate();
 	}
+	//Update must be opened
+	parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::ItemInBoxUpdate), 0.1f);
+	parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::DropsUpdate), 0.1f);
+
+
 	parentMap->setTag(2);//表示已经到过该地图
 	addChild(parentMap, 1);
 	//parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::MonsterUpdate), 0.01f);

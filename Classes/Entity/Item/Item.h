@@ -7,7 +7,7 @@ class Item :public Entity
 {
 public:
 	virtual bool init();
-	virtual void Interact();
+	virtual void Interact(int mode);
 	virtual void update(float dt);
 	bool isAround(int Range);	//判断场景里的玩家是否在周围
 	bool getIsCanSee();//0不可见，1可见

@@ -30,4 +30,9 @@
    eJxjYBgFhIA5Gh5q+kcBbgAAGfQClQ==
   </data>
  </layer>
+ <objectgroup name="Item">
+  <object name="Box_1" x="529.446" y="177.324" width="47.1088" height="49.3521"/>
+  <object name="Box_2" x="832.946" y="201.824" width="47.1088" height="49.3521"/>
+  <object name="Box_3" x="644.946" y="146.824" width="47.1088" height="49.3521"/>
+ </objectgroup>
 </map>

@@ -7,16 +7,33 @@ bool HealingVial::init()
 	this->bindSprite(Sprite::create("Items/HealingVial.png"));
 	return 1;
 }
-void  HealingVial::Interact()
+void  HealingVial::Interact(int mode)
 {
-	if (isAround(50))
+	if (mode == 0)//°×¸ø
 	{
-		if (isUsed == 0)
+		if (isAround(50))
 		{
-			isUsed = 1;
-			this->removeAllChildren();
-			this->bindSprite(Sprite::create("Items/EmptyVial.png"));
-			mPlayer->getPlayerAttribute()->AddHp(1);
+			if (isUsed == 0)
+			{
+				isUsed = 1;
+				this->removeAllChildren();
+				this->bindSprite(Sprite::create("Items/EmptyVial.png"));
+				mPlayer->getPlayerAttribute()->AddHp(1);
+			}
+		}
+	}
+	if (mode == 1)
+	{
+		if (isAround(50))
+		{
+			if (isUsed == 0&&mPlayer->getPlayerAttribute()->getMoney()>=10)
+			{
+				isUsed = 1;
+				this->removeAllChildren();
+				this->bindSprite(Sprite::create("Items/EmptyVial.png"));
+				mPlayer->getPlayerAttribute()->AddHp(1);
+				mPlayer->getPlayerAttribute()->CutMoney(10);
+			}
 		}
 	}
 }

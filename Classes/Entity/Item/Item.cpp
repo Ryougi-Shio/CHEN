@@ -7,7 +7,7 @@ bool Item::init()
 {
 	return 1;
 }
-void Item::Interact()
+void Item::Interact(int mode)
 {
 	;
 }

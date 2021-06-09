@@ -26,12 +26,14 @@ bool Player::init()
 	playerAttribute = PlayerAttribute::create();
 	playerAttribute->retain();
 	playerAttribute->bindPlayer(this);
+	this->addChild(playerAttribute->getSkillEffect(), -1);
 	TFSM = PlayerTFSM::create();
 	TFSM->retain();
 	TFSM->bindPlayer(this);
-	this->scheduleUpdate();//开启调用update函数的能力
+	this->scheduleUpdate();
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::FlipUpdate), 0.01f);
+	this->schedule(CC_SCHEDULE_SELECTOR(Player::SkillUpdate),0.01f);
 //	this->schedule(CC_SCHEDULE_SELECTOR(PlayerMove::FlipToMouse),0.01f);
 	PLAYERMOVE = PlayerMove::create();
 	PLAYERMOVE->retain();
@@ -57,6 +59,27 @@ void Player::AnimateFrameCache_init()
 	sprintf(plist, "Player/%s_animate.plist", heroName);
 	sprintf(png, "Player/%s_animate.png", heroName);
 	m_frameCache->addSpriteFramesWithFile(plist, png);//添加帧动画文件到缓存
+}
+
+void Player::HeroSkill(int mode)
+{
+	if (!skillTime||clock()-skillTime>5000)//CD:5s
+	{
+		playerAttribute->setDamage_Buff(5);
+		playerAttribute->setShootSpeed_Buff(250);
+		playerAttribute->getSkillEffect()->setOpacity(255);
+		skillTime = clock();
+	}
+
+}
+void Player::SkillUpdate(float dt)
+{
+	if (clock() - skillTime > 1000)//持续1s
+	{
+		playerAttribute->setDamage_Buff(0);
+		playerAttribute->setShootSpeed_Buff(0);
+		playerAttribute->getSkillEffect()->setOpacity(0);
+	}
 }
 void Player::rest()
 {
@@ -201,6 +224,7 @@ void Player::SwordInit()
 }
 void Player::PistolInit()
 {
+	/**
 	if (!weapon1)
 	{
 		weapon1 = Pistol::create();
@@ -218,7 +242,13 @@ void Player::PistolInit()
 		weapon2->setPosition(getSprite()->getContentSize().width / 2 , 0);
 
 		weapon2->setTag(AllTag::PlayerWeapon_Pistol_TAG);
-	}
+	}*/
+	weapon1 = Pistol::create();
+	weapon1->retain();
+	weapon1->bindPlayer(this);
+	weapon1->setPosition(getSprite()->getContentSize().width / 2, 0);
+
+	weapon1->setTag(AllTag::PlayerWeapon_Pistol_TAG);
 }
 void Player::changeMouseLocation(Vec2 location)
 {

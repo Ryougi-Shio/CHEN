@@ -8,19 +8,23 @@
 #include"Player.h"
 #include"PlayerMove.h"
 #include"AllTag.h"
+#include"Coin.h"
+#include"Entity.h"
 bool BattleMap::init()
 {
 
-	this->schedule(CC_SCHEDULE_SELECTOR(BattleMap::ItemInBoxUpdate), 0.1f);
+
+
 	return 1;
 }
 void BattleMap::MapInit(int mode)
 {
+	int i = rand() % 3;
 	if (mode == 0)//战斗房间
 	{
-		int i = rand() % 3;
+
 		char s[40];
-		sprintf(s, "maps/DungeonScene%d.tmx", i);
+		sprintf(s, "maps/BattleScene%d.tmx", i);
 		m_map = TMXTiledMap::create(s);
 		m_map->setTag(NormalRoom_TAG);
 		this->addChild(m_map);
@@ -90,8 +94,18 @@ void BattleMap::ItemInBoxUpdate(float dt)
 		{
 			m_Items.at(i)->getSprite()->setOpacity(255);
 			if (m_scene->getPlayer()->getplayermove()->getkeyMap()[EventKeyboard::KeyCode::KEY_R])
-				m_Items.at(i)->Interact();
+			{
+				if(m_map->getTag()==NormalRoom_TAG)
+					m_Items.at(i)->Interact(0);
+				else if(m_map->getTag()==ShopRoom_TAG)
+					m_Items.at(i)->Interact(1);
+			}
+
 		}
+		if (m_box.at(i)->getIsOpen() == 0)
+			m_Items.at(i)->getSprite()->setOpacity(0);
+		else
+			m_Items.at(i)->getSprite()->setOpacity(255);
 	}
 
 }
@@ -145,7 +159,51 @@ void BattleMap::createMonster(int MonsterNum)
 
 
 }
+void BattleMap::DropsInit()
+{
+	for (int i = 0; i < m_monster.size(); i++)
+	{
+		m_Drops.push_back(Coin::create());
+	}
 
+}
+void BattleMap::DropsCreate()
+{
+	for (int i = 0; i < m_Drops.size(); i++)
+	{
+		this->addChild(m_Drops.at(i), 11);
+		m_Drops.at(i)->setTag(Coin_TAG);
+
+		m_Drops.at(i)->getSprite()->setOpacity(0);
+		m_Drops.at(i)->bindPlayer(m_scene->getPlayer());
+		m_Drops.at(i)->bindMap(this);
+	}
+
+}
+void BattleMap::DropsUpdate(float dt)
+{
+	for (int i = 0; i < m_monster.size(); i++)
+	{
+		if (m_monster.at(i)->getIsDead()&&m_Drops.at(i)->getIsCanSee()==0&& m_Drops.at(i)->getIsUsed()==0)
+		{
+			//掉落物
+			m_Drops.at(i)->getSprite()->setOpacity(255);
+			m_Drops.at(i)->setPosition(m_monster.at(i)->getPosition());
+		}
+	}
+	for (int i = 0; i < m_Drops.size(); i++)
+	{
+		if (m_Drops.at(i)->isAround(30)&& m_Drops.at(i)->getIsCanSee()==0&& m_Drops.at(i)->getIsUsed()==0)
+		{
+			m_Drops.at(i)->Interact(0);
+			m_Drops.at(i)->getSprite()->setOpacity(0);
+		}
+	}
+}
+std::vector<Item*> BattleMap::getDrops()
+{
+	return m_Drops;
+}
 void BattleMap::MonsterUpdate(float dt)
 {
 

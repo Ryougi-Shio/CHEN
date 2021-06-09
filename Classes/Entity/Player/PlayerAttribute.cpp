@@ -1,6 +1,7 @@
 #include"PlayerAttribute.h"
 #include"Player/Player.h"
 #include"json/json.h"
+#include"Entity.h"
 USING_NS_CC;
 bool PlayerAttribute::init()
 {
@@ -41,6 +42,10 @@ bool PlayerAttribute::init()
 	getSprite()->addChild(moneyLabel);
 	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::DeadUpdate), 0.01f);
 	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::CountTimeUpdate), 0.01f);
+	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::Skill_EffectUpdate), 0.5f);
+	//Effect
+	SkillEffect=Sprite::create("CharacterEffect/blank.png");
+	SkillEffect->setScale(2);
 	scheduleUpdate();
 	return 1;
 }
@@ -108,14 +113,23 @@ void PlayerAttribute::AddHp(int heal)
 	mhp += heal;
 	mhp = mhp > maxHp ? maxHp : mhp;
 }
-void PlayerAttribute::hpApMoneyinit()
+void PlayerAttribute::HpApMoneySpeedDamageinit()
 {
 	mhp = maxHp;
 	map = maxAp;
 	mmoney = 0;
+	damage = 1;
+	shootSpeed = 300;//输入时单位为ms
 	isDamaged = 0;
 }
-
+void PlayerAttribute::Buffinit()//Buff初始化为0
+{
+	Hp_buff = 0;
+	Ap_buff = 0;
+	damage_buff = 0;
+	shootSpeed_buff = 0;
+}
+//获取人物各项属性
 int PlayerAttribute::getHp()
 {
 	return mhp;
@@ -130,6 +144,50 @@ int PlayerAttribute::getMoney()
 {
 	return mmoney;
 }
+int PlayerAttribute::getDamage()
+{
+	return damage;
+}
+int PlayerAttribute::getShootSpeed()
+{
+	return shootSpeed;
+}
+//获取各项buff属性
+int PlayerAttribute::getHp_Buff()
+{
+	return Hp_buff;
+}
+int PlayerAttribute::getAp_Buff()
+{
+	return Ap_buff;
+}
+int PlayerAttribute::getDamage_Buff()
+{
+	return damage_buff;
+}
+int PlayerAttribute::getShootSpeed_Buff()
+{
+	return shootSpeed_buff;
+}
+
+//设置buff
+void PlayerAttribute::setHp_Buff(int buff)
+{
+	Hp_buff = buff;
+}
+void PlayerAttribute::setAp_Buff(int buff)
+{
+	Ap_buff = buff;
+}
+void PlayerAttribute::setDamage_Buff(int buff)
+{
+	damage_buff = buff;
+}
+void PlayerAttribute::setShootSpeed_Buff(int buff)
+{
+	shootSpeed_buff = buff;	
+}
+
 
 void PlayerAttribute::bindPlayer(Player* player)
 {
@@ -155,7 +213,7 @@ bool PlayerAttribute::CutMoney(int outcome)
 {
 	if (mmoney >= outcome)
 	{
-		mmoney - +outcome;
+		mmoney -=outcome;
 		return true;
 	}
 	else
@@ -171,7 +229,37 @@ void PlayerAttribute::CountTimeUpdate(float dt)
 		isDamaged = 0;
 	}
 }
+void PlayerAttribute::Skill_EffectUpdate(float dt)
+{
+	if (shootSpeed_buff)
+	{
+		Animation* animation = Animation::create();
+		for (int i = 1; i <= 6; i++)
+		{
+			char s[50];
+			sprintf(s, "CharacterEffect/flame_effect%d.png", i);
+			animation->addSpriteFrameWithFile(s);
+		}
+		animation->setDelayPerUnit(0.1f);
+		auto* action = Animate::create(animation);
+		SkillEffect->runAction(action);
+	}
+	
+}
+
+Sprite* PlayerAttribute::getSkillEffect()
+{
+	return SkillEffect;
+}
 int PlayerAttribute::mhp;
 int PlayerAttribute::map;
 int PlayerAttribute::mmoney;
+int PlayerAttribute::damage;
+int PlayerAttribute::shootSpeed;
+
+int PlayerAttribute::Hp_buff;
+int PlayerAttribute::Ap_buff;
+int PlayerAttribute::damage_buff;
+int PlayerAttribute::shootSpeed_buff;
+
 char PlayerAttribute::heroName[10];

@@ -14,11 +14,14 @@
 #include"SafeScene.h"
 #include"HealingVial.h"
 #include"WeaponManager.h"
+#include"Coin.h"
+
 static long long SwordEnd;
 static long long PistolEnd;
 //记录上一颗子弹消失的时刻，后续在生成子弹时，需起码与此间隔0.3s
 bool BattleScene1::init()
 {
+	
 	srand((unsigned)time(NULL));//根据时间取随机种子
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	
@@ -28,13 +31,17 @@ bool BattleScene1::init()
 		getPhysicsWorld()->setSubsteps(20);
 	}
 	getmusicManager()->changeMusic("bgm/Room.mp3");
+	int shop_num = rand() % 9 ;//随机取一个值，这张图设置为商店
 	for (int i = 0; i <9; i++)//取九张地图
 	{
 
 		m_battleMap.pushBack(BattleMap::create());
 
 		m_battleMap.back()->bindScene(this);
-		m_battleMap.back()->MapInit(1);
+		if(i==shop_num)
+			m_battleMap.back()->MapInit(1);//MapInit可传参，0为普通战斗图，1为商店图
+		else
+			m_battleMap.back()->MapInit(0);
 		m_battleMap.back()->setPosition(visibleSize.width * (i % 3), visibleSize.width * (i / 3));
 		m_battleMap.back()->setNumber(i);
 
@@ -102,7 +109,7 @@ bool BattleScene1::init()
 	parentMap->BoxCreate();
 	parentMap->getBox().back()->BoxBirth(1);
 
-	parentMap->ItemInit();
+	parentMap->ItemInit();//宝箱里的血瓶创建
 	parentMap->getItems().back()->bindScene(this);
 	parentMap->ItemCreate();
 
@@ -121,6 +128,18 @@ bool BattleScene1::init()
 			parentMap->ItemCreate();
 		}
 	}
+
+	parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::ItemInBoxUpdate), 0.1f);
+
+	parentMap->DropsInit();//打怪的掉落物
+	for (int i = 0; i < parentMap->getDrops().size(); i++)
+	{
+		parentMap->getDrops().at(i)->bindScene(this);
+		
+	}
+	parentMap->DropsCreate();
+	parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::DropsUpdate), 0.1f);
+
 	//小地图创建
 	MiniMap = miniMapTab::create();
 	MiniMap->bindBattleScene(this);
@@ -139,8 +158,14 @@ bool BattleScene1::init()
 		if (keycode==EventKeyboard::KeyCode::KEY_E)//按E进门
 		{
 			inGate();
-			for(int i=0;i< parentMap->getBox().size();i++)
-				parentMap->getBox().at(i)->Interact("Money+30");
+			for (int i = 0; i < parentMap->getBox().size(); i++)
+			{
+				if(parentMap->getBattleMap()->getTag()==NormalRoom_TAG)
+					parentMap->getBox().at(i)->Interact(" ");
+				else if(parentMap->getBattleMap()->getTag()==ShopRoom_TAG)
+					parentMap->getBox().at(i)->Interact("$10");
+			}
+
 
 			
 		}
@@ -154,9 +179,14 @@ bool BattleScene1::init()
 			getPlayer()->getWeapon2()->setTag(Tag);
 
 			*/
+
+		}
+		if (keycode == EventKeyboard::KeyCode::KEY_SPACE)//按空格开技能
+		{
+			getPlayer()->HeroSkill(0);
 		}
 	};
-
+	
 	myKeyListener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘松开时响应
 	{
 		getPlayer()->getplayermove()->FalseKeyCode(keycode);
@@ -349,13 +379,15 @@ void BattleScene1::Ammoupdate(float dt)
 
 		if (AmmoList.size() == 0)
 		{
-			if (clock() - PistolEnd > 300)
+			if (clock() - PistolEnd > getPlayer()->getPlayerAttribute()->getShootSpeed()
+				- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 			{
 				CanShoot = 1;
 			}
 
 		}
-		else if (clock() - AmmoList.back()->start > 300)
+		else if (clock() - AmmoList.back()->start > getPlayer()->getPlayerAttribute()->getShootSpeed()
+			- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 			CanShoot = 1;
 
 		if (AmmoList.size() == 0)
@@ -389,13 +421,15 @@ void BattleScene1::Ammoupdate(float dt)
 
 		if (AmmoList.size() == 0)
 		{
-			if (clock() - SwordEnd > 300)
+			if (clock() - SwordEnd > getPlayer()->getPlayerAttribute()->getShootSpeed()
+				- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 			{
 				CanShoot = 1;
 			}
 
 		}
-		else if (clock() - AmmoList.back()->start > 300)
+		else if (clock() - AmmoList.back()->start > getPlayer()->getPlayerAttribute()->getShootSpeed()
+			- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 			CanShoot = 1;
 		if (CanShoot)
 		{
@@ -466,7 +500,8 @@ void BattleScene1::DeleteAmmo(float dt)
 				AmmoList[i]->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
 				double NowTime = clock();
 
-				if (NowTime - AmmoList[i]->start -300>= -10 )
+				if (NowTime - AmmoList[i]->start >= getPlayer()->getPlayerAttribute()->getShootSpeed()
+					- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 				{
 					removeChild(AmmoList[i]);
 					AmmoList.erase(ix);
@@ -573,7 +608,8 @@ bool BattleScene1::onContactBegin(PhysicsContact& contact)
 					break;
 				}
 			}
-			monster->takingDamage(1);
+			monster->takingDamage(getPlayer()->getPlayerAttribute()->getDamage()
+			+ getPlayer()->getPlayerAttribute()->getDamage_Buff());
 		}
 		//怪物撞玩家刀剑子弹
 		if ((TagA > AllTag::CloseMonster_TAG && TagA < AllTag::RemoteMonster_TAG) && (TagB == AllTag::PlayerAmmo_Sword_TAG) ||
@@ -592,7 +628,8 @@ bool BattleScene1::onContactBegin(PhysicsContact& contact)
 					break;
 				}
 			}
-			monster->takingDamage(1);
+			monster->takingDamage(getPlayer()->getPlayerAttribute()->getDamage()
+				+ getPlayer()->getPlayerAttribute()->getDamage_Buff());
 		}
 		//玩家撞怪物Pistol子弹
 		if ((TagA==AllTag::Player_TAG&&TagB==AllTag::MonsterAmmo_PistolTAG)||
