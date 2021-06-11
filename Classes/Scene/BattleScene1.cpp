@@ -110,6 +110,9 @@ bool BattleScene1::init()
 		getPlayer()->getplayermove()->TrueKeyCode(keycode);//PlayerMove里keyMap的对应键码置true
 		if (keycode==EventKeyboard::KeyCode::KEY_E)//按E进门
 		{
+
+
+
 			inGate();
 			for (int i = 0; i < parentMap->getBox().size(); i++)
 			{
@@ -183,7 +186,7 @@ bool BattleScene1::init()
 }
 void BattleScene1::MapGateInit()//地图门的初始化
 {
-	for (int i = 1; i <= 4; i++)
+	for (int i = 1; i <= 5; i++)
 	{
 		m_mapgate.pushBack(MapGate::create());
 		m_mapgate.back()->bindPlayer(getPlayer());
@@ -202,10 +205,11 @@ void BattleScene1::MapGateInit()//地图门的初始化
 	//右
 	m_mapgate.at(3)->setPosition(Director::getInstance()->getVisibleSize().width- m_mapgate.back()->getSprite()->getContentSize().width / 2-64,
 		Director::getInstance()->getVisibleSize().height / 2);
+	m_mapgate.at(4)->setPosition(Director::getInstance()->getVisibleSize()/2);//Boos房
 }
 void BattleScene1::inGate()//进门的判断和传送的实现
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		if (m_mapgate.at(i)->getAble())//获取该门是否可用
 		{
@@ -233,10 +237,15 @@ void BattleScene1::inGate()//进门的判断和传送的实现
 					getPlayer()->setPosition(m_mapgate.back()->getSprite()->getContentSize().width / 2 + 64,
 						Director::getInstance()->getVisibleSize().height / 2);
 					break;
+				case 4:
+					Director::getInstance()->replaceScene(BattleScene1::create());
+					break;
 				default:
 					break;
 				}
 				break;
+
+
 			}
 			
 		}
@@ -253,7 +262,7 @@ void BattleScene1::update(float dt)
 	int x = parentMap->getNumber()%4+1;
 	int y = parentMap->getNumber() / 4+1;
 	//根据地图的编号位置选择传送门的开启，例如最左侧地图不会开左门
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		m_mapgate.at(i)->IsAble(0);
 	}
@@ -273,6 +282,8 @@ void BattleScene1::update(float dt)
 	{
 		m_mapgate.at(0)->IsAble(able);
 	}
+	if (parentMap->getNumber() == getBossRoom())
+		m_mapgate.at(4)->IsAble(able);
 	for (int i = 0; i < parentMap->getBox().size(); i++)
 		parentMap->getBox().at(i)->setIsCanSee(able);
 }

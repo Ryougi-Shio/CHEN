@@ -65,42 +65,6 @@ void  Monster::takingDamage(int damage)
 	mHp -= damage;
 	scheduleOnce(CC_SCHEDULE_SELECTOR(Monster::reSetColor), 0.1f);
 }
-/*
-void  Monster::move()
-{
-	bool canMove = 1;
-	float Mx = getPositionX();
-	float My = getPositionY();
-	int mapX = (int)(Mx / 64);
-	int mapY = (int)(11 - int(My / 64));
-	
-
-	auto move = MoveBy::create(0.5, Vec2(movespeedX, movespeedY));
-	if (movespeedX > 0)
-	{
-		if (isWall(Mx + WIDTH , My))
-			canMove = 0;
-	}
-	if (movespeedX < 0)
-	{
-		if (isWall(Mx - WIDTH , My))
-			canMove = 0;
-	}
-	if (movespeedY > 0)
-	{
-		if (isWall(Mx , My+HEIGHTH))
-			canMove = 0;
-	}
-	if (movespeedY < 0)
-	{
-		if (isWall(Mx, My-HEIGHTH))
-			canMove = 0;
-	}
-	if(canMove)
-		this->runAction(move);//进行实质移动
-
-	
-}*/
 void  Monster::StrollAround()
 {
 

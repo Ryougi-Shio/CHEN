@@ -171,13 +171,13 @@ void PlayerMove::FlipToMouse()
 	if (Mouse_X > Player_X)
 	{
 		isFlip = 0;
-//		CCLOG("000000000000");
+
 	}
 
 	else
 	{
 		isFlip = 1;
-//	CCLOG("11111111111");
+
 	}
 
 }

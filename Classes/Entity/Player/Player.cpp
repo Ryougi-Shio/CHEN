@@ -73,7 +73,9 @@ void Player::AnimateFrameCache_init()
 
 void Player::HeroSkill(int mode)
 {
-	if (!SkillIson||clock()-skillTime>500)//CD:0.5s
+
+	std::string s= this->getHeroName();
+	if ((!SkillIson||clock()-skillTime>500)&&s=="knight")//CD:0.5s
 	{
 		playerAttribute->changeDamage_Buff(5);
 		playerAttribute->changeShootSpeed_Buff(250);
@@ -81,18 +83,76 @@ void Player::HeroSkill(int mode)
 		skillTime = clock();
 		SkillIson = 1;
 	}
+	if ((!SkillIson || clock() - skillTime > 1000) && s== "ranger")//CD:0.5s
+	{
+		this->unschedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate));
+		skill_ranger();
+		skillTime = clock();
 
+
+		this->removeComponent(this->getPhysicsBody());
+		SkillIson = 1;
+	}
 }
 
 void Player::SkillUpdate(float dt)
 {
-	if (clock() - skillTime > 1000&&SkillIson)//持续1s
+	std::string s = this->getHeroName();
+	if (clock() - skillTime > 1000&&SkillIson && s == "knight")//持续1s
 	{
 		playerAttribute->changeDamage_Buff(-5);
 		playerAttribute->changeShootSpeed_Buff(-250);
 		playerAttribute->getSkillEffect()->setOpacity(0);
 		SkillIson=0;
 	}
+	if (SkillIson&& s == "ranger")
+	{
+
+		if (this->getPhysicsBody()==nullptr&&(clock() - skillTime > 1200))
+		{
+			this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);
+			auto physicsBody = PhysicsBody::createBox(Size(40.0f, 40.0f),
+				PhysicsMaterial(0.0f, 0.0f, 0.0f));
+			physicsBody->setDynamic(false);
+			this->addComponent(physicsBody);
+			this->getPhysicsBody()->setCategoryBitmask(0x0010);
+			this->getPhysicsBody()->setCollisionBitmask(0x0010);
+			this->getPhysicsBody()->setContactTestBitmask(0x0010);
+			this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);
+		}
+		if (clock() - skillTime > 4000)
+		{
+			
+			SkillIson = 0;
+		}
+//			
+	}
+}
+void Player::skill_ranger()
+{
+	Vector<SpriteFrame*>frameArray;
+	for (int i = 1; i <= 4; i++)
+	{
+		char s[40];
+		sprintf(s, "%s_skill%d.png", heroName, i);
+		auto frame = m_frameCache->getSpriteFrameByName(s);
+		frameArray.pushBack(frame);
+	}
+	for (int i = 1; i <= 4; i++)
+	{
+		char s[40];
+		sprintf(s, "%s_skill%d.png", heroName, i);
+		auto frame = m_frameCache->getSpriteFrameByName(s);
+		frameArray.pushBack(frame);
+	}
+	Animation* animation = Animation::createWithSpriteFrames(frameArray);
+	animation->setLoops(1);
+	animation->setDelayPerUnit(0.1f);
+	animation->setLoops(2);
+	auto* action = Animate::create(animation);
+	getSprite()->runAction(action);
+	AnimationCache::destroyInstance();
+	
 }
 void Player::rest()
 {
@@ -106,6 +166,7 @@ void Player::rest()
 		auto frame = m_frameCache->getSpriteFrameByName(s);
 		frameArray.pushBack(frame);//将帧加入到序列中
 	}
+
 	Animation* animation = Animation::createWithSpriteFrames(frameArray);//创建动画
 	//animation->setLoops(-1);//-1表示无限播放
 	animation->setDelayPerUnit(0.1f);//每两张图片的间隔时间
