@@ -7,18 +7,16 @@ USING_NS_CC;
 class Weapon :public Entity
 {
 public:
-	bool isAround(float x, float y);
+	bool isAround();
 	void bindPlayer(Player* player);
 	Player* getPlayer();
 	void picked();
-	virtual Ammo* Attack()=0	;
-	void initground();
-	bool getIsGround();
-	float getShootSpeed();
-	void setShootSpeed(float speed);
+	virtual Ammo* Attack()=0;
+	int  getWeaponSpeed();
+	void setWeaponSpeed(int  speed);
+
 
 private:
 	Player* mplayer;
-	bool isground=0;
-	float shootSpeed;
+	int  WeaponSpeed;//…‰ÀŸ
 };

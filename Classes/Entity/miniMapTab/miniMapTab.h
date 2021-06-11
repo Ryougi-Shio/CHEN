@@ -13,6 +13,7 @@ public:
 private:
 	NormalBattleScene* mScene;
 	std::vector<Sprite*> RoomTab;
+	std::map <int, bool>hasVisited;
 	int x;
 	int y;
 };

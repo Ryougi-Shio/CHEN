@@ -8,7 +8,6 @@ class Sword :public Weapon
 public:	
 	virtual bool init();
 	 virtual void update(float dt);
-	 void initground();
 	 virtual Ammo* Attack();
 	 CREATE_FUNC(Sword);
 private:

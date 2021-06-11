@@ -25,16 +25,24 @@ public:
 	int getMoney();
 	int getDamage();
 	int getShootSpeed();
+
+	void setHp(int n);
+	void setAp(int n);
+	void setMoney(int n);
+	void setDamage(int n);
+	void setShootSpeed(int n);
+
+
 	//获取buff
 	int getHp_Buff();
 	int getAp_Buff();
 	int getDamage_Buff();
 	int getShootSpeed_Buff();
-	//设置buff
-	void setHp_Buff(int buff);
-	void setAp_Buff(int buff);
-	void setDamage_Buff(int buff);
-	void setShootSpeed_Buff(int buff);
+	//改变buff
+	void changeHp_Buff(int buff);
+	void changeAp_Buff(int buff);
+	void changeDamage_Buff(int buff);
+	void changeShootSpeed_Buff(int buff);
 
 	void takeDamage(int damage);//收到伤害
 	void ApHealingStart(float dt);//开始恢复护甲
@@ -46,9 +54,12 @@ public:
 	void resetColor(float delay);
 	void CountTimeUpdate(float dt);
 
-	void Skill_EffectUpdate(float dt);
-	Sprite* getSkillEffect();
 
+	void changeAttribute();
+	void Skill_EffectUpdate(float dt);
+	void Buff_EffectUpdate(float dt);
+	Sprite* getSkillEffect();
+	Sprite* getBuffEffect();
 	CREATE_FUNC(PlayerAttribute);
 private:
 	static int mhp;
@@ -57,10 +68,10 @@ private:
 	static int damage;
 	static int shootSpeed;
 
-	static int Hp_buff;
-	static int Ap_buff;
-	static int damage_buff;
-	static int shootSpeed_buff;
+	int Hp_buff;
+	int Ap_buff;
+	int damage_buff;
+	int shootSpeed_buff;
 
 	int maxHp;
 	int maxAp;
@@ -71,6 +82,6 @@ private:
 	Label* apLabel;
 	Label* hpLabel;
 	Sprite* SkillEffect;
-
+	Sprite* BuffEffect;
 	static char heroName[10];
 };

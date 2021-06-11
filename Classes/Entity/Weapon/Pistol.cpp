@@ -2,13 +2,15 @@
 #include"Player/Player.h"
 #include<cmath>
 #include"PistolAmmo.h"
+#include"AllTag.h"
 #define PI 3.14159
 
 
 bool Pistol::init()
 {
 	bindSprite(Sprite::create("Weapon/Pistol.png"));
-	setShootSpeed(0.3f);
+	this->setTag(AllTag::PlayerWeapon_Pistol_TAG);
+	setWeaponSpeed(300);
 	return 1;
 }
 
@@ -18,20 +20,17 @@ Ammo* Pistol::Attack()
 }
 void Pistol::update(float dt)
 {
-	if (!getIsGround())
-	{
-		float x = getPlayer()->getMouseLocation().x;
-		float y = Director::getInstance()->getVisibleSize().height-getPlayer()->getMouseLocation().y;
-		float Px = getPlayer()->getPositionX();
-		float Py = getPlayer()->getPositionY();	
-		float r = atan((y - Py) / (x - Px))*180/PI;
+	float x = getPlayer()->getMouseLocation().x;
+	float y = Director::getInstance()->getVisibleSize().height-getPlayer()->getMouseLocation().y;
+	float Px = getPlayer()->getPositionX();
+	float Py = getPlayer()->getPositionY();	
+	float r = atan((y - Py) / (x - Px))*180/PI;
 
-		if (x <= Px)
-			r = 180 + r;
+	if (x <= Px)
+		r = 180 + r;
 
-			
-		getSprite()->setRotation(-r);
-	}
+		
+	getSprite()->setRotation(-r);
 	if (getPlayer()->getIsFlip())
 	{
 		getSprite()->setFlippedY(1);

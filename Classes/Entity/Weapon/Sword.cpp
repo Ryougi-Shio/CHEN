@@ -1,13 +1,15 @@
 #include"Sword.h"
 #include"Player/Player.h"
 #include"SwordAmmo.h"
+#include"AllTag.h"
 #define PI 3.1415926;
 
 
 bool Sword::init()
 {
 	bindSprite(Sprite::create("Weapon/sword_1.png"));
-	setShootSpeed(0.3f);
+	setWeaponSpeed(300);
+	this->setTag(AllTag::PlayerWeapon_Sword_TAG);
 	return 1;
 }
 

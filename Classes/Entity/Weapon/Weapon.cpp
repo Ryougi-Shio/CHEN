@@ -5,17 +5,7 @@
 USING_NS_CC;
 void Weapon::picked()
 {
-	if (isground)
-	{
-		Director::getInstance()->getRunningScene()->removeChild(this);
-		isground = 0;
-		unscheduleUpdate();
-	}
-	mplayer->PistolInit();
-}
-bool Weapon::getIsGround()
-{
-	return isground;
+	this->removeFromParentAndCleanup(0);
 }
 void Weapon::bindPlayer(Player* player)
 {
@@ -25,19 +15,29 @@ Player* Weapon::getPlayer()
 {
 	return mplayer;
 }
-void Weapon::initground()
+
+int  Weapon::getWeaponSpeed()
 {
-	isground = 1;
-	Director::getInstance()->getRunningScene()->addChild(this);
-	scheduleUpdate();
+	return WeaponSpeed;
 }
 
-float Weapon::getShootSpeed()
+void Weapon::setWeaponSpeed(int  speed)
 {
-	return shootSpeed;
+	WeaponSpeed = speed;
 }
 
-void Weapon::setShootSpeed(float speed)
+bool Weapon::isAround()
 {
-	shootSpeed = speed;
+	float Px = mplayer->getPositionX();
+	float Py = mplayer->getPositionY();
+	float x = this->getPositionX();
+	float y = this->getPositionY();
+	if (sqrt((Px - x) * (Px - x) + (Py - y) * (Py - y)) <= 100)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }

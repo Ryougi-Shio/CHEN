@@ -5,18 +5,27 @@
 #include"Player/PlayerMove.h"
 #include"Weapon/Pistol.h"
 #include"Weapon/Sword.h"
+#include"Weapon/PitchFork.h"
+#include"Weapon/Shotgun.h"
 #include"music.h"
 #include"AllTag.h"
+
 bool Player::init()
 {
 	if (strlen(heroName) == 0)
 	{
-		changeHero("knight");
+		changeHero("ranger");
 	}
 	if (weapon1!=nullptr)
 	{
+		weapon1->removeFromParentAndCleanup(0);
 		weapon1->bindPlayer(this);
-		this->addChild(weapon1, 2);
+		this->addChild(weapon1, 3);
+	}
+	if (weapon2!=nullptr)
+	{
+		weapon2->removeFromParentAndCleanup(0);
+		weapon2->bindPlayer(this);
 	}
 	{
 		char s[40];
@@ -26,7 +35,8 @@ bool Player::init()
 	playerAttribute = PlayerAttribute::create();
 	playerAttribute->retain();
 	playerAttribute->bindPlayer(this);
-	this->addChild(playerAttribute->getSkillEffect(), -1);
+	this->addChild(playerAttribute->getSkillEffect(), -2);
+	this->addChild(playerAttribute->getBuffEffect(), -1);
 	TFSM = PlayerTFSM::create();
 	TFSM->retain();
 	TFSM->bindPlayer(this);
@@ -63,22 +73,25 @@ void Player::AnimateFrameCache_init()
 
 void Player::HeroSkill(int mode)
 {
-	if (!skillTime||clock()-skillTime>5000)//CD:5s
+	if (!SkillIson||clock()-skillTime>500)//CD:0.5s
 	{
-		playerAttribute->setDamage_Buff(5);
-		playerAttribute->setShootSpeed_Buff(250);
+		playerAttribute->changeDamage_Buff(5);
+		playerAttribute->changeShootSpeed_Buff(250);
 		playerAttribute->getSkillEffect()->setOpacity(255);
 		skillTime = clock();
+		SkillIson = 1;
 	}
 
 }
+
 void Player::SkillUpdate(float dt)
 {
-	if (clock() - skillTime > 1000)//持续1s
+	if (clock() - skillTime > 1000&&SkillIson)//持续1s
 	{
-		playerAttribute->setDamage_Buff(0);
-		playerAttribute->setShootSpeed_Buff(0);
+		playerAttribute->changeDamage_Buff(-5);
+		playerAttribute->changeShootSpeed_Buff(-250);
 		playerAttribute->getSkillEffect()->setOpacity(0);
+		SkillIson=0;
 	}
 }
 void Player::rest()
@@ -176,8 +189,8 @@ void Player::update(float delta)//update for Player
 	PLAYERMOVE->Move();
 	if(weapon1)
 		weapon1->update(delta);
-	if (weapon2)
-		weapon2->update(delta);
+	//if (weapon2)
+		//weapon2->update(delta);
 	float x = mouseLocation.x;
 	float y = mouseLocation.y;
 //	pistol->getSprite()->setRotation(x);
@@ -201,6 +214,50 @@ Weapon* Player::getWeapon2()
 {
 	return weapon2;
 }
+void Player::swapWeapon()
+{
+	auto temp = weapon2;
+	weapon1->removeFromParentAndCleanup(0);
+	weapon2 = weapon1;
+	weapon1 = temp;
+	addChild(weapon1);
+}
+void Player::PitchForkInit()
+{
+	if (!weapon1)
+	{
+		weapon1 = PitchFork::create();
+		weapon1->retain();
+		weapon1->bindPlayer(this);
+		weapon1->setPosition(getSprite()->getContentSize().width / 2 + 5, 0);
+		this->addChild(weapon1, 2);
+	}
+	else if (!weapon2)
+	{
+		weapon2 = PitchFork::create();
+		weapon2->retain();
+		weapon2->bindPlayer(this);
+		weapon2->setPosition(getSprite()->getContentSize().width / 2, 0);
+	}
+}
+void Player::ShotgunInit()
+{
+	if (!weapon1)
+	{
+		weapon1 = Shotgun::create();
+		weapon1->retain();
+		weapon1->bindPlayer(this);
+		weapon1->setPosition(getSprite()->getContentSize().width / 2 + 5, 0);
+		this->addChild(weapon1, 2);
+	}
+	else if (!weapon2)
+	{
+		weapon2 = Shotgun::create();
+		weapon2->retain();
+		weapon2->bindPlayer(this);
+		weapon2->setPosition(getSprite()->getContentSize().width / 2, 0);
+	}
+}
 void Player::SwordInit()
 {
 	if (!weapon1)
@@ -209,8 +266,7 @@ void Player::SwordInit()
 		weapon1->retain();
 		weapon1->bindPlayer(this);
 		weapon1->setPosition(getSprite()->getContentSize().width / 2+5 ,-20 );
-
-		weapon1->setTag(AllTag::PlayerWeapon_Sword_TAG);
+		this->addChild(weapon1,2);
 	}
 	else if(!weapon2)
 	{
@@ -218,21 +274,18 @@ void Player::SwordInit()
 		weapon2->retain();
 		weapon2->bindPlayer(this);
 		weapon2->setPosition(getSprite()->getContentSize().width / 2 , 0);
-
-		weapon2->setTag(AllTag::PlayerWeapon_Sword_TAG);
 	}
 }
 void Player::PistolInit()
 {
-	/**
+	
 	if (!weapon1)
 	{
 		weapon1 = Pistol::create();
 		weapon1->retain();
 		weapon1->bindPlayer(this);
-		weapon1->setPosition(getSprite()->getContentSize().width / 2 ,0);
-
-		weapon1->setTag(AllTag::PlayerWeapon_Pistol_TAG);
+		weapon1->setPosition(getSprite()->getContentSize().width / 2, 0);
+		this->addChild(weapon1);
 	}
 	else
 	{
@@ -241,14 +294,7 @@ void Player::PistolInit()
 		weapon2->bindPlayer(this);
 		weapon2->setPosition(getSprite()->getContentSize().width / 2 , 0);
 
-		weapon2->setTag(AllTag::PlayerWeapon_Pistol_TAG);
-	}*/
-	weapon1 = Pistol::create();
-	weapon1->retain();
-	weapon1->bindPlayer(this);
-	weapon1->setPosition(getSprite()->getContentSize().width / 2, 0);
-
-	weapon1->setTag(AllTag::PlayerWeapon_Pistol_TAG);
+	}
 }
 void Player::changeMouseLocation(Vec2 location)
 {
@@ -267,10 +313,10 @@ void Player::deadNotice()
 void Player::changeHero(char hero[])
 {
 	strcpy(heroName, hero);
-	if (playerAttribute!=nullptr)
-	{
-		playerAttribute->changeHero(hero);
-	}
+
+	playerAttribute->changeHero(hero);
+	AnimateFrameCache_init();
+	
 }
 char* Player::getHeroName()
 {
@@ -284,6 +330,32 @@ void Player::FlipUpdate(float dt)//翻转
 	else
 		this->getSprite()->setFlippedX(1);
 }
+void Player::pickWeapon(int TAG)
+{
+
+	weapon1->removeFromParentAndCleanup(0);
+	weapon2 = weapon1;
+	weapon1 = nullptr;
+	switch (TAG)
+	{
+	case AllTag::PlayerWeapon_Sword_TAG:
+		SwordInit();
+		break;
+	case AllTag::PlayerWeapon_Pistol_TAG:
+		PistolInit();
+		break;
+	case AllTag::PlayerWeapn_PitchFork_TAG:
+		PitchForkInit();
+		break;
+	case AllTag::PlayerWeapon_Shotgun_TAG:
+		ShotgunInit();
+		break;
+	default:
+		break;
+	}
+}
+
+
 
 Weapon* Player::weapon1;
 Weapon* Player::weapon2;

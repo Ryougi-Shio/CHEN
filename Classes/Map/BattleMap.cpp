@@ -4,12 +4,14 @@
 #include"Monster.h"
 #include"TreasureBoxes.h"
 #include"HealingVial.h"
+#include"PowerVest.h"
 #include"NormalBattleScene.h"
 #include"Player.h"
 #include"PlayerMove.h"
 #include"AllTag.h"
 #include"Coin.h"
 #include"Entity.h"
+
 bool BattleMap::init()
 {
 
@@ -66,7 +68,12 @@ void BattleMap::BoxInit()
 }
 void BattleMap::ItemInit()
 {
-	m_Items.push_back(HealingVial::create());
+	int i = rand() % 2;
+	i = 0;
+	if(i)
+		m_Items.push_back(HealingVial::create());
+	else
+		m_Items.push_back(PowerVest::create());
 
 
 }
@@ -95,7 +102,7 @@ void BattleMap::ItemInBoxUpdate(float dt)
 			m_Items.at(i)->getSprite()->setOpacity(255);
 			if (m_scene->getPlayer()->getplayermove()->getkeyMap()[EventKeyboard::KeyCode::KEY_R])
 			{
-				if(m_map->getTag()==NormalRoom_TAG)
+				if(m_map->getTag()!=ShopRoom_TAG)
 					m_Items.at(i)->Interact(0);
 				else if(m_map->getTag()==ShopRoom_TAG)
 					m_Items.at(i)->Interact(1);

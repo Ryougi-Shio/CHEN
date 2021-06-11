@@ -32,5 +32,5 @@ private:
 	std::vector<Ammo*> AmmoList;
 	std::vector<Ammo*> m_monsterAmmoList;
 	miniMapTab* MiniMap;
-	Vector<MapGate*>m_mapgate;
+
 };

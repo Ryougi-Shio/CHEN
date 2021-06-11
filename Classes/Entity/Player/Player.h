@@ -17,6 +17,7 @@ USING_NS_CC;
 class Player : public Entity
 {
 public:
+
 	virtual bool init();
 	void rest();//待机动画函数
 
@@ -31,6 +32,8 @@ public:
 	void flaseMouseMap(EventMouse::MouseButton key);
 	void PistolInit();
 	void SwordInit();
+	void PitchForkInit();
+	void ShotgunInit();
 	void changeMouseLocation(Vec2 location);
 	Vec2 getMouseLocation();
 	bool getIsFlip();
@@ -38,16 +41,20 @@ public:
 	std::map<EventMouse::MouseButton, bool> getMouseMap();
 	Weapon* getWeapon1();
 	Weapon* getWeapon2();
+	void swapWeapon();
+	void pickWeapon(int TAG);//捡起武器，TAG为要设置的武器
 	void dead();
 	void deadNotice();
 	void changeHero(char hero[]);
 	char* getHeroName();
 	void  HeroSkill(int mode);
+
 	void SkillUpdate(float dt);
 	CREATE_FUNC(Player);
 	friend class PlayerMove;
 private:
 	long skillTime = 0;
+	 
 	PlayerTFSM* TFSM;
 	PlayerMove* PLAYERMOVE;
 	PlayerAttribute* playerAttribute;
@@ -56,5 +63,6 @@ private:
 	static Weapon* weapon2;
 	std::map<EventMouse::MouseButton, bool> mouseMap;
 	Vec2 mouseLocation;
+	bool SkillIson=0;
 	static char heroName[10];
 };

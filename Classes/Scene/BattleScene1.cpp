@@ -15,7 +15,9 @@
 #include"HealingVial.h"
 #include"WeaponManager.h"
 #include"Coin.h"
-
+#include"PitchForkAmmo.h"
+#include"StartScene.h"
+#define PI 3.1415926f
 static long long SwordEnd;
 static long long PistolEnd;
 //记录上一颗子弹消失的时刻，后续在生成子弹时，需起码与此间隔0.3s
@@ -31,43 +33,7 @@ bool BattleScene1::init()
 		getPhysicsWorld()->setSubsteps(20);
 	}
 	getmusicManager()->changeMusic("bgm/Room.mp3");
-	int shop_num = rand() % 9 ;//随机取一个值，这张图设置为商店
-	for (int i = 0; i <9; i++)//取九张地图
-	{
-
-		m_battleMap.pushBack(BattleMap::create());
-
-		m_battleMap.back()->bindScene(this);
-		if(i==shop_num)
-			m_battleMap.back()->MapInit(1);//MapInit可传参，0为普通战斗图，1为商店图
-		else
-			m_battleMap.back()->MapInit(0);
-		m_battleMap.back()->setPosition(visibleSize.width * (i % 3), visibleSize.width * (i / 3));
-		m_battleMap.back()->setNumber(i);
-
-	}
-	parentMap = m_battleMap.at(0);//初始地图取左下角0号
-	if(parentMap->getBattleMap()->getTag()==NormalRoom_TAG)
-		m_battleMap.at(0)->createMonster(4);//创建4只随机怪物
-	addChild(parentMap,1);
-
-	m_battleMap.at(0)->setTag(2);
-	for (int i = 0; i < parentMap->getMonster().size(); i++)//给初始地图的怪物添加刚体
-	{
-		float x = parentMap->getMonster().at(i)->Width;
-		float y = parentMap->getMonster().at(i)->Height;
-		auto physicsBody_M = PhysicsBody::createBox(Size(x,y),
-			PhysicsMaterial(0.0f, 0.0f, 0.0f));
-		parentMap->getMonster().at(i)->addComponent(physicsBody_M);
-		parentMap->getMonster().at(i)->getPhysicsBody()->setPositionOffset(Vec2(x/2,y/2));
-		physicsBody_M->setDynamic(false);
-		physicsBody_M->setCategoryBitmask(0x0001);//0011掩码
-		physicsBody_M->setCollisionBitmask(0x0001);//0001
-		physicsBody_M->setContactTestBitmask(0x0001);
-		parentMap->getMonster().at(i)->setPhysicsBody(physicsBody_M);
-	}
-	
-
+	Mapinit();
 	//设置按钮
 	auto settings = MenuItemImage::create("ui/settings.png", "ui/settings.png", [&](Ref* sender) {
 		getmusicManager()->effectPlay("effect/button.mp3");
@@ -104,38 +70,25 @@ bool BattleScene1::init()
 	this->addChild(getPlayer()->getPlayerAttribute(), 4);
 	this->addChild(getPlayer(), 2);
 	//宝箱创建,血瓶创建
-	parentMap->BoxInit();
-	parentMap->getBox().back()->bindScene(this);
-	parentMap->BoxCreate();
-	parentMap->getBox().back()->BoxBirth(1);
-
-	parentMap->ItemInit();//宝箱里的血瓶创建
-	parentMap->getItems().back()->bindScene(this);
-	parentMap->ItemCreate();
-
-	if (parentMap->getBattleMap()->getTag() == ShopRoom_TAG)
+	if (parentMap->getBattleMap()->getTag() == NormalRoom_TAG)
 	{
-		for (int i = 2; i <= 3; i++)
-		{
-			parentMap->BoxInit();
-			parentMap->getBox().back()->bindScene(this);
-			parentMap->BoxCreate();
-			parentMap->getBox().back()->BoxBirth(i);
+		parentMap->BoxInit();
+		parentMap->getBox().back()->bindScene(this);
+		parentMap->BoxCreate();
+		parentMap->getBox().back()->BoxBirth(1);
 
+		parentMap->ItemInit();//宝箱里的物品创建
+		parentMap->getItems().back()->bindScene(this);
+		parentMap->ItemCreate();
 
-			parentMap->ItemInit();
-			parentMap->getItems().back()->bindScene(this);
-			parentMap->ItemCreate();
-		}
+		parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::ItemInBoxUpdate), 0.1f);
 	}
 
-	parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::ItemInBoxUpdate), 0.1f);
 
 	parentMap->DropsInit();//打怪的掉落物
 	for (int i = 0; i < parentMap->getDrops().size(); i++)
 	{
 		parentMap->getDrops().at(i)->bindScene(this);
-		
 	}
 	parentMap->DropsCreate();
 	parentMap->schedule(CC_SCHEDULE_SELECTOR(BattleMap::DropsUpdate), 0.1f);
@@ -147,8 +100,8 @@ bool BattleScene1::init()
 	MiniMap->setScale(1);
 	MiniMap->setPosition(Vec2(visibleSize.width-MiniMap->getSprite()->getContentSize().width/2
 	, MiniMap->getSprite()->getContentSize().height / 2));
-	//HealingVial in Box
 
+	
 
 	////eventlistener,键盘监听，用于移动人物
 	auto myKeyListener = EventListenerKeyboard::create();
@@ -171,14 +124,13 @@ bool BattleScene1::init()
 		}
 		if (keycode == EventKeyboard::KeyCode::KEY_Q)//按Q切换武器
 		{
-			/*
-			int Tag;//武器互换的中间量,只记录tag
-			Tag = getPlayer()->getWeapon1()->getTag();
-			getWeaponManager()->WeaponSwap();
-			getPlayer()->getWeapon1()->setTag(getPlayer()->getWeapon2()->getTag());
-			getPlayer()->getWeapon2()->setTag(Tag);
+			
+			if (getPlayer()->getWeapon2()!=nullptr)
+			{
+				getPlayer()->swapWeapon();
+			}
 
-			*/
+			
 
 		}
 		if (keycode == EventKeyboard::KeyCode::KEY_SPACE)//按空格开技能
@@ -238,11 +190,13 @@ void BattleScene1::MapGateInit()//地图门的初始化
 		this->addChild(m_mapgate.back(), 5);
 		m_mapgate.back()->IsAble(false);//初始默认该门不可用
 	}
-	//下
-	m_mapgate.at(1)->setPosition(Director::getInstance()->getVisibleSize().width / 2, m_mapgate.back()->getSprite()->getContentSize().height * 0.5 + 64);
+
 	//上
 	m_mapgate.at(0)->setPosition(Director::getInstance()->getVisibleSize().width / 2,
-		Director::getInstance()->getVisibleSize().height- m_mapgate.back()->getSprite()->getContentSize().height * 0.5 - 64);
+		Director::getInstance()->getVisibleSize().height - m_mapgate.back()->getSprite()->getContentSize().height * 0.5 - 64);
+	//下
+	m_mapgate.at(1)->setPosition(Director::getInstance()->getVisibleSize().width / 2, m_mapgate.back()->getSprite()->getContentSize().height * 0.5 + 64);
+
 	//左
 	m_mapgate.at(2)->setPosition(m_mapgate.back()->getSprite()->getContentSize().width/2+64, Director::getInstance()->getVisibleSize().height / 2);
 	//右
@@ -261,11 +215,11 @@ void BattleScene1::inGate()//进门的判断和传送的实现
 				switch (i)
 				{
 				case 0://改变地图并改变玩家位置，即传送
-					changeMap(parentMap->getNumber() + 3);
+					changeMap(parentMap->getNumber() + 4);
 					getPlayer()->setPosition(Director::getInstance()->getVisibleSize().width / 2, m_mapgate.back()->getSprite()->getContentSize().height * 0.5 + 64);
 					break;
 				case 1:
-					changeMap(parentMap->getNumber() - 3);
+					changeMap(parentMap->getNumber() - 4);
 					getPlayer()->setPosition(Director::getInstance()->getVisibleSize().width / 2,
 						Director::getInstance()->getVisibleSize().height - m_mapgate.back()->getSprite()->getContentSize().height * 0.5 - 64);
 					break;
@@ -296,26 +250,26 @@ void BattleScene1::update(float dt)
 		if (parentMap->getMonster().at(i)->getIsDead()==0)//但凡这张图里有一只怪没死，就置为不可用 able=0
 			able = 0;
 	}
-	int x = parentMap->getNumber()%3+1;
-	int y = parentMap->getNumber() / 3+1;
+	int x = parentMap->getNumber()%4+1;
+	int y = parentMap->getNumber() / 4+1;
 	//根据地图的编号位置选择传送门的开启，例如最左侧地图不会开左门
 	for (int i = 0; i < 4; i++)
 	{
 		m_mapgate.at(i)->IsAble(0);
 	}
-	if (x <= 2)
+	if (x<=3 && m_battleMap.at(parentMap->getNumber()+1)->getName()!="no")
 	{
 		m_mapgate.at(3)->IsAble(able);
 	}
-	if (x >= 2)
+	if (x>=2 && m_battleMap.at(parentMap->getNumber() - 1)->getName() != "no")
 	{
 		m_mapgate.at(2)->IsAble(able);
 	}
-	if (y >= 2)
+	if (y>=2 && m_battleMap.at(parentMap->getNumber() - 4)->getName() != "no")
 	{
 		m_mapgate.at(1)->IsAble(able);
 	}
-	if (y <= 2)
+	if (y<=3 && m_battleMap.at(parentMap->getNumber() + 4)->getName() != "no")
 	{
 		m_mapgate.at(0)->IsAble(able);
 	}
@@ -372,21 +326,26 @@ void BattleScene1::Ammoupdate(float dt)
 	//玩家Pistol子弹
 	if (getPlayer()->getMouseMap()[EventMouse::MouseButton::BUTTON_LEFT]		//鼠标左键按下
 		&&getPlayer()->getPlayerAttribute()->getHp()>0							//Player没死
-		&&getPlayer()->getWeapon1()->getTag()==AllTag::PlayerWeapon_Pistol_TAG)//Weapon是枪
+		&&(getPlayer()->getWeapon1()->getTag()==AllTag::PlayerWeapon_Pistol_TAG
+			|| getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Shotgun_TAG))//Weapon是枪
 	{
 		bool CanShoot = 0;
 
 
 		if (AmmoList.size() == 0)
 		{
-			if (clock() - PistolEnd > getPlayer()->getPlayerAttribute()->getShootSpeed()
+			if (clock() - PistolEnd > 
+				getPlayer()->getWeapon1 ()->getWeaponSpeed()
+				+getPlayer()->getPlayerAttribute()->getShootSpeed()
 				- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 			{
 				CanShoot = 1;
 			}
 
 		}
-		else if (clock() - AmmoList.back()->start > getPlayer()->getPlayerAttribute()->getShootSpeed()
+		else if (clock() - AmmoList.back()->start > 
+			getPlayer()->getWeapon1()->getWeaponSpeed()
+			+getPlayer()->getPlayerAttribute()->getShootSpeed()
 			- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 			CanShoot = 1;
 
@@ -396,39 +355,82 @@ void BattleScene1::Ammoupdate(float dt)
 		}
 		if (CanShoot)
 		{
-			AmmoList.push_back(getPlayer()->getWeapon1()->Attack());
-			AmmoList.back()->setTag(AllTag::PlayerAmmo_Pistol_TAG);
-			AmmoList.back()->start = clock();//每个子弹内部的start负责记录出生时刻
-			addChild(AmmoList.back(), 3);
-			auto physicBody = PhysicsBody::createBox(Size(20.0f, 20.0f), PhysicsMaterial(0, 0, 0));
-			AmmoList.back()->addComponent(physicBody);
-			AmmoList.back()->getPhysicsBody()->setDynamic(false);
-			AmmoList.back()->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
-			AmmoList.back()->getPhysicsBody()->setVelocity(v * 500);
-			AmmoList.back()->getPhysicsBody()->setCategoryBitmask(0x0001);//0001
-			AmmoList.back()->getPhysicsBody()->setCollisionBitmask(0x0001);//0001
-			AmmoList.back()->getPhysicsBody()->setContactTestBitmask(0x0001);
+			int Num = 1;
+			if (getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Shotgun_TAG)//霰弹则三连发
+				Num = 5;
+			for (int i = 1; i <= Num; i++)
+			{
+				AmmoList.push_back(getPlayer()->getWeapon1()->Attack());
+
+
+				AmmoList.back()->setTag(AllTag::PlayerAmmo_Pistol_TAG);
+				AmmoList.back()->start = clock();//每个子弹内部的start负责记录出生时刻
+				addChild(AmmoList.back(), 3);
+				auto physicBody = PhysicsBody::createBox(Size(20.0f, 20.0f), PhysicsMaterial(0, 0, 0));
+				AmmoList.back()->addComponent(physicBody);
+				AmmoList.back()->getPhysicsBody()->setDynamic(false);
+				AmmoList.back()->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
+				if (i == 1)
+					AmmoList.back()->getPhysicsBody()->setVelocity(v * 500);
+				else if (i == 2)
+				{					
+					float ang_v = v.getAngle() + 4 * (PI / 180);
+					Vec2 v2 = Vec2(cos(ang_v), sin(ang_v));
+
+					AmmoList.back()->getPhysicsBody()->setVelocity(v2 * 500);
+				}
+				else if (i == 3)
+				{
+					float ang_v = v.getAngle() -4  * (PI / 180);
+					Vec2 v2 = Vec2(cos(ang_v), sin(ang_v));
+
+					AmmoList.back()->getPhysicsBody()->setVelocity(v2 * 500);
+				}
+				else if (i == 4)
+				{
+					float ang_v = v.getAngle() - 8 * (PI / 180);
+					Vec2 v2 = Vec2(cos(ang_v), sin(ang_v));
+
+					AmmoList.back()->getPhysicsBody()->setVelocity(v2 * 500);
+				}
+				else if (i == 5)
+				{
+					float ang_v = v.getAngle() - 8 * (PI / 180);
+					Vec2 v2 = Vec2(cos(ang_v), sin(ang_v));
+
+					AmmoList.back()->getPhysicsBody()->setVelocity(v2 * 500);
+				}
+				AmmoList.back()->getPhysicsBody()->setCategoryBitmask(0x0001);//0001
+				AmmoList.back()->getPhysicsBody()->setCollisionBitmask(0x0001);//0001
+				AmmoList.back()->getPhysicsBody()->setContactTestBitmask(0x0001);
+			}
+		
 		}
 	
 	}
-	//玩家Sword子弹
+	//玩家Sword子弹 &PitchFor子弹
 	if (getPlayer()->getMouseMap()[EventMouse::MouseButton::BUTTON_LEFT] &&
 		getPlayer()->getPlayerAttribute()->getHp() > 0 && 
-		getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Sword_TAG)
+		(getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Sword_TAG
+			|| getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapn_PitchFork_TAG))
 	{
 		bool CanShoot = 0;
 
 
 		if (AmmoList.size() == 0)
 		{
-			if (clock() - SwordEnd > getPlayer()->getPlayerAttribute()->getShootSpeed()
+			if (clock() - SwordEnd > 
+				getPlayer()->getWeapon1()->getWeaponSpeed()
+				+getPlayer()->getPlayerAttribute()->getShootSpeed()
 				- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 			{
 				CanShoot = 1;
 			}
 
 		}
-		else if (clock() - AmmoList.back()->start > getPlayer()->getPlayerAttribute()->getShootSpeed()
+		else if (clock() - AmmoList.back()->start > 
+			getPlayer()->getWeapon1()->getWeaponSpeed()
+			+getPlayer()->getPlayerAttribute()->getShootSpeed()
 			- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
 			CanShoot = 1;
 		if (CanShoot)
@@ -446,11 +448,16 @@ void BattleScene1::Ammoupdate(float dt)
 			AmmoList.back()->getPhysicsBody()->setCategoryBitmask(0x0001);//0001
 			AmmoList.back()->getPhysicsBody()->setCollisionBitmask(0x0001);//0001
 			AmmoList.back()->getPhysicsBody()->setContactTestBitmask(0x0001);
-			if (getPlayer()->getIsFlip())
+			if (getPlayer()->getIsFlip()&&getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Sword_TAG)
 				AmmoList.back()->getSprite()->setFlippedX(1);
+			if (getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapn_PitchFork_TAG)
+			{
+				AmmoList.back()->getSprite()->setRotation(getPlayer()->getWeapon1()->getSprite()->getRotation());
+			}
 		}
 
 	}
+	
 	
 }
 
@@ -490,30 +497,39 @@ void BattleScene1::DeleteAmmo(float dt)
 		int i = 0;
 		auto ix = AmmoList.begin();
 		int size = AmmoList.size();
-
-		if (getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Sword_TAG)//Sword的子弹回收
+		//Sword&&PitchFork的子弹回收
+		if (getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Sword_TAG
+			|| getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapn_PitchFork_TAG)
 		{
 
 			
 			for (; i < size; ix++, i++)
 			{
-				AmmoList[i]->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
-				double NowTime = clock();
-
-				if (NowTime - AmmoList[i]->start >= getPlayer()->getPlayerAttribute()->getShootSpeed()
-					- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
+				
+				if (AmmoList[i]->getTag() == AllTag::PlayerAmmo_Sword_TAG)
 				{
-					removeChild(AmmoList[i]);
-					AmmoList.erase(ix);
-					SwordEnd = clock();
-					break;
+					AmmoList[i]->setPosition(getPlayer()->getPosition() + getPlayer()->getWeapon1()->getPosition());
+					double NowTime = clock();
+
+					if (NowTime - AmmoList[i]->start >= getPlayer()->getPlayerAttribute()->getShootSpeed()
+						- getPlayer()->getPlayerAttribute()->getShootSpeed_Buff())
+					{
+						removeChild(AmmoList[i]);
+						AmmoList.erase(ix);
+						SwordEnd = clock();
+						break;
+					}
 				}
+
 			}
 		}
-		else
-		{	//Pistol的子弹撞墙回收
+		i = 0;
+		ix = AmmoList.begin();
+		size = AmmoList.size();
+//子弹撞墙回收
 			for (; i < size; ix++, i++)
 			{
+
 				if (isWall((*ix)->getPositionX(), (*ix)->getPositionY()))
 				{
 					removeChild(AmmoList[i]);
@@ -521,9 +537,11 @@ void BattleScene1::DeleteAmmo(float dt)
 					PistolEnd = clock();
 					break;
 				}
+				
+
 
 			}
-		}
+		
 
 	}
 	//怪物手枪子弹的撞墙回收 
@@ -543,7 +561,8 @@ void BattleScene1::DeleteAmmo(float dt)
 
 		}
 	}
-	if (getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Sword_TAG)
+	if (getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapon_Sword_TAG
+		|| getPlayer()->getWeapon1()->getTag() == AllTag::PlayerWeapn_PitchFork_TAG)
 	{
 		if (AmmoList.size())
 			getPlayer()->getWeapon1()->getSprite()->setOpacity(0);
@@ -673,9 +692,7 @@ void BattleScene1::PlayerDeatheUpdate(float dt)
 	int Hp=getPlayer()->getPlayerAttribute()->getHp();
 	if (Hp <= 0)
 	{	
-	//	_sleep(2000);
 
-//		Director::getInstance()->popScene();
-//		Director::getInstance()->replaceScene(SafeScene::create());
+		Director::getInstance()->replaceScene(StartScene::create());
 	}
 }

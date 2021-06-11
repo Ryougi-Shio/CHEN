@@ -4,6 +4,10 @@
 #include"json.h"
 #include"Player/PlayerAttribute.h"
 #include"Player/PlayerMove.h"
+#include"Sword.h"
+#include"Pistol.h"
+#include"PitchFork.h"
+#include"HeroNPC.h"
 USING_NS_CC;
 bool SafeScene::init()
 {
@@ -14,8 +18,6 @@ bool SafeScene::init()
 	auto backgroundSprite = Sprite::create("background/SafeScene.png");
 	backgroundSprite->setPosition(origin.x + backgroundSprite->getContentSize().width / 2, origin.y + backgroundSprite->getContentSize().height / 2);
 	this->addChild(backgroundSprite,1);
-
-
 
 	//更改bgm以及绑定tiledmap
 	getmusicManager()->changeMusic("bgm/Room.mp3");
@@ -38,7 +40,10 @@ bool SafeScene::init()
 	//玩家创建
 	bindPlayer(Player::create());
 	getPlayer()->PistolInit();//手枪
+	getPlayer()->ShotgunInit();//霰弹枪
 //	getPlayer()->SwordInit();//剑
+//	getPlayer()->PitchForkInit();//干草叉
+
 	getPlayer()->getPlayerAttribute()->HpApMoneySpeedDamageinit();//玩家属性初始化
 	getPlayer()->getPlayerAttribute()->Buffinit();//玩家buff初始化（全是0
 	getPlayer()->setPosition(64 * 4 + 32, 64 * 4 + 32);
@@ -47,8 +52,14 @@ bool SafeScene::init()
 		visibleSize.height - getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().height / 2);//属性UI位置设定
 	this->addChild(getPlayer()->getPlayerAttribute(),5);//生成playerUI
 	this->addChild(getPlayer(),2);
+	
+	getPlayer()->changeHero(getPlayer()->getHeroName() );
+	getPlayer()->setTag(Hero_Ranger_TAG);
+	//
+	heroNPC = HeroNPC::create();
+	this->addChild(heroNPC,10);
 
-
+	heroNPC->setPosition(64*5,64*5);
 
 	//传送门创建
 
@@ -65,9 +76,7 @@ bool SafeScene::init()
 	auto myKeyListener = EventListenerKeyboard::create();
 	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘按下时响应
 	{
-
 		getPlayer()->getplayermove()->TrueKeyCode(keycode);//PlayerMove里keyMap的对应键码置true
-
 	};
 
 	myKeyListener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘松开时响应
@@ -78,6 +87,7 @@ bool SafeScene::init()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
 	this->scheduleUpdate();
 	//this->schedule(CC_SCHEDULE_SELECTOR(SafeScene::test), 10.0f);
+	this->schedule(CC_SCHEDULE_SELECTOR(SafeScene::ChangeHeroUpdate), 0.1f);
 	return 1;
 }
 
@@ -88,6 +98,33 @@ void SafeScene::update(float dt)
 	
 
 	safeGate->update(dt);
+}
+
+void SafeScene::ChangeHeroUpdate(float dt)
+{
+	int x = getPlayer()->getPositionX();
+	int y = getPlayer()->getPositionY();
+	int Nx = heroNPC->getPositionX();
+	int Ny = heroNPC->getPositionY();
+	if (sqrt((x - Nx) * (x - Nx) + (y - Ny) * (y - Ny)) <= 100
+		&&getPlayer()->getplayermove()->getkeyMap()[EventKeyboard::KeyCode::KEY_E])
+	{
+		
+		if (getPlayer()->getTag()==Hero_Knight_TAG)
+		{
+			getPlayer()->changeHero("ranger");
+			getPlayer()->setTag(Hero_Ranger_TAG);
+			heroNPC->interact(0);
+		}
+
+		else
+		{
+			getPlayer()->changeHero("knight");
+			getPlayer()->setTag(Hero_Knight_TAG);
+			heroNPC->interact(1);
+		}
+
+	}
 }
 
 void SafeScene::test(float dt)
