@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
+  <image source="ground.png" width="384" height="512"/>
+ </tileset>
+ <tileset firstgid="49" name="wall" tilewidth="64" tileheight="64">
+  <image source="wall.png" width="640" height="64"/>
+ </tileset>
+ <tileset firstgid="59" name="ground_else" tilewidth="64" tileheight="64">
+  <image source="tiles1.png" width="448" height="448"/>
+ </tileset>
+ <layer name="ground" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJwTZmBgEKYQ25OJR/WP6qeGfkowAMr3JlE=
+  </data>
+ </layer>
+ <objectgroup name="Monster">
+  <object name="Monster_birth1" x="250.895" y="146.707" width="47.1088" height="49.3521"/>
+  <object name="Monster_birth3" x="772.241" y="377.883" width="47.1088" height="49.3521"/>
+  <object name="Monster_birth4" x="486.574" y="140.762" width="47.1088" height="49.3521"/>
+  <object name="Monster_birth2" x="202.906" y="379.197" width="47.1088" height="49.3521"/>
+ </objectgroup>
+ <layer name="wall" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJwzZGBgMETCRmh8YuTIBYNBvxES3wQNExKn1H5YeJIL0N0PA7jcj00/Lvtx+ZlY/cQAavif2DSKSxwAw9kNPQ==
+  </data>
+ </layer>
+ <layer name="DamagingLand" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFgxWYQ/FA6R8JAAAXxwDd
+  </data>
+ </layer>
+ <objectgroup name="Item">
+  <object name="Box_1" x="569.446" y="189.324" width="47.1088" height="49.3521"/>
+  <object name="Box_2" x="802.946" y="171.824" width="47.1088" height="49.3521"/>
+  <object name="Box_3" x="691.946" y="185.824" width="47.1088" height="49.3521"/>
+ </objectgroup>
+</map>

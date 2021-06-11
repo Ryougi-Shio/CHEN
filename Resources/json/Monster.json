@@ -1,0 +1,18 @@
+{
+  "O_small_monster": {
+    "Hp":10,
+    "MoveSpeed":0.5
+    },
+       "Y_craw_monster": {
+    "Hp":10,
+    "MoveSpeed":0.5
+    },
+      "pig_monster": {
+    "Hp":10,
+    "MoveSpeed":0.15
+    },
+      "snow_monster": {
+    "Hp":10,
+    "MoveSpeed":0.15
+    }
+}
