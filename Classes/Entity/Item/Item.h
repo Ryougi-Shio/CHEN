@@ -9,6 +9,9 @@ public:
 	virtual bool init();
 	virtual void Interact(int mode);
 	virtual void update(float dt);
+	virtual void notice(char s[]);
+	void ChangeNotice(char s[]);
+	void NoticeOnorOff(bool able);
 	bool isAround(int Range);	//判断场景里的玩家是否在周围
 	bool getIsCanSee();//0不可见，1可见
 	bool getIsUsed();//0不可用，1可用
@@ -23,6 +26,7 @@ protected:
 	BattleMap* mMap;
 	Scene* mScene;
 	Player* mPlayer;
+	Label* noticeLabel;
 	bool isCanSee = 0;
 	bool isUsed=0;
 	long startTime = 0;

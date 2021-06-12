@@ -56,6 +56,7 @@ protected:
 	int mHp;
 	NormalBattleScene* mScene;
 	MonsterTFSM* TFSM_M;
+
 	char MonsterName[30];
 	double MonsterSpeed;
 	bool isFlip=0;

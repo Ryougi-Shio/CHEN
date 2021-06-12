@@ -1,6 +1,8 @@
 #include"HealingVial.h"
 #include"Player.h"
 #include"PlayerAttribute.h"
+#include"AllTag.h"
+#include"BattleMap.h"
 USING_NS_CC;
 bool HealingVial::init()
 {
@@ -40,4 +42,14 @@ void  HealingVial::Interact(int mode)
 void HealingVial::update(float dt)
 {
 	;
+}
+void HealingVial::notice(char s[])
+{
+	s = "HP Healing";
+	noticeLabel = Label::createWithTTF(s, "fonts/Marker Felt.ttf", 24);
+
+	noticeLabel->setTag(NoticeLabel_TAG);
+	mMap->addChild(noticeLabel, 10);
+	noticeLabel->setOpacity(0);
+	noticeLabel->setPosition(getPosition().x, getPosition().y - noticeLabel->getContentSize().height * 1.5);
 }

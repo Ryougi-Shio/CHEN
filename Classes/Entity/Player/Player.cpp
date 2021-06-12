@@ -83,7 +83,7 @@ void Player::HeroSkill(int mode)
 		skillTime = clock();
 		SkillIson = 1;
 	}
-	if ((!SkillIson || clock() - skillTime > 1000) && s== "ranger")//CD:0.5s
+	if ((!SkillIson || clock() - skillTime > 2000) && s== "ranger")//CD2s
 	{
 		this->unschedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate));
 		skill_ranger();
@@ -108,7 +108,7 @@ void Player::SkillUpdate(float dt)
 	if (SkillIson&& s == "ranger")
 	{
 
-		if (this->getPhysicsBody()==nullptr&&(clock() - skillTime > 1200))
+		if (this->getPhysicsBody()==nullptr&&(clock() - skillTime > 1200))//³ÖÐø1.2s
 		{
 			this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);
 			auto physicsBody = PhysicsBody::createBox(Size(40.0f, 40.0f),
@@ -120,7 +120,7 @@ void Player::SkillUpdate(float dt)
 			this->getPhysicsBody()->setContactTestBitmask(0x0010);
 			this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);
 		}
-		if (clock() - skillTime > 4000)
+		if (clock() - skillTime > 2000)//CD2s
 		{
 			
 			SkillIson = 0;

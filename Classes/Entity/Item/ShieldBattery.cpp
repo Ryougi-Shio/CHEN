@@ -1,16 +1,15 @@
-#include"PowerVest.h"
+#include"ShieldBattery.h"
 #include"Player.h"
 #include"PlayerAttribute.h"
 #include"AllTag.h"
 #include"BattleMap.h"
 USING_NS_CC;
-bool PowerVest::init()
+bool ShieldBattery::init()
 {
-	this->bindSprite(Sprite::create("Items/PowerVest.png"));
-
+	this->bindSprite(Sprite::create("Items/ShieldBattery.png"));
 	return 1;
 }
-void  PowerVest::Interact(int mode)
+void  ShieldBattery::Interact(int mode)
 {
 	if (mode == 0)//白给
 	{
@@ -20,42 +19,38 @@ void  PowerVest::Interact(int mode)
 			{
 				isUsed = 1;
 				this->removeAllChildren();
-				this->bindSprite(Sprite::create("Items/EmptyVest.png"));
-				mPlayer->getPlayerAttribute()->changeDamage_Buff(1);
+				this->bindSprite(Sprite::create("Items/EmptyBattery.png"));
+				mPlayer->getPlayerAttribute()->changeAp(20);
+				mPlayer->getPlayerAttribute()->AddHp(1);
 			}
 		}
 	}
 	if (mode == 1)
 	{
-		if (isAround(50))
+		if (isAround(100))
 		{
 			if (isUsed == 0 && mPlayer->getPlayerAttribute()->getMoney() >= 10)
 			{
 				isUsed = 1;
 				this->removeAllChildren();
-				this->bindSprite(Sprite::create("Items/EmptyVest.png"));
-				mPlayer->getPlayerAttribute()->changeDamage_Buff(1);
+				this->bindSprite(Sprite::create("Items/EmptyBattery.png"));
+				mPlayer->getPlayerAttribute()->changeAp(20);
 				mPlayer->getPlayerAttribute()->CutMoney(10);
 			}
 		}
 	}
 }
-//Notice的初始化 
-void PowerVest::notice(char s[])
+void ShieldBattery::update(float dt)
 {
-
-	s = "Damage UP";
+	;
+}
+void ShieldBattery::notice(char s[])
+{
+	s = "Shield UP";
 	noticeLabel = Label::createWithTTF(s, "fonts/Marker Felt.ttf", 24);
 
 	noticeLabel->setTag(NoticeLabel_TAG);
 	mMap->addChild(noticeLabel, 10);
 	noticeLabel->setOpacity(0);
 	noticeLabel->setPosition(getPosition().x, getPosition().y - noticeLabel->getContentSize().height * 1.5);
-	
-
-}
-
-void PowerVest::update(float dt)
-{
-	;
 }

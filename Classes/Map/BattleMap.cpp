@@ -11,7 +11,7 @@
 #include"AllTag.h"
 #include"Coin.h"
 #include"Entity.h"
-
+#include"ShieldBattery.h"
 bool BattleMap::init()
 {
 
@@ -68,13 +68,15 @@ void BattleMap::BoxInit()
 }
 void BattleMap::ItemInit()
 {
-	int i = rand() % 2;
-	i = 0;
-	if(i)
+	//随机创建血瓶,力量药水,护盾电池 
+	int i = rand() % 3;
+//	i = 2;
+	if(i==0)
 		m_Items.push_back(HealingVial::create());
-	else
+	else if(i==1)
 		m_Items.push_back(PowerVest::create());
-
+	else if(i==2)
+		m_Items.push_back(ShieldBattery::create());
 
 }
 void BattleMap::BoxCreate()
@@ -90,25 +92,41 @@ void BattleMap::ItemCreate()
 	m_Items.back()->setPosition(Vec2(this->getBox().back()->getPosition()));
 	m_Items.back()->getSprite()->setOpacity(0);
 	m_Items.back()->bindPlayer(m_scene->getPlayer());
+
 	m_Items.back()->bindMap(this);
+	m_Items.back()->notice("");
 }
 void BattleMap::ItemInBoxUpdate(float dt)
 {
-
+	//宝箱中的Item
 	for (int i = 0; i < m_box.size(); i++)
 	{
+		//宝箱能看见，宝箱被使用，宝箱被打开
 		if (m_box.at(i)->getIsCanSee() == 1 && m_box.at(i)->getIsUsed() == 1 && m_box.at(i)->getIsOpen() == 1)
 		{
 			m_Items.at(i)->getSprite()->setOpacity(255);
+			//按下R
 			if (m_scene->getPlayer()->getplayermove()->getkeyMap()[EventKeyboard::KeyCode::KEY_R])
 			{
 				if(m_map->getTag()!=ShopRoom_TAG)
-					m_Items.at(i)->Interact(0);
+					m_Items.at(i)->Interact(0);//mode：0，商店里要花钱的
 				else if(m_map->getTag()==ShopRoom_TAG)
-					m_Items.at(i)->Interact(1);
+					m_Items.at(i)->Interact(1);//mode：1，战斗地图的白嫖奖励
 			}
+			//玩家在周围，抬头提示
+			if (m_Items.at(i)->isAround(50))
+			{
+				m_Items.at(i)->NoticeOnorOff(1);
+			}
+			else
+				m_Items.at(i)->NoticeOnorOff(0);
 
 		}
+		else
+		{
+			m_Items.at(i)->NoticeOnorOff(0);
+		}
+		
 		if (m_box.at(i)->getIsOpen() == 0)
 			m_Items.at(i)->getSprite()->setOpacity(0);
 		else

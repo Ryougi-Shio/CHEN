@@ -26,11 +26,11 @@ public:
 	int getDamage();
 	int getShootSpeed();
 
-	void setHp(int n);
-	void setAp(int n);
-	void setMoney(int n);
-	void setDamage(int n);
-	void setShootSpeed(int n);
+	void changeHp(int n);
+	void changeAp(int n);
+	void changeMoney(int n);
+	void changeDamage(int n);
+	void changeShootSpeed(int n);
 
 
 	//ªÒ»°buff
