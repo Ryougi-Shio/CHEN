@@ -8,6 +8,7 @@
 bool miniMapTab::init()
 {
 	this->bindSprite(Sprite::create("UI/miniMapTab.png"));
+	this->getSprite()->setOpacity(150);
 	for (int i = 0; i < 16; i++)
 	{
 		RoomTab.push_back(Sprite::create("UI/WitheSpot.png"));

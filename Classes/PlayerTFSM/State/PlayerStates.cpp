@@ -10,3 +10,4 @@ void RestState::execute(Player* player)
 {
 	player->rest();
 }
+

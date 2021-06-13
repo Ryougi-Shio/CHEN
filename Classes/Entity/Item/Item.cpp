@@ -1,7 +1,8 @@
 #include"Item.h"
 #include"cocos2d.h"
 #include"Player.h"
-
+#include"AllTag.h"
+#include"BattleMap.h"
 USING_NS_CC;
 bool Item::init()
 {
@@ -15,6 +16,33 @@ void Item::update(float dt)
 {
 	;
 }
+
+void Item::notice(char s[])
+{
+	;
+}
+
+void Item::ChangeNotice(char s[])
+{
+	noticeLabel->removeAllChildren();
+	mMap->removeChild(noticeLabel);
+	noticeLabel = Label::createWithTTF(s, "fonts/Marker Felt.ttf", 24);
+
+	noticeLabel->setTag(NoticeLabel_TAG);
+	mMap->addChild(noticeLabel, 10);
+	noticeLabel->setOpacity(255);
+	noticeLabel->setPosition(getPosition().x, getPosition().y - noticeLabel->getContentSize().height * 1.5);
+}
+
+void Item::NoticeOnorOff(bool able)
+{
+	if (able)
+		noticeLabel->setOpacity(255);
+	else
+		noticeLabel->setOpacity(0);
+}
+
+
 
 void Item::bindPlayer(Player* player)
 {

@@ -2,6 +2,8 @@
 #include"cocos2d.h"
 #include"Player.h"
 #include"PlayerAttribute.h"
+#include"AllTag.h"
+#include"BattleMap.h"
 USING_NS_CC;
 bool  Coin::init()
 {
@@ -32,4 +34,13 @@ void Coin::Interact(int mode)
 void Coin::update(float dt)
 {
 	;
+}
+void Coin::notice(char s[])
+{
+	noticeLabel = Label::createWithTTF(s, "fonts/Marker Felt.ttf", 24);
+
+	noticeLabel->setTag(NoticeLabel_TAG);
+	mMap->addChild(noticeLabel, 10);
+	noticeLabel->setOpacity(0);
+	noticeLabel->setPosition(getPosition().x, getPosition().y - noticeLabel->getContentSize().height * 1.5);
 }

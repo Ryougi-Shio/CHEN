@@ -23,6 +23,7 @@ public:
 
 	void run();//跑步动画函数
 
+	void skill_ranger();
 	void TFSMupdate(float dt);//动画状态机专用update，每0.4f一次调用
 	PlayerAttribute* getPlayerAttribute();
 	PlayerMove* getplayermove();

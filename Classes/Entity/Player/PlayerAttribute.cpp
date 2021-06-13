@@ -164,25 +164,25 @@ int PlayerAttribute::getShootSpeed()
 {
 	return shootSpeed;
 }
-void PlayerAttribute::setHp(int n)
+void PlayerAttribute::changeHp(int n)
 {
-	mhp = n;
+	mhp += n;
 }
-void PlayerAttribute::setAp(int n)
+void PlayerAttribute::changeAp(int n)
 {
-	map = n;
+	map += n;
 }
-void PlayerAttribute::setMoney(int n)
+void PlayerAttribute::changeMoney(int n)
 {
-	mmoney = n;
+	mmoney += n;
 }
-void PlayerAttribute::setDamage(int n)
+void PlayerAttribute::changeDamage(int n)
 {
-	damage = n;
+	damage += n;
 }
-void PlayerAttribute::setShootSpeed(int n)
+void PlayerAttribute::changeShootSpeed(int n)
 {
-	shootSpeed = n;
+	shootSpeed += n;
 }
 
 

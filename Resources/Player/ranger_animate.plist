@@ -139,6 +139,66 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
+            <key>ranger_skill1.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{50,56}</string>
+                <key>spriteSourceSize</key>
+                <string>{50,56}</string>
+                <key>textureRect</key>
+                <string>{{440,0},{50,56}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>ranger_skill2.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{58,48}</string>
+                <key>spriteSourceSize</key>
+                <string>{58,48}</string>
+                <key>textureRect</key>
+                <string>{{490,0},{58,48}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>ranger_skill3.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{48,50}</string>
+                <key>spriteSourceSize</key>
+                <string>{48,50}</string>
+                <key>textureRect</key>
+                <string>{{548,0},{48,50}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>ranger_skill4.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{52,46}</string>
+                <key>spriteSourceSize</key>
+                <string>{52,46}</string>
+                <key>textureRect</key>
+                <string>{{596,0},{52,46}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -151,9 +211,9 @@
             <key>realTextureFileName</key>
             <string>ranger_animate.png</string>
             <key>size</key>
-            <string>{440,54}</string>
+            <string>{648,56}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:0c09a262b3f4ae3580d9c0757e3cd260:c7b041b96e5654e97c847e2faa6c4ab4:b27dc48ab1ec37c909fa724458527435$</string>
+            <string>$TexturePacker:SmartUpdate:0b18da23d8ee98980c687c04771df951:a35fb6e85b2a25b9c7f20c1892c903fc:b27dc48ab1ec37c909fa724458527435$</string>
             <key>textureFileName</key>
             <string>ranger_animate.png</string>
         </dict>

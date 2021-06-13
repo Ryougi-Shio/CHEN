@@ -40,8 +40,8 @@ bool SafeScene::init()
 	//玩家创建
 	bindPlayer(Player::create());
 	getPlayer()->PistolInit();//手枪
-	getPlayer()->ShotgunInit();//霰弹枪
-//	getPlayer()->SwordInit();//剑
+//	getPlayer()->ShotgunInit();//霰弹枪
+	getPlayer()->SwordInit();//剑
 //	getPlayer()->PitchForkInit();//干草叉
 
 	getPlayer()->getPlayerAttribute()->HpApMoneySpeedDamageinit();//玩家属性初始化
