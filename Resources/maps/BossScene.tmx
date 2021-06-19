@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="ground" tilewidth="64" tileheight="64">
+  <image source="ground.png" width="384" height="512"/>
+ </tileset>
+ <tileset firstgid="49" name="wall" tilewidth="64" tileheight="64">
+  <image source="wall.png" width="640" height="64"/>
+ </tileset>
+ <tileset firstgid="59" name="ground_else" tilewidth="64" tileheight="64">
+  <image source="tiles1.png" width="448" height="448"/>
+ </tileset>
+ <layer name="ground" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJylkksOACEIQ7mDl4C5/wFnTMakaR66cNH4oYWCjogYl8gP9a9r/wA8tvTVcE75XF8A5fuZ9OqhYu+l01Mt6kP1lIM86Z3P3z2f5qH6bDiEXX3q33snPb17Wsx5t/924gXptRpw
+  </data>
+ </layer>
+ <objectgroup name="Monster" opacity="0.8">
+  <object name="Monster_birth1" x="384" y="256" width="64" height="64"/>
+  <object name="Monster_birth2" x="657" y="422" width="64" height="64"/>
+  <object name="Monster_birth3" x="259" y="117" width="64" height="64"/>
+  <object name="Monster_birth4" x="659" y="556" width="64" height="64"/>
+  <object name="Monster_birth0" x="492" y="364" width="64" height="64"/>
+ </objectgroup>
+ <layer name="wall" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJyzZGBgsMKBLaEYnzyIJhfAzBnK+i0p0A8LX0r0D7T/B1o/ofRJSB4AtXcLvQ==
+  </data>
+ </layer>
+ <layer name="DamagingLand" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFFkiYHLVDXf9IBgDt6QVB
+  </data>
+ </layer>
+ <objectgroup name="Item">
+  <object name="Box_1" x="259.446" y="459.324" width="47.1088" height="49.3521"/>
+  <object name="Box_2" x="413.446" y="461.324" width="47.1088" height="49.3521"/>
+  <object name="Box_3" x="553.446" y="465.324" width="47.1088" height="49.3521"/>
+  <object name="Statue_1" x="522.446" y="247.324" width="47.1088" height="49.3521"/>
+  <object name="Weapon_1" x="726.446" y="470.324" width="47.1088" height="49.3521"/>
+ </objectgroup>
+ <objectgroup name="Traps">
+  <object name="Trap_1" x="152.446" y="104.324" width="47.1088" height="49.3521"/>
+  <object name="Trap_2" x="508.446" y="143.324" width="47.1088" height="49.3521"/>
+  <object name="Trap_3" x="844.446" y="94.324" width="47.1088" height="49.3521"/>
+  <object name="Trap_4" x="790.446" y="582.324" width="47.1088" height="49.3521"/>
+  <object name="Trap_5" x="213.446" y="594.324" width="47.1088" height="49.3521"/>
+ </objectgroup>
+ <layer name="SlowingLand" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFqkiYHLVDXf9IBgA+OwN5
+  </data>
+ </layer>
+ <layer name="BurningLand" width="16" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBh8wIJIscGqf6ABNdxvgYNNqhmDPdwA+G0CoQ==
+  </data>
+ </layer>
+</map>

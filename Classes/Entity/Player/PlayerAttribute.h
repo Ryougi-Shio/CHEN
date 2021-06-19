@@ -19,19 +19,22 @@ public:
 	void AddMoney(int income);
 	bool CutMoney(int outcome);
 	void AddHp(int heal);
+	void AddScore(int score);
+	void CutScore(int score);
 
 	int getHp();
 	int getAp();
 	int getMoney();
 	int getDamage();
 	int getShootSpeed();
+	int getScore();
 
 	void changeHp(int n);
 	void changeAp(int n);
 	void changeMoney(int n);
 	void changeDamage(int n);
 	void changeShootSpeed(int n);
-
+	void changeScore(int n);
 
 	//ªÒ»°buff
 	int getHp_Buff();
@@ -54,12 +57,17 @@ public:
 	void resetColor(float delay);
 	void CountTimeUpdate(float dt);
 
-
+	void setIsBurnging(int burn);
+	bool getIsBurning();
+	void BurningUpdate(float dt);
 	void changeAttribute();
 	void Skill_EffectUpdate(float dt);
 	void Buff_EffectUpdate(float dt);
 	Sprite* getSkillEffect();
 	Sprite* getBuffEffect();
+
+	void LevelUp();
+
 	CREATE_FUNC(PlayerAttribute);
 private:
 	static int mhp;
@@ -67,7 +75,8 @@ private:
 	static int mmoney;
 	static int damage;
 	static int shootSpeed;
-
+	static int mscore;
+	static int level;
 	int Hp_buff;
 	int Ap_buff;
 	int damage_buff;
@@ -78,10 +87,15 @@ private:
 	long startTime;
 	Player* mplayer;
 	bool isDamaged;
+	bool isBurning;
 	Label* moneyLabel;
 	Label* apLabel;
 	Label* hpLabel;
+	Label* mscoreLabel;
+	Label* levelLabel;
 	Sprite* SkillEffect;
 	Sprite* BuffEffect;
 	static char heroName[10];
+
+
 };

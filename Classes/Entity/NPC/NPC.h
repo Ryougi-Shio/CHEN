@@ -12,6 +12,7 @@ public:
 	void AnimateFrameCache_init();
 	CREATE_FUNC(NPC);
 protected:
-	char NpcName[30];
+	static char NpcName[30];
 	SpriteFrameCache* m_frameCache;
+
 };

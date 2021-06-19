@@ -21,7 +21,7 @@ public:
 	void ShockUpdate(float dt);
 	CREATE_FUNC(CloseMonster);
 private:
-	
+
 	MonsterDashAmmo* DashAmmo;
 	MonsterShockAmmo* ShockAmmo;
 };

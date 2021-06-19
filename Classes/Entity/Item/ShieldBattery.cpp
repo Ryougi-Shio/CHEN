@@ -20,22 +20,22 @@ void  ShieldBattery::Interact(int mode)
 				isUsed = 1;
 				this->removeAllChildren();
 				this->bindSprite(Sprite::create("Items/EmptyBattery.png"));
-				mPlayer->getPlayerAttribute()->changeAp(20);
-				mPlayer->getPlayerAttribute()->AddHp(1);
+				mPlayer->getPlayerAttribute()->changeAp(20);	//增加护甲
+
 			}
 		}
 	}
-	if (mode == 1)
+	if (mode == 1)//商店花钱买
 	{
 		if (isAround(100))
 		{
-			if (isUsed == 0 && mPlayer->getPlayerAttribute()->getMoney() >= 10)
+			if (isUsed == 0 && mPlayer->getPlayerAttribute()->getMoney() >= 30)//钱够
 			{
 				isUsed = 1;
 				this->removeAllChildren();
 				this->bindSprite(Sprite::create("Items/EmptyBattery.png"));
 				mPlayer->getPlayerAttribute()->changeAp(20);
-				mPlayer->getPlayerAttribute()->CutMoney(10);
+				mPlayer->getPlayerAttribute()->CutMoney(30);
 			}
 		}
 	}

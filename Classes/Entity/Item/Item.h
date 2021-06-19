@@ -7,14 +7,15 @@ class Item :public Entity
 {
 public:
 	virtual bool init();
-	virtual void Interact(int mode);
+	virtual void Interact(int mode);//各种物品的交互功能
 	virtual void update(float dt);
-	virtual void notice(char s[]);
+	virtual void notice(char s[]);//标签初始化
 	void ChangeNotice(char s[]);
-	void NoticeOnorOff(bool able);
+	void NoticeOnorOff(bool able);//标签是否可见
+	
 	bool isAround(int Range);	//判断场景里的玩家是否在周围
-	bool getIsCanSee();//0不可见，1可见
-	bool getIsUsed();//0不可用，1可用
+	bool getIsCanSee();			//0不可见，1可见
+	bool getIsUsed();			//0不可用，1可用
 	void setIsCanSee(bool can);
 	void setIsUsed(bool used);
 	void bindScene(Scene* scene);
@@ -26,8 +27,9 @@ protected:
 	BattleMap* mMap;
 	Scene* mScene;
 	Player* mPlayer;
-	Label* noticeLabel;
+	Label* noticeLabel;	//标签
+
 	bool isCanSee = 0;
-	bool isUsed=0;
-	long startTime = 0;
+	bool isUsed=0;		//是否用过
+	long startTime = 0;//用于简单的计时
 };

@@ -14,6 +14,7 @@ bool RemoteMonster::init()
 	return 1;
 }
 
+
 Ammo* RemoteMonster::MonsterAttack()
 {
 	return MonsterPistolAmmo::create();

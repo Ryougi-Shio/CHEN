@@ -8,6 +8,7 @@
 
 bool Pistol::init()
 {
+	notice(" ");
 	bindSprite(Sprite::create("Weapon/Pistol.png"));
 	this->setTag(AllTag::PlayerWeapon_Pistol_TAG);
 	setWeaponSpeed(300);

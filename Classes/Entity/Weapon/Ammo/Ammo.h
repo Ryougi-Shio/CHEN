@@ -6,7 +6,7 @@ class Ammo : public Entity
 {
 public:
 
-	double start;
+	long start;
 
 private:
 

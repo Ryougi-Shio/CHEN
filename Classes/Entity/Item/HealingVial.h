@@ -1,6 +1,6 @@
 #pragma once
 #include"Item.h"
-//Ѫƿ
+//血瓶
 USING_NS_CC;
 class HealingVial :public Item
 {

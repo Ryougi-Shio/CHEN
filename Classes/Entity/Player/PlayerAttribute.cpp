@@ -2,55 +2,18 @@
 #include"Player/Player.h"
 #include"json/json.h"
 #include"Entity.h"
+#include"music.h"
+#include <direct.h>
 USING_NS_CC;
 bool PlayerAttribute::init()
 {
-	/**
-	Json::Reader reader;
-	Json::Value root;
-	std::string data = FileUtils::getInstance()->getStringFromFile("json/Hero.json");
-
-	if (reader.parse(data, root, false) == true)
-	{
-//		CCLOG("%d", root.isMember("knight"));
-		if (strlen(heroName) == 0)
-		{
-			changeHero("knight");
-		}
-		maxHp = root[heroName]["Hp"].asInt();
-		maxAp = root[heroName]["Ap"].asInt();
-	}
-	bindSprite(Sprite::create("UI/attribute_UI.png"));
-	getSprite()->setPosition(Vec2::ZERO);
-	//hpUI
-	char hps[20];
-	sprintf(hps, "%d/%d", mhp, maxHp);
-	hpLabel = Label::createWithTTF(std::string(hps), "fonts/Marker Felt.ttf", 16);
-	hpLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height - hpLabel->getContentSize().height);
-	getSprite()->addChild(hpLabel);
-	//apUI
-	char aps[20];
-	sprintf(aps, "%d/%d", map, maxAp);
-	apLabel = Label::createWithTTF(std::string(aps), "fonts/Marker Felt.ttf", 16);
-	apLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
-		hpLabel->getContentSize().height - apLabel->getContentSize().height);
-	getSprite()->addChild(apLabel);
-	//moneyUI
-	char moneys[20];
-	sprintf(moneys, "%d", mmoney);
-	moneyLabel = Label::createWithTTF(std::string(moneys), "fonts/Marker Felt.ttf", 16);
-	moneyLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
-		hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height+3);
-	getSprite()->addChild(moneyLabel);
-
-
 	
-	*/
 	changeAttribute();
 	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::DeadUpdate), 0.01f);
 	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::CountTimeUpdate), 0.01f);
 	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::Skill_EffectUpdate), 0.5f);
 	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::Buff_EffectUpdate), 0.05f);
+	this->schedule(CC_SCHEDULE_SELECTOR(PlayerAttribute::BurningUpdate), 1.0f);
 	//Effect
 
 	SkillEffect = Sprite::create("CharacterEffect/blank.png");
@@ -73,10 +36,17 @@ void PlayerAttribute::update(float dt)
 	char moneys[20];
 	sprintf(moneys, "%d", mmoney);
 	moneyLabel->setString(std::string(moneys));
+	char scores[20];
+	sprintf(scores, "scores: %d", mscore);
+	mscoreLabel->setString(scores);
+	char levels[20];
+	sprintf(levels, "level: %d", level);
+	levelLabel->setString(levels);
 }
 void PlayerAttribute::resetColor(float delay)
 {
-	mplayer->getSprite()->setColor(Color3B(255, 255, 255));
+	if(!isBurning)
+		mplayer->getSprite()->setColor(Color3B(255, 255, 255));
 }
 //开始恢复
 void PlayerAttribute::ApHealingStart(float dt)
@@ -100,6 +70,7 @@ void PlayerAttribute::ApHealing(float dt)
 
 void PlayerAttribute::takeDamage(int damage)
 {
+	MusicManager::effectPlay("effect/player_damage.mp3");
 	mplayer->getSprite()->setColor(Color3B(255, 0, 0));
 	this->scheduleOnce(CC_SCHEDULE_SELECTOR(PlayerAttribute::resetColor), 0.1f);
 	if (map > 0 && damage <= map)//只减甲
@@ -125,12 +96,21 @@ void PlayerAttribute::AddHp(int heal)
 	mhp += heal;
 	mhp = mhp > maxHp ? maxHp : mhp;
 }
+void PlayerAttribute::AddScore(int score)
+{
+	mscore += score;
+}
+void PlayerAttribute::CutScore(int score)
+{
+	mscore -= score;
+
+}
 void PlayerAttribute::HpApMoneySpeedDamageinit()
 {
 	mhp = maxHp;
 	map = maxAp;
 	mmoney = 0;
-	damage = 1;
+	damage = 2;
 	shootSpeed = 0;//输入时单位为ms
 	isDamaged = 0;
 }
@@ -164,6 +144,10 @@ int PlayerAttribute::getShootSpeed()
 {
 	return shootSpeed;
 }
+int PlayerAttribute::getScore()
+{
+	return mscore;
+}
 void PlayerAttribute::changeHp(int n)
 {
 	mhp += n;
@@ -183,6 +167,11 @@ void PlayerAttribute::changeDamage(int n)
 void PlayerAttribute::changeShootSpeed(int n)
 {
 	shootSpeed += n;
+}
+
+void PlayerAttribute::changeScore(int n)
+{
+	mscore = n;
 }
 
 
@@ -238,9 +227,9 @@ void PlayerAttribute::DeadUpdate(float dt)
 void PlayerAttribute::changeHero(char hero[])
 {
 	strcpy(heroName, hero);
+
 	if(this!=nullptr)
 		changeAttribute();
-
 }
 void PlayerAttribute::AddMoney(int income)
 {
@@ -301,52 +290,145 @@ Sprite* PlayerAttribute::getBuffEffect()
 {
 	return BuffEffect;
 }
+void PlayerAttribute::LevelUp()
+{
+	if (mscore>=290)
+	{
+		mscore -= 290;
+		{
+			UserDefault::getInstance()->setIntegerForKey("Score", mscore);
+			UserDefault::getInstance()->flush();
+		}
+		level += 1;
+		{
+			char s[100];
+			sprintf(s,"%sLevel", heroName);
+			UserDefault::getInstance()->setIntegerForKey(s,level);
+			UserDefault::getInstance()->flush();
+		}
+		changeAttribute();
+		HpApMoneySpeedDamageinit();
+	}
+}
+void PlayerAttribute::setIsBurnging(int burn)
+{
+	isBurning = burn;
+}
+bool PlayerAttribute::getIsBurning()
+{
+	return isBurning;
+}
+void PlayerAttribute::BurningUpdate(float dt)
+{
+	if (isBurning)
+	{
+		this->takeDamage(1);
+		
+	}
+	else
+	{
+		;
+	}
+}
 void PlayerAttribute::changeAttribute()
 {
-	Json::Reader reader;
-	Json::Value root;
-	std::string data = FileUtils::getInstance()->getStringFromFile("json/Hero.json");
-
-	if (reader.parse(data, root, false) == true)
+	char* currentPaths;
+	currentPaths = getcwd(NULL, 0);
 	{
-		//		CCLOG("%d", root.isMember("knight"));
-		if (strlen(heroName) == 0)
+		char s[200];
+		sprintf(s, "%sLevel", heroName);
+		level = UserDefault::getInstance()->getIntegerForKey(s);
+		if (level==NULL)
 		{
-			changeHero("knight");
+			UserDefault::getInstance()->setIntegerForKey(s, 1);
+			level = UserDefault::getInstance()->getIntegerForKey(s);
+			UserDefault::getInstance()->flush();
 		}
-		maxHp = root[heroName]["Hp"].asInt();
-		maxAp = root[heroName]["Ap"].asInt();
 	}
-	bindSprite(Sprite::create("UI/attribute_UI.png"));
-	getSprite()->setPosition(Vec2::ZERO);
+	{
+		Json::Reader reader;
+		Json::Value root;
+		std::string data = FileUtils::getInstance()->getStringFromFile("json/Hero.json");
+
+		if (reader.parse(data, root, false) == true)
+		{
+			//		CCLOG("%d", root.isMember("knight"));
+			if (strlen(heroName) == 0)
+			{
+				changeHero("knight");
+			}
+			maxHp = root[heroName]["Hp"].asInt() + (level - 1) * 10;
+			maxAp = root[heroName]["Ap"].asInt() + (level - 1) * 10;
+		}
+	}
+	if (getSprite() == NULL)
+	{
+		bindSprite(Sprite::create("UI/attribute_UI.png"));
+		getSprite()->setPosition(Vec2::ZERO);
+	}
 	//hpUI
-	char hps[20];
-	sprintf(hps, "%d/%d", mhp, maxHp);
-	hpLabel = Label::createWithTTF(std::string(hps), "fonts/Marker Felt.ttf", 16);
-	hpLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height - hpLabel->getContentSize().height);
-	getSprite()->addChild(hpLabel);
+	if (hpLabel==nullptr)
+	{
+		char hps[20];
+		sprintf(hps, "%d/%d", mhp, maxHp);
+		hpLabel = Label::createWithTTF(std::string(hps), "fonts/Marker Felt.ttf", 16);
+		hpLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height - hpLabel->getContentSize().height);
+		getSprite()->addChild(hpLabel,2);
+	}
 	//apUI
-	char aps[20];
-	sprintf(aps, "%d/%d", map, maxAp);
-	apLabel = Label::createWithTTF(std::string(aps), "fonts/Marker Felt.ttf", 16);
-	apLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
-		hpLabel->getContentSize().height - apLabel->getContentSize().height);
-	getSprite()->addChild(apLabel);
+	if (apLabel==NULL)
+	{
+		char aps[20];
+		sprintf(aps, "%d/%d", map, maxAp);
+		apLabel = Label::createWithTTF(std::string(aps), "fonts/Marker Felt.ttf", 16);
+		apLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
+			hpLabel->getContentSize().height - apLabel->getContentSize().height);
+		getSprite()->addChild(apLabel);
+	}
 	//moneyUI
-	char moneys[20];
-	sprintf(moneys, "%d", mmoney);
-	moneyLabel = Label::createWithTTF(std::string(moneys), "fonts/Marker Felt.ttf", 16);
-	moneyLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
-		hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height + 3);
-	getSprite()->addChild(moneyLabel);
-	HpApMoneySpeedDamageinit();
+	if (moneyLabel==NULL)
+	{
+		char moneys[20];
+		sprintf(moneys, "%d", mmoney);
+		moneyLabel = Label::createWithTTF(std::string(moneys), "fonts/Marker Felt.ttf", 16);
+		moneyLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
+			hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height + 3);
+		getSprite()->addChild(moneyLabel);
+	}
+	//HpApMoneySpeedDamageinit();
+	{
+		mscore = UserDefault::getInstance()->getIntegerForKey("Score");
+	}
+	if (mscoreLabel == NULL)
+	{
+		char scores[20];
+		sprintf(scores, "scores: %d", mscore);
+		mscoreLabel = Label::createWithTTF(scores, "fonts/Marker Felt.ttf", 24);
+		mscoreLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
+			hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height -
+			mscoreLabel->getContentSize().height + 3);
+		getSprite()->addChild(mscoreLabel);
+	}
+	if (levelLabel == NULL)
+	{
+		char levels[20];
+		sprintf(levels, "level: %d", level);
+		levelLabel = Label::createWithTTF(levels, "fonts/Marker Felt.ttf", 24);
+		levelLabel->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height -
+			hpLabel->getContentSize().height - apLabel->getContentSize().height - moneyLabel->getContentSize().height -
+			mscoreLabel->getContentSize().height - levelLabel->getContentSize().height + 3);
+		getSprite()->addChild(levelLabel);
+	}
 }
+
+
+
 int PlayerAttribute::mhp;
 int PlayerAttribute::map;
 int PlayerAttribute::mmoney;
 int PlayerAttribute::damage;
 int PlayerAttribute::shootSpeed;
-
-
+int PlayerAttribute::mscore;
+int PlayerAttribute::level;
 
 char PlayerAttribute::heroName[10];

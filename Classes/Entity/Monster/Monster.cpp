@@ -8,6 +8,10 @@
 #include"Map/BattleMap.h"
 #include"MonsterPistolAmmo.h"
 #include"json.h"
+#include"AllTag.h"
+#include"music.h"
+#include"PlayerAttribute.h"
+#include<direct.h>
 #define RANGE 400
 
 USING_NS_CC;
@@ -26,7 +30,15 @@ void  Monster::Birth(int i)
 	getSprite()->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height / 2);
 	setPosition(Vec2(MonsterBirth.at("x").asFloat(), MonsterBirth.at("y").asFloat()));//出生位置设置
 	this->schedule(CC_SCHEDULE_SELECTOR(Monster::FlipUpdate), 0.01f);
-	delete s;
+	this->schedule(CC_SCHEDULE_SELECTOR(Monster::ImmortalAmmoUpdate), 0.1f);
+	this->schedule(CC_SCHEDULE_SELECTOR(Monster::CallFellowMonsterUpdate), 2.0f);
+	if (this->getTag() == CthulhuEye_Monster_TAG)
+	{
+		this->schedule(CC_SCHEDULE_SELECTOR(Monster::BossDashUpdate), 5.0f);
+		this->schedule(CC_SCHEDULE_SELECTOR(Monster::BossDashRecover), 2.0f);
+	}
+	
+	delete[] s;
 	Width = this->getSprite()->getContentSize().width;
 	Height = this->getSprite()->getContentSize().height;
 
@@ -61,6 +73,7 @@ void  Monster::bindScene(NormalBattleScene* scene)
 }
 void  Monster::takingDamage(int damage)
 {
+	MusicManager::effectPlay("effect/monster_damage.mp3");
 	getSprite()->setColor(Color3B(255, 0, 0));
 	mHp -= damage;
 	scheduleOnce(CC_SCHEDULE_SELECTOR(Monster::reSetColor), 0.1f);
@@ -88,28 +101,31 @@ bool  Monster::CanReachto(int Mapx, int Mapy,bool isDip=0)
 {
 
 	
-
-	int tileGid = mScene->getParentMap()->getBattleMap()->getLayer("wall")->getTileGIDAt(Vec2(Mapx, Mapy));
-	if (!isDip)//非斜向判断
+	if (this->getTag() == CthulhuEye_Monster_TAG)
+		return false;
+	else
 	{
-		if (tileGid)
+		int tileGid = mScene->getParentMap()->getBattleMap()->getLayer("wall")->getTileGIDAt(Vec2(Mapx, Mapy));
+		if (!isDip)//非斜向判断
 		{
-			return true;// 不能走
-		}
+			if (tileGid)
+			{
+				return true;// 不能走
+			}
 
-		else
-		{
-			return false; //能走
+			else
+			{
+				return false; //能走
+			}
 		}
-	}
-	else//斜向判断
-	{
-		if (tileGid)
+		else//斜向判断
 		{
-			return true;// 是墙不能走
-		}
-		else
-		{
+			if (tileGid)
+			{
+				return true;// 是墙不能走
+			}
+			else
+			{
 
 				int ix = int(getPositionX() / 64) - Mapx;
 				int iy = 11 - int(getPositionY() / 64) - Mapy;
@@ -124,9 +140,12 @@ bool  Monster::CanReachto(int Mapx, int Mapy,bool isDip=0)
 					return true;
 				}
 
-			
+
+			}
 		}
+
 	}
+	
 }
 
 void Monster::setPhysicsBody(PhysicsBody* body)
@@ -137,8 +156,26 @@ PhysicsBody* Monster::getMyBody()
 {
 	return PhysicsBody_M;
 }
+void Monster::ImmortalAmmoUpdate(float dt)
+{
+	if (ImmortalAmmo)
+	{
+		ImmortalAmmo->setPosition(this->getSprite()->getContentSize() / 2);
+	}
+}
+void Monster::CallFellowMonsterUpdate(float dt)
+{
+	if (this->getTag() == CthulhuEye_Monster_TAG&&mHp<=MaxHp/2)
+	{
+		MusicManager::effectPlay("effect/Cthulhu.mp3");
+		int num = (1 + mScene->getBattleLevel() / 2) >= 4 ? 4 : (1 + mScene->getBattleLevel() / 2);
+		mScene->getParentMap()->createMonster(num);
+
+	}
+}
 void Monster::DeadUpdate(float dt)
 {
+
 	if (mHp <= 0)
 	{
 
@@ -147,8 +184,31 @@ void Monster::DeadUpdate(float dt)
 		dead();
 		this->unschedule(CC_SCHEDULE_SELECTOR(Monster::MoveUpdate));
 		this->unschedule(CC_SCHEDULE_SELECTOR(Monster::TFSMupdate));
+		this->unschedule(CC_SCHEDULE_SELECTOR(Monster::CallFellowMonsterUpdate));
+	//	this->unschedule(CC_SCHEDULE_SELECTOR(Monster::DeadUpdate));
 
+		if (this->getTag() == CthulhuEye_Monster_TAG)
+		{
+			this->unschedule(CC_SCHEDULE_SELECTOR(Monster::BossDashRecover));
+			this->unschedule(CC_SCHEDULE_SELECTOR(Monster::BossDashUpdate));
+			for (auto ix : mScene->getParentMap()->getMonster())
+			{
+				if(ix->mHp>0)
+					ix->takingDamage(1000);
+			}
+		}
 	}
+
+
+}
+void Monster::BossDashRecover(float dt)
+{
+	MonsterSpeed = 2;
+}
+void Monster::BossDashUpdate(float dt)
+{
+	MusicManager::effectPlay("effect/Cthulhu.mp3");
+	MonsterSpeed = 0.3;
 
 }
 
@@ -226,6 +286,10 @@ bool Monster::CanSee()
 
 	}
 }
+bool Monster::getIsFlip()
+{
+	return isFlip;
+}
 void Monster::TFSMupdate(float dt)
 {
 	TFSM_M->update(dt);
@@ -248,6 +312,18 @@ Ammo* Monster::MonsterAttack()
 {
 	return MonsterPistolAmmo::create();
 }
+int Monster::getHp()
+{
+	return mHp;
+}
+int Monster::getMaxHp()
+{
+	return MaxHp;
+}
+int Monster::getATK()
+{
+	return ATK;
+}
 void Monster::ChangeFlipByDestination(Vec2 destination)
 {
 	float Mx = getPositionX();
@@ -256,7 +332,6 @@ void Monster::ChangeFlipByDestination(Vec2 destination)
 		isFlip = 0;
 	else
 		isFlip = 1;
-//	CCLOG("%d", isFlip);
 }
 bool Monster::moveToDestination(Vec2 destination)
 {
@@ -318,85 +393,7 @@ bool Monster::moveToDestination(Vec2 destination)
 		CCLOG("too far");
 		return false;
 	}
-	/*else
-	{
-		Vec2 destination_temp1= Vec2(map_Mx + ix * Length, 11-map_My + iy * Length) * 64;
-		MoveTo* moveTo_dip = MoveTo::create(1.0f*1.41*Length, destination_temp1);
-		this->runAction(moveTo_dip);
-		if (map_Mx + ix * Length == map_X && map_My + iy * Length == map_Y)
-			return true;
-		else if (map_Mx + ix * Length == map_X)
-		{
-			MoveTo* moveTo_dire = MoveTo::create(1.0f * abs(map_My + iy - map_Y), destination);
-			runAction(moveTo_dire);
-		}
-		else if (map_My + iy * Length == map_Y)
-		{
-			MoveTo* moveTo_dire = MoveTo::create(1.0f * abs(map_Mx + ix - map_X), destination);
-			runAction(moveTo_dire);
-		}
-		else
-			CCLOG("Unexpected Error");
-		return true;
-	}*/
-	
-	/*
-	int map_X = destination.x / 64;
-	int map_Y = 11 - int(destination.y / 64);
-	int map_Mx = getPositionX() / 64;
-	int map_My = 11 - int(getPositionY() / 64);
-	int ix = map_Mx > map_X ? -1 : 1;
-	int iy = map_My > map_Y ? -1 : 1;
-	if (map_Mx == map_X)
-		ix = 0;
-	if (map_My == map_Y)
-		iy = 0;
-	//修正
-//	map_X = (destination.x+ix * Width*0.5)/64;
-//	map_Y = 11-int(destination.y+iy * Height*0.5)/64;
-	int Length = MIN(abs(map_X - map_Mx), abs(map_Y - map_My));
-	if (abs(map_Mx - map_X) <= 1 && abs(map_My - map_Y) <= 1)
-	{
-		if (map_X == map_Mx || map_Y == map_My)
-		{
-			if (CanReachto(map_X, map_Y))
-			{
-				return false;
-			}
-			MoveTo* moveTo = MoveTo::create(1.0f, destination);
-			this->runAction(moveTo);
-			return true;
-		}
-		else
-		{
-			if (CanReachto(map_X  , map_Y , 1))
-			{
-				return false;
-			}
-			MoveTo* moveTo = MoveTo::create(1.0f, destination);
-			this->runAction(moveTo);
-			return true;
-		}
-	}
-	else
-	{
-		Vec2 destination_temp1 = Vec2(map_Mx + ix * Length, map_My + iy * Length) * 64;
-		MoveTo* moveTo_dip = MoveTo::create(1.0f * 1.41 * Length, destination_temp1);
-		this->runAction(moveTo_dip);
-		if (map_Mx + ix * Length == map_X && map_My + iy * Length == map_Y)
-			return true;
-		else if (map_Mx + ix * Length == map_X)
-		{
-			MoveTo* moveTo_dire = MoveTo::create(1.0f * abs(map_My + iy - map_Y), destination);
-		}
-		else if (map_My + iy * Length == map_Y)
-		{
-			MoveTo* moveTo_dire = MoveTo::create(1.0f * abs(map_Mx + ix - map_X), destination);
-		}
-		else
-			CCLOG("Unexpected Error");
-		return true;
-	}*/
+
 }
 
 void  Monster::ApproachPlayer(Vec2 playerDestination)
@@ -467,6 +464,8 @@ void Monster::InitWithName(char s[])
 	if (reader.parse(data, root, false) == true)
 	{
 		mHp = root[MonsterName]["Hp"].asInt();
+		MaxHp = mHp;
+		ATK = root[MonsterName]["ATK"].asInt();
 	}
 
 	//移动速度读取
@@ -489,13 +488,15 @@ void Monster::InitWithName(char s[])
 	TFSM_M = MonsterTFSM::create();
 	TFSM_M->retain();
 	TFSM_M->bindMonster(this);
-	this->schedule(CC_SCHEDULE_SELECTOR(Monster::MoveUpdate), MonsterSpeed);//每0.5f调用一次运动更新函数
+	this->schedule(CC_SCHEDULE_SELECTOR(Monster::MoveUpdate), MonsterSpeed);//调用动更新函数
 	this->schedule(CC_SCHEDULE_SELECTOR(Monster::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
 	this->schedule(CC_SCHEDULE_SELECTOR(Monster::DeadUpdate), 0.01f);
+	if(this->getTag()==CthulhuEye_Monster_TAG)
+		MonsterSpeed = 2;
 }
 void Monster::FramCacheInit(char Name[])
 {
-	char s_Plist[50], s_Plist_Png[50];
+	char s_Plist[80], s_Plist_Png[80];
 	sprintf(s_Plist, "Monster/%s_animate.plist", Name);
 	sprintf(s_Plist_Png, "Monster/%s_animate.png", Name);
 
@@ -505,16 +506,43 @@ void Monster::FramCacheInit(char Name[])
 
 void Monster::dead()
 {
+	if (!isdead)
+	{
+		char* currentPaths;
+		currentPaths = getcwd(NULL, 0);
+		MusicManager::effectPlay("effect/monster_die.mp3");
+		if (this->getTag()==CthulhuEye_Monster_TAG)
+		{
+			mScene->getPlayer()->getPlayerAttribute()->AddScore(50);
+			UserDefault::getInstance()->setIntegerForKey("Score", mScene->getPlayer()->getPlayerAttribute()->getScore());
+			this->removeChild(ImmortalAmmo);
+		}
+		else if(this->getTag()!=AllTag::LittleEye_monster_TAG)
+		{
+			mScene->getPlayer()->getPlayerAttribute()->AddScore(10);
+			UserDefault::getInstance()->setIntegerForKey("Score", mScene->getPlayer()->getPlayerAttribute()->getScore());
+		}
+		UserDefault::getInstance()->flush();
+	}
 	isdead = 1;
+
 	Vector<SpriteFrame*>frameArray;
 	char s[50];
-	sprintf(s, "%s_dead.png", MonsterName);
+	if (this->getTag() == CthulhuEye_Monster_TAG)
+	{
+		sprintf(s, "Cthulhu's Eye_angry_monster_dead.png");
+
+	}
+	else if(this->getTag()!=Chaos_monster_TAG)
+		sprintf(s, "%s_dead.png", MonsterName);
+	else if(this->getTag()==Chaos_monster_TAG)
+		sprintf(s, "%s_dead.png", "O_small_monster");
 	auto frame1 = m_frameCache->getSpriteFrameByName(s);
 	frameArray.pushBack(frame1);
 
 
 	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.1f);
+	animation->setDelayPerUnit(0.1f);	
 	auto* action = Animate::create(animation);
 	this->getSprite()->runAction(action);
 	AnimationCache::destroyInstance();
@@ -522,20 +550,82 @@ void Monster::dead()
 
 void Monster::MonsterAnimate(char type[])
 {
-	Vector<SpriteFrame*>frameArray;
-	for (int i = 1; i <= 4; i++)
+	if (this->getTag() == CthulhuEye_Monster_TAG&&this->mHp<=MaxHp/2)
 	{
-		char s[50];
-		sprintf(s, "%s_%s%d.png", MonsterName, type, i);
-		auto frame = m_frameCache->getSpriteFrameByName(s);
-		frameArray.pushBack(frame);
+		Vector<SpriteFrame*>frameArray;
+		for (int i = 1; i <= 4; i++)
+		{
+			char s[50];
+			sprintf(s, "Cthulhu's Eye_angry_monster_%s%d.png",type,i);
+			auto frame = m_frameCache->getSpriteFrameByName(s);
+			frameArray.pushBack(frame);
+		}
+
+		Animation* animation = Animation::createWithSpriteFrames(frameArray);
+		animation->setDelayPerUnit(0.1f);
+		auto* action = Animate::create(animation);
+		this->getSprite()->runAction(action);
+
+		AnimationCache::destroyInstance();
 	}
+	else if(this->getTag()!=Chaos_monster_TAG)
+	{
+		Vector<SpriteFrame*>frameArray;
+		for (int i = 1; i <= 4; i++)
+		{
+			char s[50];
+			sprintf(s, "%s_%s%d.png", MonsterName, type, i);
+			auto frame = m_frameCache->getSpriteFrameByName(s);
+			frameArray.pushBack(frame);
+		}
 
-	Animation* animation = Animation::createWithSpriteFrames(frameArray);
-	animation->setDelayPerUnit(0.1f);
-	auto* action = Animate::create(animation);
-	this->getSprite()->runAction(action);
+		Animation* animation = Animation::createWithSpriteFrames(frameArray);
+		animation->setDelayPerUnit(0.1f);
+		auto* action = Animate::create(animation);
+		this->getSprite()->runAction(action);
 
-	AnimationCache::destroyInstance();
+		AnimationCache::destroyInstance();
+	}
+	else if (this->getTag() == Chaos_monster_TAG)
+	{
+
+	
+		char chaosName[80];
+	
+		Vector<SpriteFrame*>frameArray;
+		for (int i = 1; i <= 4; i++)
+		{
+			char s[50];
+			int chaos = rand() % 4;
+			switch (chaos)
+			{
+			case 0:
+				strcpy(chaosName, "O_small_monster");
+				break;
+			case 1:
+				strcpy(chaosName, "pig_monster");
+				break;
+			case 2:
+				strcpy(chaosName, "snow_monster");
+				break;
+			case 3:
+				strcpy(chaosName, "Y_craw_monster");
+				break;
+			default:
+				break;
+			}
+			sprintf(s, "%s_%s%d.png", chaosName, type, i);
+			auto frame = m_frameCache->getSpriteFrameByName(s);
+			frameArray.pushBack(frame);
+		}
+
+		Animation* animation = Animation::createWithSpriteFrames(frameArray);
+		animation->setDelayPerUnit(0.1f);
+		auto* action = Animate::create(animation);
+		this->getSprite()->runAction(action);
+
+		AnimationCache::destroyInstance();
+	}
+	
 	//SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
 }

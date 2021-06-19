@@ -8,6 +8,7 @@
 
 bool Shotgun::init()
 {
+	notice(" ");
 	bindSprite(Sprite::create("Weapon/Shotgun.png"));
 	this->setTag(AllTag::PlayerWeapon_Shotgun_TAG);
 	setWeaponSpeed(1000);

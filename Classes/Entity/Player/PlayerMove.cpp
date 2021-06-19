@@ -2,11 +2,16 @@
 #include"Player.h"
 #include"PlayerStates.h"
 #include"PlayerTFSM/PlayerTFSM.h"
-
+#include"PlayerAttribute.h"
 #define PX 52
 #define PY 60
 USING_NS_CC;
+bool PlayerMove::init()
+{
+	this->schedule(CC_SCHEDULE_SELECTOR(PlayerMove::FrozenUpdate), 0.1f);
 
+	return 1;
+}
 void PlayerMove::bindPlayer(Player* player)
 {
 	mPlayer = player;
@@ -15,6 +20,25 @@ Player* PlayerMove::getPlayer()
 {
 	return mPlayer;
 }
+bool PlayerMove::getIsFrozen()
+{
+	return isFrozen;
+}
+void PlayerMove::setFrozen(bool frozen)
+{
+	isFrozen = frozen;
+}
+void PlayerMove::FrozenUpdate(float dt)
+{
+	if (isFrozen)
+	{
+		mPlayer->TFSM->changeState(new FrozenState());//改变状态机
+	}
+	else
+	{
+		;
+	}
+}
 bool PlayerMove::getIsFlip()
 {
 	return isFlip;
@@ -22,26 +46,30 @@ bool PlayerMove::getIsFlip()
 
 void PlayerMove::playerMove()
 {
-	auto move = MoveBy::create(0, Vec2(movespeedX, movespeedY));
-	this->getPlayer()->runAction(move);//进行实质移动
-
-
-	if (movespeedX)
+	if (!isFrozen)
 	{
-		mPlayer->TFSM->changeState(new RunState());//改变状态机
+		auto move = MoveBy::create(0, Vec2(movespeedX, movespeedY));
+		this->getPlayer()->runAction(move);//进行实质移动
+
+
+		if (movespeedX)
+		{
+			mPlayer->TFSM->changeState(new RunState());//改变状态机
+
+		}
+
+
+		if ((!movespeedX) && (!movespeedY))
+			mPlayer->TFSM->changeState(new RestState());
+
+		if (movespeedY)
+		{
+			mPlayer->TFSM->changeState(new RunState());
+
+		}
 
 	}
-
-
-	if ((!movespeedX) && (!movespeedY))
-		mPlayer->TFSM->changeState(new RestState());
 	
-	if (movespeedY)
-	{
-		mPlayer->TFSM->changeState(new RunState());
-
-	}
-
 	
 }
 void PlayerMove::startmoveX(float x)
@@ -84,6 +112,10 @@ float PlayerMove::getSpeed()
 {
 	return Speed;
 }
+void PlayerMove::setSpeed(float s)
+{
+	Speed = s;
+}
 std::map<cocos2d::EventKeyboard::KeyCode, bool> PlayerMove::getkeyMap()
 {
 	return keyMap;
@@ -96,6 +128,10 @@ void PlayerMove::FalseKeyCode(EventKeyboard::KeyCode keycode)//键盘松开，对应key
 {
 
 	keyMap[keycode] = false;
+}
+void PlayerMove::setSpeed(int spee)
+{
+	Speed = spee;
 }
 bool PlayerMove::isWall(float Px, float Py)
 {

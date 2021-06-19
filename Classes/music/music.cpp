@@ -2,6 +2,7 @@
 #include"ui/CocosGUI.h"
 #include"SafeScene.h"
 #include"StartScene.h"
+#include"MenuScene.h"
 USING_NS_CC;
 
 //初始化
@@ -15,7 +16,47 @@ bool MusicManager::init()
 //播放音效
 void  MusicManager::effectPlay(char* filename)
 {
-	effect = manager->play2d(filename, false, effectVolume);
+	effect = manager->play2d(filename, false, effectVolume*0.2);
+}
+
+float MusicManager::getMusicVolume()
+{
+	return musicVolume;
+}
+
+int MusicManager::getEffect()
+{
+	return effect;
+}
+
+float MusicManager::getEffectVolume()
+{
+	return effectVolume;
+}
+
+int MusicManager::getBgm()
+{
+	return bgm;
+}
+
+void MusicManager::setMusicVolume(float volume)
+{
+	musicVolume = volume*0.2;
+}
+
+void MusicManager::setEffect(int _effect)
+{
+	effect = _effect;
+}
+
+void MusicManager::setEffectVolume(float _effectvolume)
+{
+	effectVolume = _effectvolume;
+}
+
+void MusicManager::setBgm(int _bgm)
+{
+	bgm = _bgm;
 }
 
 //更改背景音乐
@@ -36,12 +77,12 @@ void MusicManager::startPlay(char* filename)
 //更改音量
 void MusicManager::changeMusicVolume(float Volume)
 {
-	manager->setVolume(bgm, Volume);
+	manager->setVolume(bgm, Volume*0.2);
 }
 
 void  MusicManager::changeEffectVolume(float Volume)
 {
-	manager->setVolume(effect, effectVolume);
+	manager->setVolume(effect, Volume*0.2);
 }
 
 
@@ -50,6 +91,9 @@ void MusicManager::menu(Scene* p)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
+	
+	Director::getInstance()->pushScene(MenuScene::create());
+	/*
 	//UI背景图片
 	auto UIbackground =Sprite::create("UI/OptionUI.png");
 	UIbackground->setPosition(visibleSize / 2);
@@ -147,6 +191,7 @@ void MusicManager::menu(Scene* p)
 	auto optionUI = Menu::create(closeGameItem,closeItem,homeItem, nullptr);
 	optionUI->setPosition(Vec2::ZERO);
 	UIbackground->addChild(optionUI);
+	*/
 }
 int MusicManager::bgm;
 float MusicManager::musicVolume;

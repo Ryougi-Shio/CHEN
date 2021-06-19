@@ -1,18 +1,35 @@
 {
   "O_small_monster": {
-    "Hp":10,
+    "Hp":14,
     "MoveSpeed":0.5
     },
        "Y_craw_monster": {
-    "Hp":10,
+    "Hp":18,
     "MoveSpeed":0.5
     },
       "pig_monster": {
-    "Hp":10,
+    "Hp":14,
+"ATK":1,
     "MoveSpeed":0.15
     },
       "snow_monster": {
-    "Hp":10,
+    "Hp":18,
+"ATK":1,
     "MoveSpeed":0.15
+    },
+"Cthulhu's Eye_normal_monster":{
+    "Hp":300,
+"ATK":2,
+   "MoveSpeed":0.1
+   },
+       "LittleEye_monster": {
+    "Hp":10,
+"ATK":1,
+    "MoveSpeed":0.5
+    },
+       "chaos_monster": {
+    "Hp":20,
+"ATK":2,
+    "MoveSpeed":0.5
     }
 }

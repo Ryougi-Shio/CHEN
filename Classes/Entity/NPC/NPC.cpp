@@ -48,3 +48,5 @@ void NPC::interact(int mode)
 {
 	;
 }
+
+char NPC::NpcName[30];

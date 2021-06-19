@@ -3,6 +3,7 @@
 #include"BattleScene1.h"
 #include"Player.h"
 #include"Player/PlayerMove.h"
+
 #define WIDTH 116
 #define LENGTH 116
 USING_NS_CC;
@@ -61,6 +62,7 @@ void Gate::notice()
 	
 	if (keymap[EventKeyboard::KeyCode::KEY_E])
 	{
+		MusicManager::effectPlay("effect/tp.mp3");
 		SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();//ÇåÀí¾«ÁéÖ¡»º´æ
 		Director::getInstance()->replaceScene(BattleScene1::create());
 	}

@@ -17,12 +17,16 @@ public:
 	void Ammoupdate(float dt);
 	bool isWall(float x, float y);
 	bool isDamagingLand(float x, float y);
+	
 	void DeleteAmmo(float dt);
 	bool onContactBegin(PhysicsContact& contact);
 	void AmmoUpdate_Monster(float dt);
 	void MapGateInit();
 	void LandDamageUpdate(float dt);
+	void LandSlowUpdate(float dt);
+	void LandBurningUpdate(float dt);
 	void PlayerDeatheUpdate(float dt);
+	void DeleteAllAmmo();
 	void inGate();
 
 
@@ -32,5 +36,5 @@ private:
 	std::vector<Ammo*> AmmoList;
 	std::vector<Ammo*> m_monsterAmmoList;
 	miniMapTab* MiniMap;
-
+	Label* levelLabel;
 };

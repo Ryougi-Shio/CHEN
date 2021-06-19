@@ -10,11 +10,6 @@ bool TreasureBoxes::init()
 	bindSprite(Sprite::create("Items/box_1.png"));
 	this->schedule(CC_SCHEDULE_SELECTOR(TreasureBoxes::update), 0.01f);
 
-	
-
-
-
-
 	return 1;
 }
 void TreasureBoxes::BoxBirth(int i)
@@ -27,7 +22,7 @@ void TreasureBoxes::BoxBirth(int i)
 
 	int x = BoxBirth.at("x").asInt();
 	int y = BoxBirth.at("y").asInt();
-	CCLOG("%d,%d", x, y);
+
 	setPosition(Vec2(BoxBirth.at("x").asInt(), BoxBirth.at("y").asInt()));//出生位置设置
 
 
@@ -45,7 +40,7 @@ void TreasureBoxes::Interact(char s[])
 				notice(s);
 				isUsed = 1;
 				startTime = clock();
-	//			mPlayer->getPlayerAttribute()->AddMoney(30);
+
 			}
 
 		}

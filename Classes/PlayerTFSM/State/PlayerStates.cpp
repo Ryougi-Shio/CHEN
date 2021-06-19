@@ -11,3 +11,7 @@ void RestState::execute(Player* player)
 	player->rest();
 }
 
+void FrozenState::execute(Player* player)
+{
+	player->frozen();
+}
