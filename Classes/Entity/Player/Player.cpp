@@ -9,12 +9,23 @@
 #include"Weapon/Shotgun.h"
 #include"music.h"
 #include"AllTag.h"
-
+#include"DieScene.h"
 bool Player::init()
 {
 	if (strlen(heroName) == 0)
 	{
 		changeHero("ranger");
+	}
+	else
+	{
+		if (strcmp(heroName,"ranger")==0)
+		{
+			setTag(AllTag::Hero_Ranger_TAG);
+		}
+		else
+		{
+			setTag(AllTag::Hero_Knight_TAG);
+		}
 	}
 	if (weapon1!=nullptr)
 	{
@@ -32,6 +43,17 @@ bool Player::init()
 		sprintf(s, "Player/%s_rest1.png", heroName);
 		bindSprite(Sprite::create(s));
 	}
+
+	if (strcmp(heroName, "ranger") == 0)
+	{
+		Skill_CD=2000;
+		Skill_Lasting=1200;
+	}
+	else if(strcmp(heroName, "knight") == 0)
+	{
+		Skill_CD=10000;
+		Skill_Lasting=3000;
+	}
 	playerAttribute = PlayerAttribute::create();
 	playerAttribute->retain();
 	playerAttribute->bindPlayer(this);
@@ -44,11 +66,12 @@ bool Player::init()
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);//每0.4f调用一次状态机更新函数
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::FlipUpdate), 0.01f);
 	this->schedule(CC_SCHEDULE_SELECTOR(Player::SkillUpdate),0.01f);
+
 //	this->schedule(CC_SCHEDULE_SELECTOR(PlayerMove::FlipToMouse),0.01f);
 	PLAYERMOVE = PlayerMove::create();
 	PLAYERMOVE->retain();
 	PLAYERMOVE->bindPlayer(this);
-	
+	PLAYERMOVE->schedule(CC_SCHEDULE_SELECTOR(PlayerMove::FrozenUpdate), 0.1f);
 	AnimateFrameCache_init();
 	return 1;
 }
@@ -73,42 +96,52 @@ void Player::AnimateFrameCache_init()
 
 void Player::HeroSkill(int mode)
 {
-
+	
 	std::string s= this->getHeroName();
-	if ((!SkillIson||clock()-skillTime>500)&&s=="knight")//CD:0.5s
+	if (!SkillIson&&s=="knight")//CD:10s
 	{
-		playerAttribute->changeDamage_Buff(5);
-		playerAttribute->changeShootSpeed_Buff(250);
+		playerAttribute->changeDamage_Buff(1);
+		playerAttribute->changeShootSpeed_Buff(150);
 		playerAttribute->getSkillEffect()->setOpacity(255);
 		skillTime = clock();
 		SkillIson = 1;
 	}
-	if ((!SkillIson || clock() - skillTime > 2000) && s== "ranger")//CD2s
+	if ((!SkillIson || clock() - skillTime > Skill_CD) && s== "ranger")//CD2s
 	{
 		this->unschedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate));
 		skill_ranger();
 		skillTime = clock();
-
-
 		this->removeComponent(this->getPhysicsBody());
 		SkillIson = 1;
 	}
 }
 
+bool Player::getIsdead()
+{
+	return isDead;
+}
+
 void Player::SkillUpdate(float dt)
 {
 	std::string s = this->getHeroName();
-	if (clock() - skillTime > 1000&&SkillIson && s == "knight")//持续1s
+	if (s == "knight")
 	{
-		playerAttribute->changeDamage_Buff(-5);
-		playerAttribute->changeShootSpeed_Buff(-250);
-		playerAttribute->getSkillEffect()->setOpacity(0);
-		SkillIson=0;
+		if (clock() - skillTime > Skill_Lasting && SkillIson
+			&& playerAttribute->getSkillEffect()->getOpacity()!=0)//持续3s
+		{
+			playerAttribute->changeDamage_Buff(-1);
+			playerAttribute->changeShootSpeed_Buff(-150);
+			playerAttribute->getSkillEffect()->setOpacity(0);
+
+		}
+		if (clock() - skillTime > Skill_CD && SkillIson)
+			SkillIson = 0;
 	}
-	if (SkillIson&& s == "ranger")
+
+	if (s == "ranger")
 	{
 
-		if (this->getPhysicsBody()==nullptr&&(clock() - skillTime > 1200))//持续1.2s
+		if (SkillIson&&this->getPhysicsBody()==nullptr&&(clock() - skillTime > Skill_Lasting))//持续1.2s
 		{
 			this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);
 			auto physicsBody = PhysicsBody::createBox(Size(40.0f, 40.0f),
@@ -120,7 +153,7 @@ void Player::SkillUpdate(float dt)
 			this->getPhysicsBody()->setContactTestBitmask(0x0010);
 			this->schedule(CC_SCHEDULE_SELECTOR(Player::TFSMupdate), 0.4f);
 		}
-		if (clock() - skillTime > 2000)//CD2s
+		if (clock() - skillTime >Skill_CD )//CD2s
 		{
 			
 			SkillIson = 0;
@@ -153,6 +186,22 @@ void Player::skill_ranger()
 	getSprite()->runAction(action);
 	AnimationCache::destroyInstance();
 	
+}
+void Player::frozen()
+{
+	Vector<SpriteFrame*>frameArray;
+
+	char s[40];
+	sprintf(s, "%s_frozen.png", heroName);
+	auto frame = m_frameCache->getSpriteFrameByName(s);
+	frameArray.pushBack(frame);
+
+	Animation* animation = Animation::createWithSpriteFrames(frameArray);
+	animation->setLoops(2);
+	animation->setDelayPerUnit(0.1f);
+	auto* action = Animate::create(animation);
+	getSprite()->runAction(action);
+	AnimationCache::destroyInstance();
 }
 void Player::rest()
 {
@@ -199,6 +248,9 @@ void Player::run()
 
 void Player::dead()
 {
+
+
+	MusicManager::effectPlay("effect/Player_Killed.mp3");
 	Vector<SpriteFrame*>frameArray;
 	auto frameCache= SpriteFrameCache::getInstance();
 	{
@@ -219,6 +271,12 @@ void Player::dead()
 	this->getSprite()->runAction(action);
 
 	AnimationCache::destroyInstance();
+	if (!isDead)
+		Director::getInstance()->pushScene(TransitionFade::create(3.6f, DieScene::create()));
+	isDead = 1;
+//	Director::getInstance()->pushScene(DieScene::create());
+//	Director::getInstance()->pushScene(TransitionFade::create(1.2f, DieScene::create()));
+
 }
 
 /*
@@ -252,11 +310,19 @@ void Player::update(float delta)//update for Player
 		weapon1->update(delta);
 	//if (weapon2)
 		//weapon2->update(delta);
-	float x = mouseLocation.x;
-	float y = mouseLocation.y;
+
 //	pistol->getSprite()->setRotation(x);
 
 	//CCLOG("%f,%f", x, y);
+
+
+
+	if(playerAttribute->getIsBurning())
+		this->getSprite()->setColor(Color3B(66, 0, 13));//燃烧红色
+	else if (PLAYERMOVE->getIsFrozen())
+		this->getSprite()->setColor(Color3B(47, 114, 214));//冻结蓝色
+	else
+		this->getSprite()->setColor(Color3B(255, 255, 255));
 }
 bool Player::getIsFlip()
 {
@@ -373,6 +439,14 @@ void Player::deadNotice()
 }
 void Player::changeHero(char hero[])
 {
+	if (strcmp(hero,"ranger")==0)
+	{
+		this->setTag(AllTag::Hero_Ranger_TAG);
+	}
+	else
+	{
+		this->setTag(AllTag::Hero_Knight_TAG);
+	}
 	strcpy(heroName, hero);
 
 	playerAttribute->changeHero(hero);
@@ -391,11 +465,15 @@ void Player::FlipUpdate(float dt)//翻转
 	else
 		this->getSprite()->setFlippedX(1);
 }
-void Player::pickWeapon(int TAG)
+bool Player::pickWeapon(int TAG)
 {
-
+	bool isfull = 1;
 	weapon1->removeFromParentAndCleanup(0);
-	weapon2 = weapon1;
+	if (weapon2==nullptr)
+	{
+		weapon2 = weapon1;
+		isfull = 0;
+	}
 	weapon1 = nullptr;
 	switch (TAG)
 	{
@@ -414,6 +492,7 @@ void Player::pickWeapon(int TAG)
 	default:
 		break;
 	}
+	return isfull;
 }
 
 

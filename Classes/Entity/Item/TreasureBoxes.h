@@ -1,7 +1,7 @@
 #pragma once
 #include"Item.h"
 #include"cocos2d.h"
-
+//≤ÿ±¶œ‰
 USING_NS_CC;
 class TreasureBoxes :public Item
 {

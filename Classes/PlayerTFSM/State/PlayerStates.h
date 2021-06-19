@@ -19,7 +19,14 @@ public:
 private:
 
 };
+class FrozenState :public State
+{
+public:
+	virtual void execute(Player* player);
 
+private:
+
+};
 
 
 

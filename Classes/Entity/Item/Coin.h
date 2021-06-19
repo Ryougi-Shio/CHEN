@@ -1,6 +1,7 @@
 #pragma once
 #include"Item.h"
 USING_NS_CC;
+//ǮǮ
 class Coin :public Item
 {
 public :

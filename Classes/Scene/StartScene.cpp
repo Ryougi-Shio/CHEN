@@ -3,7 +3,6 @@
 #include"AudioEngine.h"
 #include"ui/CocosGUI.h"
 #include"SafeScene.h"
-#include"BattleScene.h"
 USING_NS_CC;
 /*初始界面的初始化
 * 需包含：

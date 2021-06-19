@@ -7,8 +7,9 @@
 
 bool Sword::init()
 {
+	notice(" ");
 	bindSprite(Sprite::create("Weapon/sword_1.png"));
-	setWeaponSpeed(300);
+	setWeaponSpeed(800);
 	this->setTag(AllTag::PlayerWeapon_Sword_TAG);
 	return 1;
 }
@@ -23,18 +24,18 @@ void Sword::update(float dt)
 	{
 
 		getSprite()->setFlippedX(1);
-		setPositionX(-getPlayer()->getSprite()->getContentSize().width / 2);
+		setPositionX(-getPlayer()->getSprite()->getContentSize().width);
 	}
 	else
 	{
 		getSprite()->setFlippedX(0);
-		setPositionX(getPlayer()->getSprite()->getContentSize().width / 2);
+		setPositionX(getPlayer()->getSprite()->getContentSize().width);
 	}
 	
 	if (getPlayer()->getMouseLocation().y >= getPlayer()->getPositionY())
-		setPositionY(-20);
+		setPositionY(-getPlayer()->getSprite()->getContentSize().height * 0.5);
 	else
-		setPositionY(0);
+		setPositionY(-getPlayer()->getSprite()->getContentSize().height * 0.1);
 
 		
 }

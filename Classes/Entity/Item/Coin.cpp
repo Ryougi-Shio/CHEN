@@ -4,9 +4,11 @@
 #include"PlayerAttribute.h"
 #include"AllTag.h"
 #include"BattleMap.h"
+#include"music.h"
 USING_NS_CC;
 bool  Coin::init()
 {
+	//钱币 持续播放动画循环
 	this->bindSprite(Sprite::create("Items/coin_1.png")); 
 	Animation* animation = Animation::create();
 	for (int i = 1; i <= 4; i++)
@@ -26,7 +28,9 @@ bool  Coin::init()
 	return 1;
 }
 void Coin::Interact(int mode)
-{
+{	
+	//biling音效  捡起+10money
+	MusicManager::effectPlay("effect/money.mp3");
 	mPlayer->getPlayerAttribute()->AddMoney(10);
 	isUsed = 1;
 	isCanSee = 1;

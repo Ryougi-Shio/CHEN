@@ -20,6 +20,16 @@ public:
 	static void menu(Scene* p);
 	static void changeEffectVolume(float Volume);
 	static void effectPlay(char* filename);
+
+	static float getMusicVolume();
+	static int getEffect();
+	static float getEffectVolume();
+	static int getBgm();
+
+	static void setMusicVolume(float volume);
+	static void setEffect(int effect);
+	static void setEffectVolume(float _effectvolume);
+	static void setBgm(int _bgm);
 	CREATE_FUNC(MusicManager);
 private:
 	static int bgm;

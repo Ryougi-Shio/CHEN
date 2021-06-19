@@ -4,7 +4,7 @@ bool HeroNPC::init()
 {
 	if (strlen(NpcName) == 0)
 	{
-		changeNpcName("knight");
+		changeNpcName("knight");//初始化为knigh形象
 	}
 	char s[40];
 	sprintf(s, "Player/%s_rest1.png", NpcName);
@@ -38,5 +38,4 @@ void HeroNPC::interact(int mode)
 	bindSprite(Sprite::create(s));
 	AnimateFrameCache_init();
 }
-
 

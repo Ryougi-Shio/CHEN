@@ -22,7 +22,7 @@ public:
 	void rest();//待机动画函数
 
 	void run();//跑步动画函数
-
+	void frozen();
 	void skill_ranger();
 	void TFSMupdate(float dt);//动画状态机专用update，每0.4f一次调用
 	PlayerAttribute* getPlayerAttribute();
@@ -43,14 +43,15 @@ public:
 	Weapon* getWeapon1();
 	Weapon* getWeapon2();
 	void swapWeapon();
-	void pickWeapon(int TAG);//捡起武器，TAG为要设置的武器
+	bool pickWeapon(int TAG);//捡起武器，TAG为要设置的武器
 	void dead();
 	void deadNotice();
 	void changeHero(char hero[]);
 	char* getHeroName();
 	void  HeroSkill(int mode);
-
+	bool getIsdead();
 	void SkillUpdate(float dt);
+	void LevelUp();
 	CREATE_FUNC(Player);
 	friend class PlayerMove;
 private:
@@ -64,6 +65,9 @@ private:
 	static Weapon* weapon2;
 	std::map<EventMouse::MouseButton, bool> mouseMap;
 	Vec2 mouseLocation;
+	int Skill_CD;
+	int Skill_Lasting;
 	bool SkillIson=0;
+	bool isDead=false;
 	static char heroName[10];
 };

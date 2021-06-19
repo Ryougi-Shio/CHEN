@@ -21,7 +21,8 @@ void  PowerVest::Interact(int mode)
 				isUsed = 1;
 				this->removeAllChildren();
 				this->bindSprite(Sprite::create("Items/EmptyVest.png"));
-				mPlayer->getPlayerAttribute()->changeDamage_Buff(1);
+				mPlayer->getPlayerAttribute()->changeDamage_Buff(1);//Ôö¼ÓÉËº¦buff
+
 			}
 		}
 	}
@@ -29,13 +30,13 @@ void  PowerVest::Interact(int mode)
 	{
 		if (isAround(50))
 		{
-			if (isUsed == 0 && mPlayer->getPlayerAttribute()->getMoney() >= 10)
+			if (isUsed == 0 && mPlayer->getPlayerAttribute()->getMoney() >= 30)
 			{
 				isUsed = 1;
 				this->removeAllChildren();
 				this->bindSprite(Sprite::create("Items/EmptyVest.png"));
 				mPlayer->getPlayerAttribute()->changeDamage_Buff(1);
-				mPlayer->getPlayerAttribute()->CutMoney(10);
+				mPlayer->getPlayerAttribute()->CutMoney(30);
 			}
 		}
 	}

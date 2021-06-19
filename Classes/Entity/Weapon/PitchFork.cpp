@@ -7,8 +7,9 @@
 
 bool PitchFork::init()
 {
+	notice(" ");
 	bindSprite(Sprite::create("Weapon/PitchFork.png"));
-	setWeaponSpeed(300);
+	setWeaponSpeed(500);
 	this->setTag(AllTag::PlayerWeapn_PitchFork_TAG);
 	return 1;
 }

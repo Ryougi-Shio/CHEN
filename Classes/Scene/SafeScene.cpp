@@ -1,5 +1,4 @@
 #include"SafeScene.h"
-#include"BattleScene.h"
 #include"cocos2d.h"
 #include"json.h"
 #include"Player/PlayerAttribute.h"
@@ -8,6 +7,7 @@
 #include"Pistol.h"
 #include"PitchFork.h"
 #include"HeroNPC.h"
+#include"AllTag.h"
 USING_NS_CC;
 bool SafeScene::init()
 {
@@ -28,6 +28,7 @@ bool SafeScene::init()
 	auto settings = MenuItemImage::create("ui/settings.png", "ui/settings.png", [&](Ref* sender) {
 		getmusicManager()->effectPlay("effect/button.mp3");
 		getmusicManager()->menu(this);
+
 	});
 	//位置位于右上角
 	settings->setPosition(visibleSize.width - settings->getContentSize().width / 2, visibleSize.height - settings->getContentSize().height/2);
@@ -41,7 +42,7 @@ bool SafeScene::init()
 	bindPlayer(Player::create());
 	getPlayer()->PistolInit();//手枪
 //	getPlayer()->ShotgunInit();//霰弹枪
-	getPlayer()->SwordInit();//剑
+//	getPlayer()->SwordInit();//剑
 //	getPlayer()->PitchForkInit();//干草叉
 
 	getPlayer()->getPlayerAttribute()->HpApMoneySpeedDamageinit();//玩家属性初始化
@@ -52,9 +53,6 @@ bool SafeScene::init()
 		visibleSize.height - getPlayer()->getPlayerAttribute()->getSprite()->getContentSize().height / 2);//属性UI位置设定
 	this->addChild(getPlayer()->getPlayerAttribute(),5);//生成playerUI
 	this->addChild(getPlayer(),2);
-	
-	getPlayer()->changeHero(getPlayer()->getHeroName() );
-	getPlayer()->setTag(Hero_Ranger_TAG);
 	//
 	heroNPC = HeroNPC::create();
 	this->addChild(heroNPC,10);
@@ -76,6 +74,36 @@ bool SafeScene::init()
 	auto myKeyListener = EventListenerKeyboard::create();
 	myKeyListener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, cocos2d::Event* event)//键盘按下时响应
 	{
+		if (keycode==EventKeyboard::KeyCode::KEY_E)
+		{
+			int x = getPlayer()->getPositionX();
+			int y = getPlayer()->getPositionY();
+			int Nx = heroNPC->getPositionX();
+			int Ny = heroNPC->getPositionY();
+			if (sqrt((x - Nx) * (x - Nx) + (y - Ny) * (y - Ny)) <= 100)
+			{
+
+				if (getPlayer()->getTag() == Hero_Knight_TAG)
+				{
+					getPlayer()->changeHero("ranger");
+					getPlayer()->getPlayerAttribute()->HpApMoneySpeedDamageinit();
+					heroNPC->interact(0);
+				}
+
+				else
+				{
+					getPlayer()->changeHero("knight");
+					getPlayer()->getPlayerAttribute()->HpApMoneySpeedDamageinit();
+					heroNPC->interact(1);
+				}
+
+			}
+		}
+
+		if (keycode==EventKeyboard::KeyCode::KEY_R)
+		{
+			getPlayer()->getPlayerAttribute()->LevelUp();
+		}
 		getPlayer()->getplayermove()->TrueKeyCode(keycode);//PlayerMove里keyMap的对应键码置true
 	};
 
@@ -85,9 +113,36 @@ bool SafeScene::init()
 	};
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(myKeyListener, this);
+
+	//鼠标监听
+	auto myMouseListener = EventListenerMouse::create();
+	myMouseListener->onMouseMove = [=](cocos2d::Event* event)//移动
+	{
+		EventMouse* e = (EventMouse*)event;
+		getPlayer()->changeMouseLocation(e->getLocation());
+
+
+	};
+	myMouseListener->onMouseDown = [=](cocos2d::Event* event)//按下
+	{
+		EventMouse* e = (EventMouse*)event;
+		getPlayer()->trueMouseMap(e->getMouseButton());
+
+	};
+	myMouseListener->onMouseUp = [=](cocos2d::Event* event)//松开
+	{
+		EventMouse* e = (EventMouse*)event;
+		getPlayer()->flaseMouseMap(e->getMouseButton());
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(myMouseListener, this);
+
+
+
+
 	this->scheduleUpdate();
 	//this->schedule(CC_SCHEDULE_SELECTOR(SafeScene::test), 10.0f);
-	this->schedule(CC_SCHEDULE_SELECTOR(SafeScene::ChangeHeroUpdate), 0.1f);
+	//this->schedule(CC_SCHEDULE_SELECTOR(SafeScene::ChangeHeroUpdate), 0.1f);
+
 	return 1;
 }
 
@@ -102,29 +157,7 @@ void SafeScene::update(float dt)
 
 void SafeScene::ChangeHeroUpdate(float dt)
 {
-	int x = getPlayer()->getPositionX();
-	int y = getPlayer()->getPositionY();
-	int Nx = heroNPC->getPositionX();
-	int Ny = heroNPC->getPositionY();
-	if (sqrt((x - Nx) * (x - Nx) + (y - Ny) * (y - Ny)) <= 100
-		&&getPlayer()->getplayermove()->getkeyMap()[EventKeyboard::KeyCode::KEY_E])
-	{
-		
-		if (getPlayer()->getTag()==Hero_Knight_TAG)
-		{
-			getPlayer()->changeHero("ranger");
-			getPlayer()->setTag(Hero_Ranger_TAG);
-			heroNPC->interact(0);
-		}
-
-		else
-		{
-			getPlayer()->changeHero("knight");
-			getPlayer()->setTag(Hero_Knight_TAG);
-			heroNPC->interact(1);
-		}
-
-	}
+	;
 }
 
 void SafeScene::test(float dt)
